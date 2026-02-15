@@ -8,20 +8,27 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Julee&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Foldit:wght@400;600;700&family=Aubrey&display=swap" rel="stylesheet">
     
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            cursor: none;
         }
 
         :root {
             --orange: #ff5500;
             --dark-blue: #0a1929;
+            --darker-blue: #0a141f;
+            --light-blue: #1e3a5f;
             --text-light: #ffffff;
             --text-dim: #b0b0b0;
+            --card-bg: rgba(20, 30, 45, 0.7);
+            --gradient-1: linear-gradient(135deg, #ff5500, #ff3300);
+            --gradient-2: linear-gradient(135deg, #0a1929, #1e3a5f);
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
 
         body {
@@ -35,8 +42,123 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem;
+            width: 100%;
         }
 
+        .section {
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            color: var(--orange);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--orange);
+            border-radius: 2px;
+        }
+
+        /* ===== CUSTOM CURSOR ===== */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--orange);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.2s ease;
+            mix-blend-mode: difference;
+            transform: translate(-50%, -50%);
+        }
+
+        .cursor-follower {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 85, 0, 0.1);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.4s ease;
+            backdrop-filter: blur(2px);
+            transform: translate(-50%, -50%);
+        }
+
+        /* ===== NAVIGATION ===== */
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 25, 41, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 85, 0, 0.2);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--orange);
+            text-decoration: none;
+            font-family: 'Foldit', cursive;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--orange);
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--orange);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::before {
+            width: 100%;
+        }
+
+        /* ===== HEADER ===== */
         header {
             min-height: 100vh;
             display: flex;
@@ -44,32 +166,1295 @@
             justify-content: center;
             align-items: center;
             text-align: center;
+            padding-top: 80px;
         }
 
-        h1 {
-            font-size: 5rem;
+        .glitch-title {
+            font-size: 7rem;
             font-weight: 700;
-            margin-bottom: 1rem;
+            text-transform: uppercase;
+            position: relative;
+            text-shadow: 0.05em 0 0 rgba(255, 85, 0, 0.75),
+                        -0.05em -0.025em 0 rgba(10, 25, 41, 0.75);
+            animation: glitch 500ms infinite;
+            letter-spacing: 0.5rem;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 0.05em 0 0 rgba(255, 85, 0, 0.75), -0.05em -0.025em 0 rgba(10, 25, 41, 0.75); }
+            14% { text-shadow: 0.05em 0 0 rgba(255, 85, 0, 0.75), -0.05em -0.025em 0 rgba(10, 25, 41, 0.75); }
+            15% { text-shadow: -0.05em -0.025em 0 rgba(255, 85, 0, 0.75), 0.025em 0.05em 0 rgba(10, 25, 41, 0.75); }
+            49% { text-shadow: -0.05em -0.025em 0 rgba(255, 85, 0, 0.75), 0.025em 0.05em 0 rgba(10, 25, 41, 0.75); }
+            50% { text-shadow: 0.025em 0.05em 0 rgba(255, 85, 0, 0.75), 0.05em 0 0 rgba(10, 25, 41, 0.75); }
+            99% { text-shadow: 0.025em 0.05em 0 rgba(255, 85, 0, 0.75), 0.05em 0 0 rgba(10, 25, 41, 0.75); }
+            100% { text-shadow: -0.025em 0 0 rgba(255, 85, 0, 0.75), -0.025em -0.025em 0 rgba(10, 25, 41, 0.75); }
         }
 
         .story {
-            font-family: 'Julee', cursive;
+            font-family: 'Foldit', cursive;
             color: var(--orange);
-            font-size: 1.5rem;
+            font-size: 4rem;
+            font-weight: 700;
             margin: 2rem 0;
+            letter-spacing: 4px;
+            line-height: 1.2;
+        }
+
+        .typing-container {
+            font-size: 2.5rem;
+            margin: 2rem 0;
+            min-height: 4rem;
+            color: var(--text-dim);
+            font-family: 'Aubrey', cursive;
+            letter-spacing: 2px;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            color: var(--orange);
+            animation: blink 0.7s infinite;
+            font-size: 2.5rem;
+            margin-left: 5px;
+            font-family: 'Aubrey', cursive;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* ===== SIMPLE BIO SECTION ===== */
+        .bio-card {
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 3rem;
+            margin: 2rem auto 4rem;
+            border: 1px solid rgba(255, 85, 0, 0.2);
+            box-shadow: var(--shadow);
+            max-width: 900px;
+        }
+
+        .bio-name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--orange);
+            margin-bottom: 0.5rem;
+        }
+
+        .bio-handle {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            margin-bottom: 1.5rem;
+            font-family: 'Aubrey', cursive;
+            letter-spacing: 1px;
+        }
+
+        .bio-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 1rem 2rem;
+            margin: 2rem 0;
+        }
+
+        .bio-label {
+            color: var(--orange);
+            font-weight: 600;
+            min-width: 100px;
+        }
+
+        .bio-value {
+            color: var(--text-dim);
+        }
+
+        .bio-projects {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 85, 0, 0.2);
+        }
+
+        .bio-projects h4 {
+            color: var(--orange);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .project-tag {
+            background: rgba(255, 85, 0, 0.1);
+            border: 1px solid rgba(255, 85, 0, 0.3);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            color: var(--orange);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .project-tag:hover {
+            background: var(--orange);
+            color: var(--dark-blue);
+            transform: translateY(-2px);
+        }
+
+        .bio-footer {
+            margin-top: 2rem;
+            color: var(--text-dim);
+            font-style: italic;
+        }
+
+        /* ===== GAME SHOWCASE ===== */
+        .game-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 3rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 85, 0, 0.2);
+            box-shadow: var(--shadow);
+        }
+
+        .game-content h2 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            color: var(--orange);
+        }
+
+        .game-subtitle {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--text-light);
+            line-height: 1.3;
+        }
+
+        .game-description {
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .game-section {
+            margin-bottom: 2rem;
+        }
+
+        .game-section h3 {
+            color: var(--orange);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .game-section ul {
+            list-style: none;
+            padding-left: 1.5rem;
+        }
+
+        .game-section li {
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+            position: relative;
+            font-size: 1rem;
+        }
+
+        .game-section li::before {
+            content: '•';
+            color: var(--orange);
+            position: absolute;
+            left: -1rem;
+            font-size: 1.2rem;
+        }
+
+        .game-tagline {
+            font-size: 1.2rem;
+            color: var(--orange);
+            margin: 2rem 0;
+            font-weight: 500;
+            text-align: center;
+            padding: 1rem;
+            border: 1px dashed rgba(255, 85, 0, 0.3);
+            border-radius: 10px;
+        }
+
+        .game-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--gradient-1);
+            color: var(--text-light);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 85, 0, 0.3);
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 85, 0, 0.5);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--orange);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: var(--orange);
+            color: var(--dark-blue);
+        }
+
+        .game-preview {
+            position: relative;
+        }
+
+        .game-preview img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .game-preview:hover img {
+            transform: scale(1.02) rotate(1deg);
+        }
+
+        .preview-glow {
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            background: radial-gradient(circle at center, rgba(255, 85, 0, 0.2), transparent 70%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .game-preview:hover .preview-glow {
+            opacity: 1;
+        }
+
+        /* ===== PHILOSOPHY CARDS ===== */
+        .philosophy-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .philosophy-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 85, 0, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .philosophy-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(255, 85, 0, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .philosophy-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--orange);
+            box-shadow: var(--shadow);
+        }
+
+        .philosophy-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .philosophy-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--orange);
+            font-weight: 700;
+        }
+
+        .philosophy-card p {
+            color: var(--text-dim);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        /* ===== DEVLOG BLOG SECTION ===== */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .blog-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 85, 0, 0.2);
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--orange);
+            box-shadow: var(--shadow);
+        }
+
+        .blog-image {
+            height: 180px;
+            background: var(--gradient-2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blog-image::before {
+            content: 'DEV LOG';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--orange);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            z-index: 1;
+        }
+
+        .blog-content {
+            padding: 1.8rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blog-date {
+            color: var(--orange);
+            font-size: 0.85rem;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+
+        .blog-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-light);
+            line-height: 1.4;
+        }
+
+        .blog-excerpt {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .blog-link {
+            color: var(--orange);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: gap 0.3s ease;
+            margin-top: auto;
+        }
+
+        .blog-link:hover {
+            gap: 1rem;
+        }
+
+        /* ===== NEWSLETTER SECTION ===== */
+        .newsletter {
+            background: var(--gradient-2);
+            border-radius: 30px;
+            padding: 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 85, 0, 0.2);
+        }
+
+        .newsletter::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 85, 0, 0.1), transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .newsletter-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .newsletter h3 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--orange);
+        }
+
+        .newsletter p {
+            margin-bottom: 2rem;
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: 2px solid rgba(255, 85, 0, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50px;
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .newsletter-input:focus {
+            outline: none;
+            border-color: var(--orange);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(255, 85, 0, 0.3);
+        }
+
+        .newsletter-input::placeholder {
+            color: var(--text-dim);
+            opacity: 0.7;
+        }
+
+        .newsletter-btn {
+            padding: 1rem 2rem;
+            background: var(--gradient-1);
+            color: var(--text-light);
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+            white-space: nowrap;
+        }
+
+        .newsletter-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 85, 0, 0.5);
+        }
+
+        .newsletter-note {
+            margin-top: 1.5rem;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        .newsletter-note a {
+            color: var(--orange);
+            text-decoration: none;
+        }
+
+        .newsletter-note a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== MEDIA KIT SECTION ===== */
+        .media-intro {
+            color: var(--text-dim);
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+            max-width: 800px;
+        }
+
+        .media-kit-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .media-item {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(255, 85, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .media-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(255, 85, 0, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .media-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--orange);
+            box-shadow: var(--shadow);
+        }
+
+        .media-item:hover::before {
+            opacity: 1;
+        }
+
+        .media-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+
+        .media-item h4 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            color: var(--orange);
+            position: relative;
+            z-index: 1;
+        }
+
+        .media-item p {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .download-btn {
+            color: var(--orange);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: gap 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .download-btn:hover {
+            gap: 1rem;
+        }
+
+        .press-contact {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 3rem;
+            border: 1px solid rgba(255, 85, 0, 0.2);
+            margin-top: 2rem;
+        }
+
+        .press-contact h3 {
+            font-size: 1.8rem;
+            color: var(--orange);
+            margin-bottom: 1rem;
+        }
+
+        .press-contact p {
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+        }
+
+        .press-email {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: rgba(255, 85, 0, 0.1);
+            border: 1px solid var(--orange);
+            border-radius: 50px;
+            color: var(--orange);
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .press-email:hover {
+            background: var(--orange);
+            color: var(--dark-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 85, 0, 0.3);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 4rem 0 2rem;
+            border-top: 1px solid rgba(255, 85, 0, 0.2);
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--orange);
+            font-family: 'Foldit', cursive;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .footer-story {
+            color: var(--text-dim);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .footer-contact {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            word-break: break-all;
+        }
+
+        .footer-contact a {
+            color: var(--orange);
+            text-decoration: none;
+        }
+
+        .footer-contact a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            color: var(--text-light);
+            text-decoration: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 85, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            border: 1px solid rgba(255, 85, 0, 0.3);
+        }
+
+        .social-link:hover {
+            background: var(--orange);
+            transform: translateY(-3px);
+            border-color: var(--orange);
+            color: var(--dark-blue);
+        }
+
+        .footer-links h4 {
+            color: var(--orange);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-bottom: 0.8rem;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--orange);
+            transform: translateX(5px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 85, 0, 0.1);
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom a {
+            color: var(--orange);
+            text-decoration: none;
+            margin: 0 0.5rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .glitch-title { font-size: 5rem; }
+            .story { font-size: 3rem; }
+            .game-showcase { grid-template-columns: 1fr; }
+            .philosophy-grid { grid-template-columns: repeat(2, 1fr); }
+            .blog-grid { grid-template-columns: repeat(2, 1fr); }
+            .media-kit-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-content { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .glitch-title { font-size: 3rem; }
+            .story { font-size: 2rem; }
+            .typing-container { font-size: 1.5rem; }
+            .nav-links { display: none; }
+            .game-showcase { padding: 2rem; }
+            .game-content h2 { font-size: 2.5rem; }
+            .game-subtitle { font-size: 1.5rem; }
+            .game-buttons { flex-direction: column; }
+            .philosophy-grid { grid-template-columns: 1fr; }
+            .blog-grid { grid-template-columns: 1fr; }
+            .media-kit-grid { grid-template-columns: 1fr; }
+            .newsletter { padding: 2rem; }
+            .newsletter-form { flex-direction: column; }
+            .newsletter-btn { width: 100%; }
+            .footer-content { grid-template-columns: 1fr; }
+            .footer-social { justify-content: center; }
+            .press-contact { padding: 2rem; }
+            .bio-grid { grid-template-columns: 1fr; gap: 0.5rem; }
+            .bio-label { min-width: auto; }
         }
     </style>
 </head>
 <body>
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursor-follower"></div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">AOLTD</a>
+            <div class="nav-links">
+                <a href="#" class="nav-link">Home</a>
+                <a href="#" class="nav-link">Games</a>
+                <a href="#" class="nav-link">Blog</a>
+                <a href="#" class="nav-link">Philosophy</a>
+                <a href="#" class="nav-link">Press</a>
+                <a href="#" class="nav-link">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
     <header>
         <div class="container">
-            <h1>AOLTD</h1>
+            <h1 class="glitch-title">AOLTD</h1>
             <div class="story">Art Of Lone Tenacious Developer</div>
-            <p style="max-width: 600px; color: var(--text-dim);">
-                Born from a father's suggestion in 2018. Building games with love, 
-                one line of code at a time.
-            </p>
+            
+            <div class="typing-container">
+                <span id="typing-text"></span>
+                <span class="cursor-blink">|</span>
+            </div>
         </div>
     </header>
+
+    <!-- Simple Bio Section -->
+    <div class="container">
+        <div class="bio-card">
+            <div class="bio-name">Aymanobama Killaghai</div>
+            <div class="bio-handle">@aoltd • Tanzania</div>
+            
+            <div class="bio-grid">
+                <div class="bio-label">Role</div>
+                <div class="bio-value">Lone Tenacious Developer</div>
+                
+                <div class="bio-label">Vibe</div>
+                <div class="bio-value">Friendly. Authentic. Indie at heart.</div>
+                
+                <div class="bio-label">Love</div>
+                <div class="bio-value">Soccer. Gaming. Coding. Deep admiration for indie work.</div>
+                
+                <div class="bio-label">Debut</div>
+                <div class="bio-value">CUBLY (Coming soon)</div>
+            </div>
+            
+            <div class="bio-projects">
+                <h4>Actively working on</h4>
+                <div class="project-tags">
+                    <span class="project-tag">Bones & Banner</span>
+                    <span class="project-tag">TouchV2</span>
+                    <span class="project-tag">The Accord</span>
+                </div>
+            </div>
+            
+            <div class="bio-footer">
+                "Just a dev who loves what he does."
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Showcase Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Current Project</h2>
+            
+            <div class="game-showcase">
+                <div class="game-content">
+                    <h2>AOLTD: CUBLY</h2>
+                    <div class="game-subtitle">WELCOME TO YOUR NEW ADDICTION 🔥</div>
+                    
+                    <p class="game-description">
+                        Not another boring flat grid. This is a CUBE. All 6 faces. All your problems.
+                    </p>
+
+                    <div class="game-section">
+                        <h3>🎲 WHAT JUST HAPPENED?</h3>
+                        <ul>
+                            <li>Shapes fall. You drag them.</li>
+                            <li>Fill a line → POOF! Gone.</li>
+                            <li>Fill multiple lines → BIGGER POOF!</li>
+                            <li>Run out of moves → Game over. Try again.</li>
+                        </ul>
+                    </div>
+
+                    <div class="game-section">
+                        <h3>🤯 WHY YOU'LL BE OBSESSED</h3>
+                        <ul>
+                            <li>That SOUND when lines clear? *chef's kiss*</li>
+                            <li>Spinning the cube feels illegal</li>
+                            <li>"One more game" turns into 3am</li>
+                            <li>Daily challenges (they change EVERY DAY)</li>
+                            <li>No wifi needed. Play anywhere.</li>
+                        </ul>
+                    </div>
+
+                    <div class="game-section">
+                        <h3>🚀 FOR THE COMPETITIVE</h3>
+                        <ul>
+                            <li>Beat your high score</li>
+                            <li>Clear combos for bonus points</li>
+                            <li>Hard shapes? Bring it on</li>
+                            <li>Leaderboards coming soon</li>
+                        </ul>
+                    </div>
+
+                    <div class="game-section">
+                        <h3>🔄 HOW IT WORKS (it's easy, promise)</h3>
+                        <ul>
+                            <li>Grab a shape</li>
+                            <li>Put it on the cube</li>
+                            <li>Make lines disappear</li>
+                            <li>Try not to smile (you will)</li>
+                        </ul>
+                    </div>
+
+                    <p class="game-tagline">
+                        Perfect for: Bus rides, bathroom breaks, pretending to work, proving you're smarter than your friends.
+                    </p>
+
+                    <p style="color: var(--orange); font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem;">
+                        Download now. Your cube awaits. 🎮
+                    </p>
+
+                    <div class="game-buttons">
+                        <a href="#" class="btn">Download Now</a>
+                        <a href="#" class="btn btn-outline">Watch Trailer</a>
+                    </div>
+                </div>
+
+                <div class="game-preview">
+                    <div class="preview-glow"></div>
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600'%3E%3Crect width='600' height='600' fill='%231e3a5f'/%3E%3Crect x='150' y='150' width='300' height='300' fill='%23ff5500' opacity='0.3'/%3E%3Crect x='200' y='200' width='200' height='200' fill='%23ff5500' opacity='0.5'/%3E%3Ctext x='300' y='320' font-family='Space Grotesk' font-size='40' fill='%23ff5500' text-anchor='middle' font-weight='bold'%3ECUBLY%3C/text%3E%3C/svg%3E" 
+                         alt="CUBLY Game Preview">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Philosophy Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">What Drives Us?</h2>
+            
+            <div class="philosophy-grid">
+                <div class="philosophy-card">
+                    <span class="card-icon">🌙</span>
+                    <h3>Late Night Dreams</h3>
+                    <p>AOLTD isn't built in a boardroom — it's built from late nights, wild dreams, and a love for gameplay that just won't quit. Every line of code comes from passion, not pressure.</p>
+                </div>
+
+                <div class="philosophy-card">
+                    <span class="card-icon">🎯</span>
+                    <h3>Curiosity Over Trends</h3>
+                    <p>We don't follow trends, we follow curiosity. Where others see products, we see endless possibilities. We build what fascinates us, not what's popular.</p>
+                </div>
+
+                <div class="philosophy-card">
+                    <span class="card-icon">❤️</span>
+                    <h3>Love in Every Pixel</h3>
+                    <p>Every decision is driven by love for the game, not love for numbers. We create because we care. If we wouldn't play it, we don't ship it.</p>
+                </div>
+
+                <div class="philosophy-card">
+                    <span class="card-icon">🤝</span>
+                    <h3>Fellow Tenacious</h3>
+                    <p>Looking for fellow lone tenacious developers who share the vision. Together, we can build something legendary. Solo? Yes. Alone? Never.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DevLog Blog Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Dev Logs</h2>
+            <p style="color: var(--text-dim); margin-bottom: 2rem; font-size: 1.1rem;">
+                The good, the bad, and the "why did I choose this" moments. Real stories from a lone developer.
+            </p>
+            
+            <div class="blog-grid">
+                <!-- Blog Post 1 -->
+                <article class="blog-card">
+                    <div class="blog-image"></div>
+                    <div class="blog-content">
+                        <div class="blog-date">Coming Soon</div>
+                        <h3 class="blog-title">The Day the Cube Broke My Brain</h3>
+                        <p class="blog-excerpt">You won't believe what happened when I tried to make shapes fit on 6 faces at once. 72 hours of chaos, one working solution.</p>
+                        <a href="#" class="blog-link">Read the nightmare →</a>
+                    </div>
+                </article>
+
+                <!-- Blog Post 2 -->
+                <article class="blog-card">
+                    <div class="blog-image"></div>
+                    <div class="blog-content">
+                        <div class="blog-date">Coming Soon</div>
+                        <h3 class="blog-title">From Flat Grid to 3D Cube</h3>
+                        <p class="blog-excerpt">The journey from "wouldn't it be cool" to "why did I do this to myself." Spoiler: Worth every headache.</p>
+                        <a href="#" class="blog-link">Read the journey →</a>
+                    </div>
+                </article>
+
+                <!-- Blog Post 3 -->
+                <article class="blog-card">
+                    <div class="blog-image"></div>
+                    <div class="blog-content">
+                        <div class="blog-date">Coming Soon</div>
+                        <h3 class="blog-title">The Sound That Made Me Cry</h3>
+                        <p class="blog-excerpt">When you spend 3 days on a sound effect and it finally clicks. That *chef's kiss* moment you'll hear in CUBLY.</p>
+                        <a href="#" class="blog-link">Read the story →</a>
+                    </div>
+                </article>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="#" class="btn btn-outline">View All Posts →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="section">
+        <div class="container">
+            <div class="newsletter">
+                <div class="newsletter-content">
+                    <h3>📬 Join the Inner Circle</h3>
+                    <p>
+                        Be the first to know when CUBLY drops. Early access, dev insights, and the occasional meme. 
+                        No spam. Just the good stuff. Promise.
+                    </p>
+                    
+                    <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Thanks for joining! You\'re officially in the inner circle. 🎉 We\'ll email you when CUBLY is ready to drop!'); this.reset();">
+                        <input type="email" placeholder="Enter your email" class="newsletter-input" required>
+                        <button type="submit" class="newsletter-btn">Subscribe</button>
+                    </form>
+                    
+                    <p class="newsletter-note">
+                        By subscribing, you're basically becoming family. We'll treat your email with love. 
+                        <a href="#">Privacy stuff</a> here.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Media Kit Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Press & Media</h2>
+            <p class="media-intro">
+                You want to write about us? You want to feature CUBLY? You want to interview a lone tenacious developer who talks to himself while coding? You've come to the right place.
+            </p>
+            
+            <div class="media-kit-grid">
+                <div class="media-item">
+                    <span class="media-icon">📸</span>
+                    <h4>Screenshots</h4>
+                    <p>High-res in-game shots • 4K • Ready to use</p>
+                    <a href="#" class="download-btn">Download .zip →</a>
+                </div>
+                
+                <div class="media-item">
+                    <span class="media-icon">🎨</span>
+                    <h4>Logo & Brand</h4>
+                    <p>Official AOLTD logos • PNG, SVG • Full kit</p>
+                    <a href="#" class="download-btn">Download .zip →</a>
+                </div>
+                
+                <div class="media-item">
+                    <span class="media-icon">📄</span>
+                    <h4>Press Kit</h4>
+                    <p>Complete media pack • Fact sheet • Bios</p>
+                    <a href="#" class="download-btn">Download .zip →</a>
+                </div>
+                
+                <div class="media-item">
+                    <span class="media-icon">🎥</span>
+                    <h4>Trailer & B-Roll</h4>
+                    <p>Gameplay footage • Capture-ready clips</p>
+                    <a href="#" class="download-btn">Download .zip →</a>
+                </div>
+            </div>
+
+            <div class="press-contact">
+                <h3>📧 For Press Inquiries</h3>
+                <p>Want early access? Want to interview the madman behind the cube? Looking for exclusive content? Hit us up:</p>
+                <a href="mailto:aoltdinquiry@outlook.com" class="press-email">aoltdinquiry@outlook.com</a>
+                <p style="margin-top: 2rem; color: var(--text-dim); font-size: 0.9rem;">
+                    We reply fast. Like, "I should be coding but I'm answering emails" fast.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="footer-logo">AOLTD</div>
+                    <p class="footer-story">Art Of Lone Tenacious Developer. Building games with love, one line of code at a time. Born from a dream in 2018.</p>
+                    <div class="footer-contact">
+                        📧 <a href="mailto:aoltdinquiry@outlook.com">aoltdinquiry@outlook.com</a>
+                    </div>
+                    <div class="footer-social">
+                        <a href="https://www.instagram.com/ao_interactive?igsh=Z3Q0dWNmZWJlZ2Fr&utm_source=qr" target="_blank" class="social-link">📷</a>
+                        <a href="https://www.tiktok.com/@ao_interactive?_r=1&_t=ZS-93tFB1WQYwa" target="_blank" class="social-link">🎵</a>
+                        <a href="https://discord.gg/4vxWYNYse" target="_blank" class="social-link">💬</a>
+                        <a href="https://www.youtube.com/@ao_interactive47" target="_blank" class="social-link">▶️</a>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Explore</h4>
+                    <a href="#">Games</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Philosophy</a>
+                    <a href="#">Press Kit</a>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Connect</h4>
+                    <a href="#">Discord</a>
+                    <a href="#">Instagram</a>
+                    <a href="#">TikTok</a>
+                    <a href="#">YouTube</a>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Use</a>
+                    <a href="#">Credits</a>
+                    <a href="#">License</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2026 AOLTD - Art Of Lone Tenacious Developer. All rights reserved.</p>
+                <p style="margin-top: 0.5rem; font-size: 0.8rem;">
+                    <a href="#">Privacy Policy</a> • <a href="#">Terms</a> • <a href="#">Credits</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Custom Cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            cursorFollower.style.left = e.clientX + 'px';
+            cursorFollower.style.top = e.clientY + 'px';
+        });
+
+        // Cursor hover effects
+        document.querySelectorAll('a, button, .nav-link, .social-link, .footer-links a, .btn, .philosophy-card, .blog-card, .media-item, .press-email, .newsletter-btn, .newsletter-input, .project-tag').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                cursorFollower.style.transform = 'translate(-50%, -50%) scale(1.5)';
+            });
+            
+            el.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+                cursorFollower.style.transform = 'translate(-50%, -50%) scale(1)';
+            });
+        });
+
+        document.addEventListener('mousedown', () => {
+            cursor.style.transform = 'translate(-50%, -50%) scale(0.8)';
+            cursorFollower.style.transform = 'translate(-50%, -50%) scale(0.8)';
+        });
+
+        document.addEventListener('mouseup', () => {
+            cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+            cursorFollower.style.transform = 'translate(-50%, -50%) scale(1)';
+        });
+
+        // Typing Animation
+        const words = ["Something", "You'll", "Remember"];
+        const fullPhrase = "Something You'll Remember";
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let isFullPhrase = false;
+        let isWaiting = false;
+        const typingElement = document.getElementById('typing-text');
+
+        function typeEffect() {
+            if (isWaiting) return;
+            
+            let currentText = '';
+            
+            if (isFullPhrase) {
+                currentText = fullPhrase.substring(0, charIndex);
+                
+                if (!isDeleting && charIndex === fullPhrase.length) {
+                    isWaiting = true;
+                    setTimeout(() => {
+                        isDeleting = true;
+                        isWaiting = false;
+                        typeEffect();
+                    }, 2000);
+                    typingElement.textContent = currentText;
+                    return;
+                }
+                
+                if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    isFullPhrase = false;
+                    wordIndex = 0;
+                    charIndex = 0;
+                }
+            } else {
+                const currentWord = words[wordIndex];
+                currentText = currentWord.substring(0, charIndex);
+                
+                if (!isDeleting && charIndex === currentWord.length) {
+                    isWaiting = true;
+                    setTimeout(() => {
+                        isDeleting = true;
+                        isWaiting = false;
+                        typeEffect();
+                    }, 1000);
+                    typingElement.textContent = currentText;
+                    return;
+                }
+                
+                if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    wordIndex++;
+                    
+                    if (wordIndex === words.length) {
+                        isFullPhrase = true;
+                        charIndex = 0;
+                    }
+                }
+            }
+            
+            typingElement.textContent = currentText;
+            
+            if (!isWaiting) {
+                if (isFullPhrase) {
+                    if (isDeleting) {
+                        charIndex--;
+                    } else {
+                        charIndex++;
+                    }
+                } else {
+                    if (isDeleting) {
+                        charIndex--;
+                    } else {
+                        charIndex++;
+                    }
+                }
+                
+                setTimeout(typeEffect, isDeleting ? 50 : 150);
+            }
+        }
+
+        typeEffect();
+    </script>
 </body>
 </html>
