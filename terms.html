@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AOLTD - Terms of Use</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Foldit:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        :root {
+            --orange: #ff5500;
+            --dark-blue: #0a1929;
+            --darker-blue: #0a141f;
+            --text-light: #ffffff;
+            --text-dim: #b0b0b0;
+            --card-bg: rgba(20, 30, 45, 0.7);
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--dark-blue);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--orange);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.2s ease;
+            mix-blend-mode: difference;
+            transform: translate(-50%, -50%);
+        }
+
+        .cursor-follower {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 85, 0, 0.1);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.4s ease;
+            backdrop-filter: blur(2px);
+            transform: translate(-50%, -50%);
+        }
+
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 25, 41, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 85, 0, 0.2);
+            padding: 1rem 2rem;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--orange);
+            text-decoration: none;
+            font-family: 'Foldit', cursive;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--orange);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .policy-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 3rem;
+            border: 1px solid rgba(255, 85, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: var(--orange);
+            margin-bottom: 0.5rem;
+        }
+
+        .last-updated {
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        h2 {
+            color: var(--orange);
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem;
+        }
+
+        p {
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-note {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 85, 0, 0.2);
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 2rem;
+            color: var(--orange);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            h1 { font-size: 2rem; }
+            .policy-card { padding: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursor-follower"></div>
+
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">AOLTD</a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="#" class="nav-link">Games</a>
+                <a href="#" class="nav-link">Blog</a>
+                <a href="#" class="nav-link">Press</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="policy-card">
+            <h1>Terms of Use</h1>
+            <div class="last-updated">Last updated: January 11, 2026</div>
+
+            <p>These Terms of Use govern your access to and use of all games, websites, and services created by AOLTD INTERACTIVE ("we", "us"). By using any AOLTD game or service, you agree to these Terms. If you do not agree, please do not use our games.</p>
+
+            <h2>1. Accounts</h2>
+            <p>Players may create accounts using email. Guest accounts may be available but will have limited access to online features. You are responsible for keeping your login credentials secure.</p>
+
+            <h2>2. User-Generated Content</h2>
+            <p>Players may create text content including chat messages, profile names, and clan names. You are solely responsible for what you post. We reserve the right to remove content or ban accounts that violate these terms.</p>
+
+            <h2>3. Player Conduct</h2>
+            <p>When using our games, you agree NOT to:</p>
+            <ul>
+                <li>Harass, bully, or threaten other players</li>
+                <li>Share personal information of others</li>
+                <li>Cheat, hack, or exploit bugs</li>
+                <li>Use bots or automated scripts</li>
+                <li>Impersonate other players or staff</li>
+                <li>Spam or disrupt gameplay</li>
+            </ul>
+            <p>Chat is limited to in-game text only.</p>
+
+            <h2>4. Virtual Items & Purchases</h2>
+            <p>Some games may include virtual items or in-app purchases. All purchases are final, handled by the platform provider, and have no real-world monetary value. Virtual items may be modified or removed at our discretion.</p>
+
+            <h2>5. Advertisements</h2>
+            <p>Optional rewarded ads may appear when you choose to view them. We are not responsible for third-party ad content.</p>
+
+            <h2>6. Analytics & Data</h2>
+            <p>We collect gameplay and device data to improve our games. This includes anonymized statistics and crash reports. See our Privacy Policy for details.</p>
+
+            <h2>7. Account Termination</h2>
+            <p>We may suspend or terminate accounts that violate these Terms without prior notice. We reserve the right to enforce rules as needed to maintain a healthy community.</p>
+
+            <h2>8. Disclaimers & Liability</h2>
+            <p>Our games are provided "as is" without guarantees. We are not liable for data loss, device issues, or other damages. You use our games at your own risk.</p>
+
+            <h2>9. Governing Law</h2>
+            <p>These Terms are governed by the laws of Tanzania. Users worldwide agree that Tanzanian law applies to any disputes.</p>
+
+            <h2>10. Updates to Terms</h2>
+            <p>We may update these Terms. We'll notify users via in-game messages, email, or store listings. Continued use means you accept the updated Terms.</p>
+
+            <h2>11. Contact</h2>
+            <p>For questions about these Terms:<br>
+            Email: <strong>aoltdinquiry@outlook.com</strong></p>
+
+            <h2>12. Arbitration</h2>
+            <p>By using our games, you agree to resolve disputes through binding arbitration in Tanzania, except where local laws prevent this. This helps resolve issues quickly and fairly.</p>
+
+            <div class="footer-note">
+                <p>These Terms apply to all AOLTD games and services, including CUBLY, Bones & Banner, TouchV2, The Accord, and future releases.</p>
+            </div>
+
+            <a href="index.html" class="back-link">← Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            cursorFollower.style.left = e.clientX + 'px';
+            cursorFollower.style.top = e.clientY + 'px';
+        });
+
+        document.querySelectorAll('a').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                cursorFollower.style.transform = 'translate(-50%, -50%) scale(1.5)';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+                cursorFollower.style.transform = 'translate(-50%, -50%) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
