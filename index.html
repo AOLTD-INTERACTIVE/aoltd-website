@@ -43,6 +43,10 @@
             --shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Space Grotesk', sans-serif;
             background-color: var(--dark-blue);
@@ -80,28 +84,6 @@
             height: 4px;
             background: var(--orange);
             border-radius: 2px;
-        }
-
-        /* ===== VISITOR COUNTER (ADMIN ONLY) ===== */
-        .visitor-counter {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            color: var(--orange);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            border: 1px solid var(--orange);
-            z-index: 9999;
-            font-family: monospace;
-            backdrop-filter: blur(5px);
-            opacity: 0.7;
-            transition: opacity 0.3s ease;
-        }
-
-        .visitor-counter:hover {
-            opacity: 1;
         }
 
         /* ===== NAVIGATION ===== */
@@ -377,6 +359,10 @@
         }
 
         /* ===== PHILOSOPHY CARDS ===== */
+        #philosophy-section {
+            scroll-margin-top: 80px;
+        }
+
         .philosophy-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -436,7 +422,11 @@
             line-height: 1.7;
         }
 
-        /* ===== REALISTIC DRAGON ===== */
+        /* ===== DEVLOG DRAGON (SPIKES REMOVED) ===== */
+        #devlog-section {
+            scroll-margin-top: 80px;
+        }
+
         .dragon-coming-soon {
             background: var(--card-bg);
             border-radius: 30px;
@@ -455,7 +445,6 @@
             margin: 0 auto 2rem;
         }
 
-        /* Realistic Dragon - CSS Art */
         .realistic-dragon {
             position: relative;
             width: 250px;
@@ -555,23 +544,6 @@
             transform: rotate(15deg);
         }
 
-        .dragon-spikes {
-            position: absolute;
-            width: 100px;
-            height: 30px;
-            bottom: 90px;
-            left: 70px;
-            display: flex;
-            gap: 5px;
-        }
-
-        .spike {
-            width: 10px;
-            height: 20px;
-            background: #ff5500;
-            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-        }
-
         .dragon-wing {
             position: absolute;
             width: 60px;
@@ -618,7 +590,138 @@
             backdrop-filter: blur(5px);
         }
 
-        /* ===== NEWSLETTER - REDESIGNED ===== */
+        /* ===== PRESS MEDIA SECTION (RESTORED PANELS) ===== */
+        #press-section {
+            scroll-margin-top: 80px;
+        }
+
+        .media-intro {
+            color: var(--text-dim);
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+            max-width: 800px;
+        }
+
+        .media-kit-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .media-item {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(255, 85, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .media-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(255, 85, 0, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .media-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--orange);
+            box-shadow: var(--shadow);
+        }
+
+        .media-item:hover::before {
+            opacity: 1;
+        }
+
+        .media-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+
+        .media-item h4 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            color: var(--orange);
+            position: relative;
+            z-index: 1;
+        }
+
+        .media-item p {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .download-btn {
+            color: var(--orange);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: gap 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .download-btn:hover {
+            gap: 1rem;
+        }
+
+        .press-contact {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 3rem;
+            border: 1px solid rgba(255, 85, 0, 0.2);
+            margin-top: 2rem;
+        }
+
+        .press-contact h3 {
+            font-size: 1.8rem;
+            color: var(--orange);
+            margin-bottom: 1rem;
+        }
+
+        .press-contact p {
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+        }
+
+        .press-email {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: rgba(255, 85, 0, 0.1);
+            border: 1px solid var(--orange);
+            border-radius: 50px;
+            color: var(--orange);
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .press-email:hover {
+            background: var(--orange);
+            color: var(--dark-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 85, 0, 0.3);
+        }
+
+        /* ===== NEWSLETTER - GOOGLE FORMS INTEGRATION ===== */
         .newsletter {
             background: var(--card-bg);
             border-radius: 30px;
@@ -735,6 +838,10 @@
         }
 
         /* ===== FOOTER ===== */
+        footer {
+            scroll-margin-top: 80px;
+        }
+
         .footer {
             background: rgba(0, 0, 0, 0.5);
             padding: 4rem 0 2rem;
@@ -820,6 +927,7 @@
             .story { font-size: 3rem; }
             .game-showcase { grid-template-columns: 1fr; }
             .philosophy-grid { grid-template-columns: repeat(2, 1fr); }
+            .media-kit-grid { grid-template-columns: repeat(2, 1fr); }
             .footer-content { grid-template-columns: repeat(2, 1fr); }
         }
 
@@ -833,36 +941,32 @@
             .game-subtitle { font-size: 1.5rem; }
             .game-buttons { flex-direction: column; }
             .philosophy-grid { grid-template-columns: 1fr; }
-            .footer-content { grid-template-columns: 1fr; }
+            .media-kit-grid { grid-template-columns: 1fr; }
             .newsletter { padding: 2rem; }
             .newsletter-form { flex-direction: column; }
+            .footer-content { grid-template-columns: 1fr; }
             .dragon-message { font-size: 1.2rem; }
         }
     </style>
 </head>
 <body>
-    <!-- Visitor Counter (Only visible to you) -->
-    <div class="visitor-counter" id="visitorCounter">
-        👁️ Loading visits...
-    </div>
-
     <!-- Navigation -->
     <nav class="nav">
         <div class="nav-container">
-            <a href="index.html" class="nav-logo">AOLTD</a>
+            <a href="#top" class="nav-logo">AOLTD</a>
             <div class="nav-links">
-                <a href="index.html" class="nav-link">Home</a>
-                <a href="#" class="nav-link">Games</a>
-                <a href="#" class="nav-link">Blog</a>
-                <a href="#" class="nav-link">Philosophy</a>
-                <a href="#" class="nav-link">Press</a>
-                <a href="#" class="nav-link">Contact</a>
+                <a href="#top" class="nav-link">Home</a>
+                <a href="games.html" class="nav-link">Games</a>
+                <a href="#devlog-section" class="nav-link">Blog</a>
+                <a href="#philosophy-section" class="nav-link">Philosophy</a>
+                <a href="#press-section" class="nav-link">Press</a>
+                <a href="#footer" class="nav-link">Contact</a>
             </div>
         </div>
     </nav>
 
-    <!-- Header -->
-    <header>
+    <!-- Header (Home Section) -->
+    <header id="top">
         <div class="container">
             <h1 class="glitch-title">AOLTD</h1>
             <div class="story">Art Of Lone Tenacious Developer</div>
@@ -938,7 +1042,7 @@
                     </p>
 
                     <div class="game-buttons">
-                        <a href="#" class="btn" target="_blank">Download Now</a>
+                        <a href="games/cubly.html#download" class="btn" target="_blank">Download Now</a>
                     </div>
                 </div>
 
@@ -951,7 +1055,7 @@
     </section>
 
     <!-- Philosophy Section -->
-    <section class="section">
+    <section id="philosophy-section" class="section">
         <div class="container">
             <h2 class="section-title">What Drives Us?</h2>
             
@@ -983,8 +1087,8 @@
         </div>
     </section>
 
-    <!-- DevLog Blog Section - Realistic Dragon -->
-    <section class="section">
+    <!-- DevLog Blog Section - Dragon (Spikes Removed) -->
+    <section id="devlog-section" class="section">
         <div class="container">
             <h2 class="section-title">Dev Logs</h2>
             
@@ -1005,12 +1109,7 @@
                         </div>
                         <div class="dragon-horn"></div>
                         <div class="dragon-horn dragon-horn-right"></div>
-                        <div class="dragon-spikes">
-                            <div class="spike"></div>
-                            <div class="spike"></div>
-                            <div class="spike"></div>
-                            <div class="spike"></div>
-                        </div>
+                        <!-- SPIKES REMOVED - No more back fins -->
                         <div class="dragon-fire">🔥</div>
                     </div>
                 </div>
@@ -1021,7 +1120,7 @@
         </div>
     </section>
 
-    <!-- Newsletter Section - Redesigned -->
+    <!-- Newsletter Section - Google Forms -->
     <section class="section">
         <div class="container">
             <div class="newsletter">
@@ -1031,8 +1130,9 @@
                         Be the first to know when CUBLY drops. Early access, dev insights, and the occasional tale from the dragon's hoard.
                     </p>
                     
-                    <form class="newsletter-form" id="newsletterForm">
-                        <input type="email" placeholder="Enter your email" class="newsletter-input" id="newsletterEmail" required>
+                    <form class="newsletter-form" action="https://docs.google.com/forms/d/e/1FAIpQLSfHkswja3AzNpmlz_pYc5OBq-ladkvRO9hUeJ0NHjll875DwA/formResponse" method="POST" target="_blank" onsubmit="alert('Thanks for joining! Check your inbox for confirmation. 🐉');">
+                        <input type="email" name="entry.2033118840" placeholder="Enter your email" class="newsletter-input" required>
+                        <input type="hidden" name="fbzx" value="7492781071004146141">
                         <button type="submit" class="newsletter-btn">Subscribe</button>
                     </form>
                     
@@ -1045,86 +1145,100 @@
         </div>
     </section>
 
-    <!-- Media Kit Section - Realistic Dragon -->
-    <section class="section">
+    <!-- Press & Media Section - Restored Panels -->
+    <section id="press-section" class="section">
         <div class="container">
             <h2 class="section-title">Press & Media</h2>
+            <p class="media-intro">
+                You want to write about us? You want to feature CUBLY? You want to interview a lone tenacious developer who talks to himself while coding? You've come to the right place.
+            </p>
             
-            <div class="dragon-coming-soon">
-                <div class="dragon-container">
-                    <div class="realistic-dragon">
-                        <div class="dragon-wing"></div>
-                        <div class="dragon-wing dragon-wing-right"></div>
-                        <div class="dragon-body"></div>
-                        <div class="dragon-neck"></div>
-                        <div class="dragon-head"></div>
-                        <div class="dragon-snout"></div>
-                        <div class="dragon-eye">
-                            <div class="dragon-eye-pupil"></div>
-                        </div>
-                        <div class="dragon-eye dragon-eye-right">
-                            <div class="dragon-eye-pupil"></div>
-                        </div>
-                        <div class="dragon-horn"></div>
-                        <div class="dragon-horn dragon-horn-right"></div>
-                        <div class="dragon-spikes">
-                            <div class="spike"></div>
-                            <div class="spike"></div>
-                            <div class="spike"></div>
-                            <div class="spike"></div>
-                        </div>
-                        <div class="dragon-fire">🔥</div>
-                    </div>
+            <div class="media-kit-grid">
+                <div class="media-item">
+                    <span class="media-icon">📸</span>
+                    <h4>Screenshots</h4>
+                    <p>High-res in-game shots • 4K • Ready to use</p>
+                    <a href="press.html#screenshots" class="download-btn">Download .zip →</a>
                 </div>
-                <div class="dragon-message">
-                    No press files yet. The dragon is still organizing his hoard. Check back soon.
+                
+                <div class="media-item">
+                    <span class="media-icon">🎨</span>
+                    <h4>Logo & Brand</h4>
+                    <p>Official AOLTD logos • PNG, SVG • Full kit</p>
+                    <a href="press.html#logo" class="download-btn">Download .zip →</a>
                 </div>
+                
+                <div class="media-item">
+                    <span class="media-icon">📄</span>
+                    <h4>Press Kit</h4>
+                    <p>Complete media pack • Fact sheet • Bios</p>
+                    <a href="press.html#presskit" class="download-btn">Download .zip →</a>
+                </div>
+                
+                <div class="media-item">
+                    <span class="media-icon">🎥</span>
+                    <h4>Trailer & B-Roll</h4>
+                    <p>Gameplay footage • Capture-ready clips</p>
+                    <a href="press.html#trailer" class="download-btn">Download .zip →</a>
+                </div>
+            </div>
+
+            <div class="press-contact">
+                <h3>📧 For Press Inquiries</h3>
+                <p>Want early access? Want to interview the madman behind the cube? Looking for exclusive content? Hit us up:</p>
+                <a href="mailto:aoltdinquiry@gmail.com" class="press-email">aoltdinquiry@gmail.com</a>
+                <p style="margin-top: 2rem; color: var(--text-dim); font-size: 0.9rem;">
+                    We reply fast. Like, "I should be coding but I'm answering emails" fast.
+                </p>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div>
-                    <div class="footer-logo">AOLTD</div>
-                    <p class="footer-story">Art Of Lone Tenacious Developer. Building games with love, one line of code at a time. Born from a dream in 2018.</p>
-                    <div class="footer-contact">
-                        📧 <a href="mailto:aoltdinquiry@outlook.com">aoltdinquiry@outlook.com</a>
+    <footer id="footer">
+        <div class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div>
+                        <div class="footer-logo">AOLTD</div>
+                        <p class="footer-story">Art Of Lone Tenacious Developer. Building games with love, one line of code at a time. Born from a dream in 2018.</p>
+                        <div class="footer-contact">
+                            📧 <a href="mailto:aoltdinquiry@gmail.com">aoltdinquiry@gmail.com</a>
+                        </div>
+                    </div>
+
+                    <div class="footer-links">
+                        <h4>Explore</h4>
+                        <a href="#top">Home</a>
+                        <a href="games.html">Games</a>
+                        <a href="#devlog-section">Blog</a>
+                        <a href="#philosophy-section">Philosophy</a>
+                        <a href="#press-section">Press Kit</a>
+                    </div>
+
+                    <div class="footer-links">
+                        <h4>Connect</h4>
+                        <a href="https://www.instagram.com/ao_interactive" target="_blank">Instagram</a>
+                        <a href="https://www.tiktok.com/@ao_interactive" target="_blank">TikTok</a>
+                        <a href="https://discord.gg/4vxWYNYse" target="_blank">Discord</a>
+                        <a href="https://www.youtube.com/@ao_interactive47" target="_blank">YouTube</a>
+                    </div>
+
+                    <div class="footer-links">
+                        <h4>Legal</h4>
+                        <a href="privacy.html">Privacy Policy</a>
+                        <a href="terms.html">Terms of Use</a>
+                        <a href="credits.html">Credits</a>
+                        <a href="license.html">License</a>
                     </div>
                 </div>
 
-                <div class="footer-links">
-                    <h4>Explore</h4>
-                    <a href="#">Games</a>
-                    <a href="#">Blog</a>
-                    <a href="#">Philosophy</a>
-                    <a href="#">Press Kit</a>
+                <div class="footer-bottom">
+                    <p>© 2026 AOLTD - Art Of Lone Tenacious Developer. All rights reserved.</p>
+                    <p style="margin-top: 0.5rem; font-size: 0.8rem;">
+                        <a href="privacy.html">Privacy Policy</a> • <a href="terms.html">Terms</a> • <a href="credits.html">Credits</a>
+                    </p>
                 </div>
-
-                <div class="footer-links">
-                    <h4>Connect</h4>
-                    <a href="https://www.instagram.com/ao_interactive" target="_blank">Instagram</a>
-                    <a href="https://www.tiktok.com/@ao_interactive" target="_blank">TikTok</a>
-                    <a href="https://discord.gg/4vxWYNYse" target="_blank">Discord</a>
-                    <a href="https://www.youtube.com/@ao_interactive47" target="_blank">YouTube</a>
-                </div>
-
-                <div class="footer-links">
-                    <h4>Legal</h4>
-                    <a href="privacy.html">Privacy Policy</a>
-                    <a href="terms.html">Terms of Use</a>
-                    <a href="#">Credits</a>
-                    <a href="#">License</a>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>© 2026 AOLTD - Art Of Lone Tenacious Developer. All rights reserved.</p>
-                <p style="margin-top: 0.5rem; font-size: 0.8rem;">
-                    <a href="privacy.html">Privacy Policy</a> • <a href="terms.html">Terms</a> • <a href="#">Credits</a>
-                </p>
             </div>
         </div>
     </footer>
@@ -1214,69 +1328,19 @@
 
         typeEffect();
 
-        // ===== VISITOR COUNTER =====
-        function updateVisitorCounter() {
-            const counterElement = document.getElementById('visitorCounter');
-            
-            // Get current count from localStorage
-            let visitorCount = localStorage.getItem('aoltd_visitor_count');
-            let lastVisit = localStorage.getItem('aoltd_last_visit');
-            let today = new Date().toDateString();
-            
-            // Initialize if first visit
-            if (!visitorCount) {
-                visitorCount = 0;
-            }
-            
-            // Check if this is a new visit (not a page refresh within same day)
-            if (lastVisit !== today) {
-                visitorCount = parseInt(visitorCount) + 1;
-                localStorage.setItem('aoltd_visitor_count', visitorCount);
-                localStorage.setItem('aoltd_last_visit', today);
-            }
-            
-            // Get current time
-            const now = new Date();
-            const timeString = now.toLocaleTimeString();
-            
-            // Display
-            counterElement.innerHTML = `👁️ Visits: ${visitorCount} | Last: ${timeString}`;
-        }
-
-        // Run on page load
-        updateVisitorCounter();
-
-        // ===== NEWSLETTER SUBSCRIPTION =====
-        document.getElementById('newsletterForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('newsletterEmail').value;
-            
-            // Save to localStorage (you can see this)
-            let subscribers = JSON.parse(localStorage.getItem('aoltd_subscribers') || '[]');
-            
-            // Check if already subscribed
-            if (subscribers.includes(email)) {
-                alert('You\'re already in the inner circle! 🐉');
-                return;
-            }
-            
-            // Add new subscriber
-            subscribers.push(email);
-            localStorage.setItem('aoltd_subscribers', JSON.stringify(subscribers));
-            
-            // Show success message
-            alert('Thanks for joining! You\'re officially in the inner circle. 🎉 Check browser console to see subscriber list.');
-            
-            // Clear form
-            this.reset();
-            
-            // Log to console (you can see this)
-            console.log('📬 Current subscribers:', subscribers);
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
         });
-
-        // Optional: Show subscribers in console on page load
-        console.log('📬 Current subscribers:', JSON.parse(localStorage.getItem('aoltd_subscribers') || '[]'));
     </script>
 </body>
 </html>
