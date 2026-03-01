@@ -84,6 +84,24 @@
             border-radius: 2px;
         }
 
+        /* ===== BACK LINK ===== */
+        .back-section {
+            margin-bottom: 1rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: var(--orange);
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+            padding: 0.5rem 0;
+        }
+
+        .back-link:hover {
+            transform: translateX(-5px);
+        }
+
         /* ===== NAVIGATION ===== */
         .nav {
             position: sticky;
@@ -287,20 +305,6 @@
             transform: translateY(-2px);
         }
 
-        /* ===== BACK BUTTON ===== */
-        .back-link {
-            display: inline-block;
-            margin: 2rem 0;
-            color: var(--orange);
-            text-decoration: none;
-            font-weight: 600;
-            transition: transform 0.3s ease;
-        }
-
-        .back-link:hover {
-            transform: translateX(-5px);
-        }
-
         /* ===== FOOTER ===== */
         .footer {
             background: rgba(0, 0, 0, 0.5);
@@ -396,7 +400,7 @@
             <a href="../index.html" class="nav-logo">AOLTD</a>
             <div class="nav-links">
                 <a href="../index.html" class="nav-link">Home</a>
-                <a href="index.html" class="nav-link">Games</a>
+                <a href="games.html" class="nav-link">Games</a>
                 <a href="../index.html#devlog-section" class="nav-link">Blog</a>
                 <a href="../index.html#philosophy-section" class="nav-link">Philosophy</a>
                 <a href="../index.html#press-section" class="nav-link">Press</a>
@@ -408,7 +412,12 @@
     <!-- Games Section -->
     <section class="section">
         <div class="container">
-            <a href="../index.html" class="back-link">← Back to Home</a>
+            <!-- Back link ABOVE the title -->
+            <div class="back-section">
+                <a href="../index.html" class="back-link">← Back to Home</a>
+            </div>
+            
+            <!-- Title independent -->
             <h1 class="section-title">All Games</h1>
             
             <div class="games-grid">
@@ -442,7 +451,7 @@
                         </div>
                         <div class="game-genre">Fighting Game</div>
                         <p class="game-description">
-                            Mortal Kombat energy meets indie soul. Brutal combat, unique fighters, and a story written in blood and banners. The arena awaits.
+                            A brutal dance of steel and strategy. Every fighter carries a story, every battle writes a new one. No tournaments. No rules. Just survival.
                         </p>
                         <a href="#" class="game-btn">Learn More →</a>
                     </div>
@@ -460,7 +469,7 @@
                         </div>
                         <div class="game-genre">Sports Game</div>
                         <p class="game-description">
-                            Step onto the pitch where tactics burn brighter than talent. Built for minds that play to dominate, not just compete. Every match tells a story.
+                            Where tactics burn brighter than talent. Built for minds that play to dominate, not just compete. Every pass, every play, every moment matters.
                         </p>
                         <a href="#" class="game-btn">Learn More →</a>
                     </div>
@@ -478,7 +487,7 @@
                         </div>
                         <div class="game-genre">Open World Exploration</div>
                         <p class="game-description">
-                            Mini GTA energy. A vast world to explore, secrets to uncover, and no hand-holding. You're on your own. Find Godot. Or don't. The choice is yours.
+                            A world that doesn't care about you. No hand-holding, no quest markers, no mercy. Explore, survive, and maybe find what you're looking for.
                         </p>
                         <a href="#" class="game-btn">Learn More →</a>
                     </div>
@@ -502,7 +511,7 @@
                 <div class="footer-links">
                     <h4>Explore</h4>
                     <a href="../index.html">Home</a>
-                    <a href="index.html">Games</a>
+                    <a href="games.html">Games</a>
                     <a href="../index.html#devlog-section">Blog</a>
                     <a href="../index.html#philosophy-section">Philosophy</a>
                     <a href="../index.html#press-section">Press Kit</a>
@@ -532,4 +541,3 @@
     </footer>
 </body>
 </html>
-
