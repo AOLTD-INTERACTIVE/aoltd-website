@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../favicon_io/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="../favicon_io/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../favicon_io/favicon-32x32.png">
+    <link rel="apple-touch-icon" href="../favicon_io/apple-touch-icon.png">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AOLTD - CUBLY</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="CUBLY - A puzzle game on a cube. All 6 faces. All your problems. Free, no ads, no in-app purchases.">
+    <meta name="keywords" content="CUBLY, puzzle game, cube puzzle, indie game, free game, Godot">
+    <meta name="author" content="AOLTD INTERACTIVE">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Foldit:wght@400;600;700&family=Aubrey&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --orange: #ff5500;
+            --dark-blue: #0a1929;
+            --darker-blue: #0a141f;
+            --light-blue: #1e3a5f;
+            --text-light: #ffffff;
+            --text-dim: #b0b0b0;
+            --card-bg: rgba(20, 30, 45, 0.7);
+            --gradient-1: linear-gradient(135deg, #ff5500, #ff3300);
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--dark-blue);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            width: 100%;
+        }
+
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--orange);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--orange);
+            border-radius: 2px;
+        }
+
+        /* ===== NAVIGATION (CUBLY SPECIFIC) ===== */
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 25, 41, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 85, 0, 0.2);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--orange);
+            text-decoration: none;
+            font-family: 'Foldit', cursive;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--orange);
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--orange);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::before {
+            width: 100%;
+        }
+
+        /* ===== GAME HEADER ===== */
+        .game-header {
+            text-align: center;
+            padding: 3rem 0 1rem;
+        }
+
+        .game-header h1 {
+            font-size: 5rem;
+            font-weight: 700;
+            color: var(--orange);
+            font-family: 'Foldit', cursive;
+            letter-spacing: 4px;
+        }
+
+        .game-tagline {
+            font-size: 1.8rem;
+            color: var(--text-dim);
+            font-family: 'Aubrey', cursive;
+            margin-top: 0.5rem;
+        }
+
+        .game-badge {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1.5rem;
+            background: rgba(255, 85, 0, 0.1);
+            border: 1px solid var(--orange);
+            border-radius: 50px;
+            color: var(--orange);
+            font-weight: 600;
+        }
+
+        /* ===== DOWNLOAD SECTION ===== */
+        #download {
+            scroll-margin-top: 80px;
+        }
+
+        .download-section {
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 3rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(255, 85, 0, 0.2);
+            text-align: center;
+        }
+
+        .download-title {
+            font-size: 2rem;
+            color: var(--orange);
+            margin-bottom: 2rem;
+        }
+
+        .download-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .download-card {
+            background: var(--darker-blue);
+            border-radius: 20px;
+            padding: 2rem 1rem;
+            border: 1px solid rgba(255, 85, 0, 0.2);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--text-light);
+        }
+
+        .download-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--orange);
+            box-shadow: var(--shadow);
+        }
+
+        .download-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .download-card h3 {
+            color: var(--orange);
+            margin-bottom: 0.5rem;
+        }
+
+        .download-card p {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .itchio-embed {
+            margin: 2rem 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .mobile-note {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            padding: 1rem;
+            border: 1px dashed rgba(255, 85, 0, 0.3);
+            border-radius: 50px;
+            display: inline-block;
+        }
+
+        /* ===== SCREENSHOTS SECTION ===== */
+        #screenshots {
+            scroll-margin-top: 80px;
+        }
+
+        .screenshot-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .screenshot-item {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 85, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .screenshot-item:hover {
+            transform: scale(1.02);
+            border-color: var(--orange);
+        }
+
+        .screenshot-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* ===== FEATURES SECTION ===== */
+        #features {
+            scroll-margin-top: 80px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 85, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--orange);
+            box-shadow: var(--shadow);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            color: var(--orange);
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: var(--text-dim);
+        }
+
+        /* ===== DEVLOG SECTION ===== */
+        #devlog {
+            scroll-margin-top: 80px;
+        }
+
+        .dragon-coming-soon {
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 4rem 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 85, 0, 0.2);
+            margin: 2rem 0;
+        }
+
+        .dragon-container {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            margin: 0 auto 2rem;
+        }
+
+        .realistic-dragon {
+            position: relative;
+            width: 250px;
+            height: 180px;
+            margin: 0 auto;
+        }
+
+        .dragon-body {
+            position: absolute;
+            width: 120px;
+            height: 80px;
+            background: #2a4a6a;
+            border-radius: 50% 50% 30% 30%;
+            bottom: 20px;
+            left: 60px;
+            box-shadow: 0 10px 0 #1a2a3a;
+            border: 2px solid #ff5500;
+        }
+
+        .dragon-neck {
+            position: absolute;
+            width: 50px;
+            height: 60px;
+            background: #2a4a6a;
+            border-radius: 40% 40% 30% 30%;
+            bottom: 70px;
+            left: 95px;
+            transform: rotate(10deg);
+            border: 2px solid #ff5500;
+            border-bottom: none;
+        }
+
+        .dragon-head {
+            position: absolute;
+            width: 70px;
+            height: 50px;
+            background: #2a4a6a;
+            border-radius: 40% 40% 20% 20%;
+            bottom: 110px;
+            left: 105px;
+            border: 2px solid #ff5500;
+            z-index: 2;
+        }
+
+        .dragon-snout {
+            position: absolute;
+            width: 30px;
+            height: 20px;
+            background: #1a3a4a;
+            border-radius: 30% 30% 50% 50%;
+            bottom: 120px;
+            left: 140px;
+            border: 2px solid #ff5500;
+            z-index: 3;
+        }
+
+        .dragon-eye {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #ffaa00;
+            border-radius: 50%;
+            bottom: 135px;
+            left: 125px;
+            border: 2px solid #000;
+            z-index: 4;
+        }
+
+        .dragon-eye-right {
+            left: 155px;
+        }
+
+        .dragon-eye-pupil {
+            width: 4px;
+            height: 4px;
+            background: #000;
+            border-radius: 50%;
+            position: absolute;
+            top: 4px;
+            left: 4px;
+        }
+
+        .dragon-horn {
+            position: absolute;
+            width: 15px;
+            height: 25px;
+            background: #ff5500;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            bottom: 155px;
+            left: 115px;
+            transform: rotate(-15deg);
+            z-index: 5;
+        }
+
+        .dragon-horn-right {
+            left: 145px;
+            transform: rotate(15deg);
+        }
+
+        .dragon-wing {
+            position: absolute;
+            width: 60px;
+            height: 70px;
+            background: #1a3a5a;
+            border-radius: 80% 0% 50% 30%;
+            bottom: 60px;
+            left: 30px;
+            transform: rotate(20deg);
+            border: 2px solid #ff5500;
+            opacity: 0.8;
+        }
+
+        .dragon-wing-right {
+            left: 150px;
+            transform: rotate(-20deg) scaleX(-1);
+        }
+
+        .dragon-fire {
+            position: absolute;
+            bottom: 120px;
+            left: 170px;
+            font-size: 2rem;
+            color: #ff5500;
+            filter: drop-shadow(0 0 10px #ff9900);
+            animation: fireFlicker 0.3s infinite alternate;
+        }
+
+        @keyframes fireFlicker {
+            from { transform: scale(0.9) translateX(0); opacity: 0.7; }
+            to { transform: scale(1.2) translateX(5px); opacity: 1; }
+        }
+
+        .dragon-message {
+            font-size: 1.8rem;
+            color: var(--orange);
+            font-family: 'Aubrey', cursive;
+            margin-top: 2rem;
+            padding: 1rem 2rem;
+            border: 2px solid rgba(255, 85, 0, 0.3);
+            border-radius: 50px;
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        /* ===== INFO GRID ===== */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .info-item {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 85, 0, 0.2);
+        }
+
+        .info-label {
+            color: var(--orange);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-value {
+            color: var(--text-dim);
+        }
+
+        /* ===== BACK LINK ===== */
+        .back-section {
+            margin: 2rem 0 1rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: var(--orange);
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+        }
+
+        .back-link:hover {
+            transform: translateX(-5px);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 4rem 0 2rem;
+            border-top: 1px solid rgba(255, 85, 0, 0.2);
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--orange);
+            font-family: 'Foldit', cursive;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .footer-story {
+            color: var(--text-dim);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .footer-contact a {
+            color: var(--orange);
+            text-decoration: none;
+        }
+
+        .footer-links h4 {
+            color: var(--orange);
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-bottom: 0.8rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--orange);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 85, 0, 0.1);
+            color: var(--text-dim);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .info-grid { grid-template-columns: repeat(2, 1fr); }
+            .download-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .game-header h1 { font-size: 3rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .screenshot-grid { grid-template-columns: 1fr; }
+            .download-grid { grid-template-columns: 1fr; }
+            .info-grid { grid-template-columns: 1fr; }
+            .footer-content { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation (CUBLY specific) -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="../games.html" class="nav-logo">AOLTD</a>
+            <div class="nav-links">
+                <a href="#screenshots" class="nav-link">Screenshots</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#download" class="nav-link">Download</a>
+                <a href="#devlog" class="nav-link">Devlog</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Back Link -->
+        <div class="back-section">
+            <a href="../games.html" class="back-link">← Back to All Games</a>
+        </div>
+
+        <!-- Game Header -->
+        <div class="game-header">
+            <h1>CUBLY</h1>
+            <div class="game-tagline">Your cube awaits. 🎮</div>
+            <div class="game-badge">Version 1.0.0 • Free • No Ads</div>
+        </div>
+
+        <!-- Info Grid -->
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Released</div>
+                <div class="info-value">2026</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Engine</div>
+                <div class="info-value">Godot</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Genre</div>
+                <div class="info-value">Puzzle</div>
+            </div>
+        </div>
+
+        <!-- Screenshots Section -->
+        <section id="screenshots" class="section">
+            <h2 class="section-title">Screenshots</h2>
+            <div class="screenshot-grid">
+                <div class="screenshot-item">
+                    <img src="../images/cubly/screenshots/screen1.png" alt="CUBLY Gameplay 1" loading="lazy">
+                </div>
+                <div class="screenshot-item">
+                    <img src="../images/cubly/screenshots/screen2.png" alt="CUBLY Gameplay 2" loading="lazy">
+                </div>
+                <div class="screenshot-item">
+                    <img src="../images/cubly/screenshots/screen3.png" alt="CUBLY Gameplay 3" loading="lazy">
+                </div>
+                <div class="screenshot-item">
+                    <img src="../images/cubly/screenshots/screen4.png" alt="CUBLY Gameplay 4" loading="lazy">
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="section">
+            <h2 class="section-title">Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🧊</div>
+                    <h3>6-Faced Madness</h3>
+                    <p>Not another boring flat grid. All 6 faces. All your problems.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎵</div>
+                    <h3>Satisfying Sounds</h3>
+                    <p>That sound when lines clear? *chef's kiss* Pure audio bliss.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📅</div>
+                    <h3>Daily Challenges</h3>
+                    <p>New puzzles every day. They change. EVERY. DAY.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📶</div>
+                    <h3>Play Anywhere</h3>
+                    <p>No wifi needed. Bus, bathroom, pretending to work.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h3>Beat Your Score</h3>
+                    <p>Combos, chains, and leaderboards coming soon.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎮</div>
+                    <h3>Simple, Not Easy</h3>
+                    <p>Easy to learn. Impossible to master. One more game...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Download Section -->
+        <section id="download" class="section">
+            <h2 class="section-title">Download CUBLY</h2>
+            
+            <div class="download-section">
+                <h3 class="download-title">⬇️ Choose Your Platform</h3>
+                
+                <div class="download-grid">
+                    <!-- Windows -->
+                    <a href="../downloads/cubly/windows/cubly-windows.zip" class="download-card" download>
+                        <div class="download-icon">🪟</div>
+                        <h3>Windows</h3>
+                        <p>cubly-windows.zip (EXE inside)</p>
+                    </a>
+
+                    <!-- Linux -->
+                    <a href="../downloads/cubly/linux/cubly-linux.x86_64" class="download-card" download>
+                        <div class="download-icon">🐧</div>
+                        <h3>Linux</h3>
+                        <p>cubly-linux.x86_64</p>
+                    </a>
+
+                    <!-- Itch.io -->
+                    <a href="https://aoltd-interactive.itch.io/aoltd-cubly" class="download-card" target="_blank">
+                        <div class="download-icon">🎮</div>
+                        <h3>Itch.io</h3>
+                        <p>Also available on Itch</p>
+                    </a>
+                </div>
+
+                <!-- Itch.io Embed -->
+                <div class="itchio-embed">
+                    <iframe frameborder="0" src="https://itch.io/embed/4333516?bg_color=b12e07&amp;fg_color=000000&amp;border_color=4d63f8" width="552" height="167"><a href="https://aoltd-interactive.itch.io/aoltd-cubly">AOLTD: CUBLY by AOLTD</a></iframe>
+                </div>
+
+                <!-- Android (Coming Soon) -->
+                <div class="mobile-note">
+                    📱 Android: com.aoltd.cubly — Coming soon to Google Play
+                </div>
+            </div>
+        </section>
+
+        <!-- Devlog Section (Dragon) -->
+        <section id="devlog" class="section">
+            <h2 class="section-title">Devlogs</h2>
+            
+            <div class="dragon-coming-soon">
+                <div class="dragon-container">
+                    <div class="realistic-dragon">
+                        <div class="dragon-wing"></div>
+                        <div class="dragon-wing dragon-wing-right"></div>
+                        <div class="dragon-body"></div>
+                        <div class="dragon-neck"></div>
+                        <div class="dragon-head"></div>
+                        <div class="dragon-snout"></div>
+                        <div class="dragon-eye">
+                            <div class="dragon-eye-pupil"></div>
+                        </div>
+                        <div class="dragon-eye dragon-eye-right">
+                            <div class="dragon-eye-pupil"></div>
+                        </div>
+                        <div class="dragon-horn"></div>
+                        <div class="dragon-horn dragon-horn-right"></div>
+                        <div class="dragon-fire">🔥</div>
+                    </div>
+                </div>
+                <div class="dragon-message">
+                    No devlogs yet. The dragon is still testing CUBLY. He's quite good at it.
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="footer-logo">AOLTD</div>
+                    <p class="footer-story">Art Of Lone Tenacious Developer. Building games with love, one line of code at a time.</p>
+                    <div class="footer-contact">
+                        📧 <a href="mailto:aoltdinquiry@gmail.com">aoltdinquiry@gmail.com</a>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Explore</h4>
+                    <a href="../index.html">Home</a>
+                    <a href="../games.html">Games</a>
+                    <a href="../index.html#devlog-section">Blog</a>
+                    <a href="../index.html#press-section">Press Kit</a>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Connect</h4>
+                    <a href="https://www.instagram.com/ao_interactive" target="_blank">Instagram</a>
+                    <a href="https://www.tiktok.com/@ao_interactive" target="_blank">TikTok</a>
+                    <a href="https://discord.gg/4vxWYNYse" target="_blank">Discord</a>
+                    <a href="https://www.youtube.com/@ao_interactive47" target="_blank">YouTube</a>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <a href="../privacy.html">Privacy Policy</a>
+                    <a href="../terms.html">Terms of Use</a>
+                    <a href="../credits.html">Credits</a>
+                    <a href="../license.html">License</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2026 AOLTD - Art Of Lone Tenacious Developer. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
