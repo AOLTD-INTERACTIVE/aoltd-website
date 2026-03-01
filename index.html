@@ -1130,11 +1130,16 @@
                         Be the first to know when CUBLY drops. Early access, dev insights, and the occasional tale from the dragon's hoard.
                     </p>
                     
-                    <form class="newsletter-form" action="https://docs.google.com/forms/d/e/1FAIpQLSfHkswja3AzNpmlz_pYc5OBq-ladkvRO9hUeJ0NHjll875DwA/formResponse" method="POST" target="_blank" onsubmit="alert('Thanks for joining! Check your inbox for confirmation. 🐉');">
+                    <form class="newsletter-form" action="https://docs.google.com/forms/d/e/1FAIpQLSfHkswja3AzNpmlz_pYc5OBq-ladkvRO9hUeJ0NHjll875DwA/formResponse" method="POST" target="hidden_iframe" onsubmit="submitted=true;">
                         <input type="email" name="entry.2033118840" placeholder="Enter your email" class="newsletter-input" required>
                         <input type="hidden" name="fbzx" value="7492781071004146141">
                         <button type="submit" class="newsletter-btn">Subscribe</button>
                     </form>
+                    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) {alert('Thanks! You\'re subscribed. Your email has been added to our list. 🐉'); submitted=false;}"></iframe>
+
+                    <script>
+                        var submitted = false;
+                    </script>
                     
                     <p class="newsletter-note">
                         No spam. Just the good stuff. We'll treat your email like dragon treasure.
@@ -1344,3 +1349,4 @@
     </script>
 </body>
 </html>
+
