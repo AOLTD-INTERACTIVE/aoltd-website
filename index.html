@@ -947,6 +947,16 @@
             .footer-content { grid-template-columns: 1fr; }
             .dragon-message { font-size: 1.2rem; }
         }
+
+        /* ===== LAZY LOADING STYLES ===== */
+        img[loading="lazy"] {
+            opacity: 0;
+            transition: opacity 0.3s ease-in;
+        }
+
+        img[loading="lazy"].loaded {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -1049,7 +1059,8 @@
 
                 <div class="game-preview">
                     <div class="preview-glow"></div>
-                    <img src="images/cubly/showcases/icon.png" alt="CUBLY Game Preview">
+                    <!-- CHANGED: icon.png → icon.webp with lazy loading -->
+                    <img src="images/cubly/showcases/icon.webp" alt="CUBLY Game Preview" loading="lazy" onload="this.classList.add('loaded')">
                 </div>
             </div>
         </div>
@@ -1348,6 +1359,16 @@
                 }
             });
         });
+
+        // Lazy loading fallback for older browsers
+        if ('loading' in HTMLImageElement.prototype) {
+            // Browser supports native lazy loading
+            console.log('Native lazy loading supported');
+        } else {
+            // Fallback for browsers that don't support lazy loading
+            // You could add a library like lozad.js here if needed
+            console.log('Native lazy loading not supported');
+        }
     </script>
 </body>
 </html>
