@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../favicon_io/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="../favicon_io/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../favicon_io/favicon-32x32.png">
+    <link rel="apple-touch-icon" href="../favicon_io/apple-touch-icon.png">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AOLTD - All Games</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="All AOLTD games: CUBLY, Bones & Banner, TouchV2, and Finding Godot. Puzzle, fighting, sports, and open-world games from a lone tenacious developer.">
+    <meta name="keywords" content="AOLTD, indie games, CUBLY, Bones & Banner, TouchV2, Finding Godot">
+    <meta name="author" content="AOLTD INTERACTIVE">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Foldit:wght@400;600;700&family=Aubrey&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --orange: #ff5500;
+            --dark-blue: #0a1929;
+            --darker-blue: #0a141f;
+            --light-blue: #1e3a5f;
+            --text-light: #ffffff;
+            --text-dim: #b0b0b0;
+            --card-bg: rgba(20, 30, 45, 0.7);
+            --gradient-1: linear-gradient(135deg, #ff5500, #ff3300);
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            
+            /* Status colors */
+            --status-active: #ff5500;
+            --status-dev: #ffaa00;
+            --status-planned: #4a90e2;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--dark-blue);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            width: 100%;
+        }
+
+        .section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            color: var(--orange);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--orange);
+            border-radius: 2px;
+        }
+
+        /* ===== NAVIGATION ===== */
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 25, 41, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 85, 0, 0.2);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--orange);
+            text-decoration: none;
+            font-family: 'Foldit', cursive;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--orange);
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--orange);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::before {
+            width: 100%;
+        }
+
+        /* ===== GAME CARDS GRID ===== */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .game-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 85, 0, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--orange);
+            box-shadow: var(--shadow);
+        }
+
+        /* Status border colors */
+        .game-card.active {
+            border-top: 4px solid var(--status-active);
+        }
+        .game-card.dev {
+            border-top: 4px solid var(--status-dev);
+        }
+        .game-card.planned {
+            border-top: 4px solid var(--status-planned);
+        }
+
+        .game-icon {
+            height: 180px;
+            background: var(--darker-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 85, 0, 0.2);
+        }
+
+        .game-icon img {
+            max-width: 100%;
+            max-height: 150px;
+            object-fit: contain;
+        }
+
+        .game-icon .placeholder-404 {
+            font-size: 4rem;
+            color: var(--orange);
+            opacity: 0.7;
+            font-family: 'Foldit', cursive;
+        }
+
+        .game-content {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .game-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--orange);
+        }
+
+        .game-status {
+            font-size: 0.75rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-active {
+            background: rgba(255, 85, 0, 0.2);
+            color: var(--status-active);
+            border: 1px solid var(--status-active);
+        }
+
+        .status-dev {
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--status-dev);
+            border: 1px solid var(--status-dev);
+        }
+
+        .status-planned {
+            background: rgba(74, 144, 226, 0.2);
+            color: var(--status-planned);
+            border: 1px solid var(--status-planned);
+        }
+
+        .game-genre {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+            font-style: italic;
+        }
+
+        .game-description {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .game-btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: transparent;
+            border: 2px solid var(--orange);
+            color: var(--orange);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .game-btn:hover {
+            background: var(--orange);
+            color: var(--dark-blue);
+            transform: translateY(-2px);
+        }
+
+        /* ===== BACK BUTTON ===== */
+        .back-link {
+            display: inline-block;
+            margin: 2rem 0;
+            color: var(--orange);
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+        }
+
+        .back-link:hover {
+            transform: translateX(-5px);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 4rem 0 2rem;
+            border-top: 1px solid rgba(255, 85, 0, 0.2);
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--orange);
+            font-family: 'Foldit', cursive;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .footer-story {
+            color: var(--text-dim);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .footer-contact {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-contact a {
+            color: var(--orange);
+            text-decoration: none;
+        }
+
+        .footer-links h4 {
+            color: var(--orange);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-bottom: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--orange);
+            transform: translateX(5px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 85, 0, 0.1);
+            color: var(--text-dim);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .games-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-links {
+                display: none;
+            }
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="../index.html" class="nav-logo">AOLTD</a>
+            <div class="nav-links">
+                <a href="../index.html" class="nav-link">Home</a>
+                <a href="index.html" class="nav-link">Games</a>
+                <a href="../index.html#devlog-section" class="nav-link">Blog</a>
+                <a href="../index.html#philosophy-section" class="nav-link">Philosophy</a>
+                <a href="../index.html#press-section" class="nav-link">Press</a>
+                <a href="../index.html#footer" class="nav-link">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Games Section -->
+    <section class="section">
+        <div class="container">
+            <a href="../index.html" class="back-link">← Back to Home</a>
+            <h1 class="section-title">All Games</h1>
+            
+            <div class="games-grid">
+                <!-- CUBLY - Active -->
+                <div class="game-card active">
+                    <div class="game-icon">
+                        <img src="../images/cubly/showcases/icon.png" alt="CUBLY Icon">
+                    </div>
+                    <div class="game-content">
+                        <div class="game-header">
+                            <h2 class="game-title">CUBLY</h2>
+                            <span class="game-status status-active">ACTIVE</span>
+                        </div>
+                        <div class="game-genre">Puzzle Game</div>
+                        <p class="game-description">
+                            Not another boring flat grid. This is a CUBE. All 6 faces. All your problems. Shapes fall, you drag them, lines disappear. Simple? Yes. Addictive? Absolutely.
+                        </p>
+                        <a href="cubly.html" class="game-btn">Learn More →</a>
+                    </div>
+                </div>
+
+                <!-- BONES & BANNER - In Development -->
+                <div class="game-card dev">
+                    <div class="game-icon">
+                        <img src="../images/bones&banner/showcases/icon.png" alt="Bones & Banner Icon">
+                    </div>
+                    <div class="game-content">
+                        <div class="game-header">
+                            <h2 class="game-title">BONES & BANNER</h2>
+                            <span class="game-status status-dev">IN DEV</span>
+                        </div>
+                        <div class="game-genre">Fighting Game</div>
+                        <p class="game-description">
+                            Mortal Kombat energy meets indie soul. Brutal combat, unique fighters, and a story written in blood and banners. The arena awaits.
+                        </p>
+                        <a href="#" class="game-btn">Learn More →</a>
+                    </div>
+                </div>
+
+                <!-- TOUCHV2 - In Development (No icon yet) -->
+                <div class="game-card dev">
+                    <div class="game-icon">
+                        <div class="placeholder-404">404</div>
+                    </div>
+                    <div class="game-content">
+                        <div class="game-header">
+                            <h2 class="game-title">TOUCHV2</h2>
+                            <span class="game-status status-dev">IN DEV</span>
+                        </div>
+                        <div class="game-genre">Sports Game</div>
+                        <p class="game-description">
+                            Step onto the pitch where tactics burn brighter than talent. Built for minds that play to dominate, not just compete. Every match tells a story.
+                        </p>
+                        <a href="#" class="game-btn">Learn More →</a>
+                    </div>
+                </div>
+
+                <!-- FINDING GODOT - Planned (No icon yet) -->
+                <div class="game-card planned">
+                    <div class="game-icon">
+                        <div class="placeholder-404">404</div>
+                    </div>
+                    <div class="game-content">
+                        <div class="game-header">
+                            <h2 class="game-title">FINDING GODOT</h2>
+                            <span class="game-status status-planned">PLANNED</span>
+                        </div>
+                        <div class="game-genre">Open World Exploration</div>
+                        <p class="game-description">
+                            Mini GTA energy. A vast world to explore, secrets to uncover, and no hand-holding. You're on your own. Find Godot. Or don't. The choice is yours.
+                        </p>
+                        <a href="#" class="game-btn">Learn More →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="footer-logo">AOLTD</div>
+                    <p class="footer-story">Art Of Lone Tenacious Developer. Building games with love, one line of code at a time. Born from a dream in 2018.</p>
+                    <div class="footer-contact">
+                        📧 <a href="mailto:aoltdinquiry@gmail.com">aoltdinquiry@gmail.com</a>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Explore</h4>
+                    <a href="../index.html">Home</a>
+                    <a href="index.html">Games</a>
+                    <a href="../index.html#devlog-section">Blog</a>
+                    <a href="../index.html#philosophy-section">Philosophy</a>
+                    <a href="../index.html#press-section">Press Kit</a>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Connect</h4>
+                    <a href="https://www.instagram.com/ao_interactive" target="_blank">Instagram</a>
+                    <a href="https://www.tiktok.com/@ao_interactive" target="_blank">TikTok</a>
+                    <a href="https://discord.gg/4vxWYNYse" target="_blank">Discord</a>
+                    <a href="https://www.youtube.com/@ao_interactive47" target="_blank">YouTube</a>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <a href="../privacy.html">Privacy Policy</a>
+                    <a href="../terms.html">Terms of Use</a>
+                    <a href="../credits.html">Credits</a>
+                    <a href="../license.html">License</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2026 AOLTD - Art Of Lone Tenacious Developer. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
