@@ -209,10 +209,16 @@
 
         .carousel-container {
             position: relative;
-            max-width: 800px;
+            max-width: 900px;
             margin: 2rem auto;
             overflow: hidden;
             border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .carousel-container.visible {
+            opacity: 1;
         }
 
         .carousel-track {
@@ -231,6 +237,9 @@
             overflow: hidden;
             border: 1px solid rgba(255, 85, 0, 0.2);
             transition: transform 0.3s ease;
+            text-decoration: none;
+            display: block;
+            height: 100%;
         }
 
         .devlog-card:hover {
@@ -239,15 +248,26 @@
             box-shadow: var(--shadow);
         }
 
-        .devlog-image {
+        .devlog-image-container {
             width: 100%;
-            height: 300px;
-            object-fit: cover;
+            height: 350px;
+            overflow: hidden;
             border-bottom: 1px solid rgba(255, 85, 0, 0.2);
         }
 
+        .devlog-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .devlog-card:hover .devlog-image {
+            transform: scale(1.05);
+        }
+
         .devlog-content {
-            padding: 1.5rem;
+            padding: 2rem 1.5rem 1.5rem;
             position: relative;
         }
 
@@ -262,12 +282,13 @@
             font-weight: 600;
             font-size: 0.9rem;
             border: 2px solid var(--dark-blue);
+            z-index: 10;
         }
 
         .devlog-description {
             color: var(--text-dim);
             font-size: 1.1rem;
-            margin: 1.5rem 0 1rem;
+            margin: 0.5rem 0 1rem;
             line-height: 1.6;
         }
 
@@ -276,7 +297,6 @@
             color: var(--orange);
             text-decoration: none;
             font-weight: 600;
-            margin-top: 0.5rem;
             transition: gap 0.3s ease;
         }
 
@@ -284,47 +304,16 @@
             gap: 0.5rem;
         }
 
-        .carousel-button {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 85, 0, 0.3);
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            cursor: pointer;
-            z-index: 10;
-            backdrop-filter: blur(5px);
-            border: 1px solid var(--orange);
-            transition: all 0.3s ease;
-        }
-
-        .carousel-button:hover {
-            background: var(--orange);
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .carousel-button.prev {
-            left: 10px;
-        }
-
-        .carousel-button.next {
-            right: 10px;
-        }
-
         .carousel-dots {
             display: flex;
             justify-content: center;
-            gap: 0.5rem;
-            margin-top: 1rem;
+            gap: 0.8rem;
+            margin-top: 2rem;
         }
 
         .carousel-dot {
-            width: 10px;
-            height: 10px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
             background: var(--text-dim);
             border: none;
@@ -332,14 +321,36 @@
             transition: all 0.3s ease;
         }
 
+        .carousel-dot:hover {
+            background: var(--orange);
+            transform: scale(1.2);
+        }
+
         .carousel-dot.active {
             background: var(--orange);
             transform: scale(1.3);
+            box-shadow: 0 0 10px var(--orange);
         }
 
         .view-all-btn {
             text-align: center;
-            margin: 2rem 0;
+            margin: 3rem 0 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: var(--gradient-1);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 85, 0, 0.3);
         }
 
         /* ===== FEATURES SECTION ===== */
@@ -384,7 +395,7 @@
 
         .planned-badge {
             display: inline-block;
-            margin-top: 0.5rem;
+            margin-top: 1rem;
             padding: 0.3rem 0.8rem;
             background: rgba(255, 85, 0, 0.1);
             border-radius: 20px;
@@ -433,18 +444,22 @@
             margin: 0 auto;
         }
 
-        .mini-dragon .dragon-head {
-            width: 50px;
-            height: 35px;
-            bottom: 70px;
-            left: 50px;
-        }
-
         .mini-dragon .dragon-body {
             width: 80px;
             height: 50px;
-            bottom: 20px;
-            left: 35px;
+            background: #2a4a6a;
+            border: 2px solid #ff5500;
+            border-radius: 50% 50% 30% 30%;
+            margin: 0 auto;
+        }
+
+        .mini-dragon .dragon-head {
+            width: 40px;
+            height: 30px;
+            background: #2a4a6a;
+            border: 2px solid #ff5500;
+            border-radius: 40% 40% 20% 20%;
+            margin: -15px auto 0;
         }
 
         .dragon-message {
@@ -532,6 +547,7 @@
         /* ===== RESPONSIVE ===== */
         @media (max-width: 1024px) {
             .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .devlog-image-container { height: 300px; }
         }
 
         @media (max-width: 768px) {
@@ -540,7 +556,8 @@
             .features-grid { grid-template-columns: 1fr; }
             .info-grid { grid-template-columns: 1fr; }
             .footer-content { grid-template-columns: 1fr; }
-            .devlog-image { height: 200px; }
+            .devlog-image-container { height: 250px; }
+            .devlog-description { font-size: 1rem; }
         }
     </style>
 </head>
@@ -548,7 +565,7 @@
     <!-- Navigation -->
     <nav class="nav">
         <div class="nav-container">
-            <a href="../games.html" class="nav-logo">AOLTD</a>
+            <a href="../games/games.html" class="nav-logo">AOLTD</a>
             <div class="nav-links">
                 <a href="#devlog" class="nav-link">Devlog</a>
                 <a href="#features" class="nav-link">Features</a>
@@ -561,7 +578,7 @@
     <div class="container">
         <!-- Back Link -->
         <div class="back-section">
-            <a href="../games.html" class="back-link">← Back to All Games</a>
+            <a href="../games/games.html" class="back-link">← Back to All Games</a>
         </div>
 
         <!-- Game Header -->
@@ -592,12 +609,14 @@
             <h2 class="section-title">Live Devlog</h2>
             <p style="color: var(--text-dim); margin-bottom: 2rem;">Documenting the journey in real-time. One entry at a time.</p>
             
-            <div class="carousel-container">
+            <div class="carousel-container" id="carouselContainer">
                 <div class="carousel-track" id="carouselTrack">
                     <!-- Devlog 1: The Beginning -->
                     <div class="carousel-slide">
-                        <a href="../devlogs/touchv2devlogs.html#beginning" class="devlog-card" style="text-decoration: none;">
-                            <img src="../images/touchv2/showcases/devlogs/the_beginning.webp" alt="The Beginning" class="devlog-image" loading="lazy">
+                        <a href="../devlogs/touchv2devlogs.html#beginning" class="devlog-card">
+                            <div class="devlog-image-container">
+                                <img src="../images/touchv2/showcases/devlogs/the_beginning.webp" alt="The Beginning" class="devlog-image" loading="lazy">
+                            </div>
                             <div class="devlog-content">
                                 <span class="devlog-date">8 Feb, 2026</span>
                                 <p class="devlog-description">Officially started the development of the soccer simulation game "TOUCH V2"</p>
@@ -608,8 +627,10 @@
 
                     <!-- Devlog 2: Greyboxing -->
                     <div class="carousel-slide">
-                        <a href="../devlogs/touchv2devlogs.html#greyboxing" class="devlog-card" style="text-decoration: none;">
-                            <img src="../images/touchv2/showcases/devlogs/greyboxing.webp" alt="Greyboxing" class="devlog-image" loading="lazy">
+                        <a href="../devlogs/touchv2devlogs.html#greyboxing" class="devlog-card">
+                            <div class="devlog-image-container">
+                                <img src="../images/touchv2/showcases/devlogs/greyboxing.webp" alt="Greyboxing" class="devlog-image" loading="lazy">
+                            </div>
                             <div class="devlog-content">
                                 <span class="devlog-date">8 Feb, 2026</span>
                                 <p class="devlog-description">Began greyboxing to get a rough view of how the game will be implemented in the future.</p>
@@ -620,8 +641,10 @@
 
                     <!-- Devlog 3: Stadium Start -->
                     <div class="carousel-slide">
-                        <a href="../devlogs/touchv2devlogs.html#stadium-start" class="devlog-card" style="text-decoration: none;">
-                            <img src="../images/touchv2/showcases/devlogs/stadium_start.webp" alt="Stadium Start" class="devlog-image" loading="lazy">
+                        <a href="../devlogs/touchv2devlogs.html#stadium-start" class="devlog-card">
+                            <div class="devlog-image-container">
+                                <img src="../images/touchv2/showcases/devlogs/stadium_start.webp" alt="Stadium Start" class="devlog-image" loading="lazy">
+                            </div>
                             <div class="devlog-content">
                                 <span class="devlog-date">17 Feb, 2026</span>
                                 <p class="devlog-description">Its time to finally design the world the game will leave on "The Stadium".</p>
@@ -632,8 +655,10 @@
 
                     <!-- Devlog 4: Stadium End -->
                     <div class="carousel-slide">
-                        <a href="../devlogs/touchv2devlogs.html#stadium-end" class="devlog-card" style="text-decoration: none;">
-                            <img src="../images/touchv2/showcases/devlogs/stadium_end.webp" alt="Stadium End" class="devlog-image" loading="lazy">
+                        <a href="../devlogs/touchv2devlogs.html#stadium-end" class="devlog-card">
+                            <div class="devlog-image-container">
+                                <img src="../images/touchv2/showcases/devlogs/stadium_end.webp" alt="Stadium End" class="devlog-image" loading="lazy">
+                            </div>
                             <div class="devlog-content">
                                 <span class="devlog-date">24 Feb, 2026</span>
                                 <p class="devlog-description">Finished the first stadium. Name? Idk yet just placeholder "The Reason Park" but its lowkey 🔥</p>
@@ -642,15 +667,12 @@
                         </a>
                     </div>
                 </div>
-
-                <button class="carousel-button prev" id="prevBtn">←</button>
-                <button class="carousel-button next" id="nextBtn">→</button>
             </div>
 
             <div class="carousel-dots" id="carouselDots"></div>
 
             <div class="view-all-btn">
-                <a href="../devlogs/touchv2devlogs.html" class="btn" style="display: inline-block; padding: 0.8rem 2rem; background: var(--gradient-1); color: white; text-decoration: none; border-radius: 50px;">View All Devlogs →</a>
+                <a href="../devlogs/touchv2devlogs.html" class="btn">View All Devlogs →</a>
             </div>
         </section>
 
@@ -689,8 +711,8 @@
                 <div class="coming-soon-dragon">
                     <div class="dragon-container">
                         <div class="mini-dragon">
-                            <div class="dragon-body" style="width: 80px; height: 50px; background: #2a4a6a; border: 2px solid #ff5500; border-radius: 50% 50% 30% 30%; margin: 0 auto;"></div>
-                            <div class="dragon-head" style="width: 40px; height: 30px; background: #2a4a6a; border: 2px solid #ff5500; border-radius: 40% 40% 20% 20%; margin: -20px auto 0;"></div>
+                            <div class="dragon-body"></div>
+                            <div class="dragon-head"></div>
                             <div style="font-size: 2rem; text-align: center; margin-top: 10px;">💤</div>
                         </div>
                     </div>
@@ -716,7 +738,7 @@
                 <div class="footer-links">
                     <h4>Explore</h4>
                     <a href="../index.html">Home</a>
-                    <a href="../games.html">Games</a>
+                    <a href="../games/games.html">Games</a>
                     <a href="../index.html#devlog-section">Blog</a>
                     <a href="../index.html#press-section">Press Kit</a>
                 </div>
@@ -748,19 +770,24 @@
         // Carousel functionality
         const track = document.getElementById('carouselTrack');
         const slides = document.querySelectorAll('.carousel-slide');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
         const dotsContainer = document.getElementById('carouselDots');
+        const carouselContainer = document.getElementById('carouselContainer');
         
         let currentIndex = 0;
         const slideCount = slides.length;
         let autoPlayInterval;
+        let isCarouselVisible = false;
+        let touchStartX = 0;
+        let touchEndX = 0;
 
         // Create dots
         for (let i = 0; i < slideCount; i++) {
             const dot = document.createElement('button');
             dot.classList.add('carousel-dot');
-            dot.addEventListener('click', () => goToSlide(i));
+            dot.addEventListener('click', () => {
+                goToSlide(i);
+                resetAutoPlay();
+            });
             dotsContainer.appendChild(dot);
         }
 
@@ -768,8 +795,6 @@
 
         function updateCarousel() {
             track.style.transform = `translateX(-${currentIndex * 100}%)`;
-            
-            // Update dots
             dots.forEach((dot, index) => {
                 dot.classList.toggle('active', index === currentIndex);
             });
@@ -778,23 +803,18 @@
         function goToSlide(index) {
             currentIndex = index;
             updateCarousel();
-            resetAutoPlay();
         }
 
         function nextSlide() {
             currentIndex = (currentIndex + 1) % slideCount;
             updateCarousel();
-            resetAutoPlay();
-        }
-
-        function prevSlide() {
-            currentIndex = (currentIndex - 1 + slideCount) % slideCount;
-            updateCarousel();
-            resetAutoPlay();
         }
 
         function startAutoPlay() {
-            autoPlayInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+            if (autoPlayInterval) clearInterval(autoPlayInterval);
+            if (isCarouselVisible) {
+                autoPlayInterval = setInterval(nextSlide, 5000);
+            }
         }
 
         function resetAutoPlay() {
@@ -802,19 +822,63 @@
             startAutoPlay();
         }
 
-        // Event listeners
-        prevBtn.addEventListener('click', prevSlide);
-        nextBtn.addEventListener('click', nextSlide);
+        // Intersection Observer to detect when carousel is visible
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    isCarouselVisible = true;
+                    carouselContainer.classList.add('visible');
+                    startAutoPlay();
+                } else {
+                    isCarouselVisible = false;
+                    clearInterval(autoPlayInterval);
+                }
+            });
+        }, { threshold: 0.3 }); // Trigger when 30% visible
 
-        // Start autoplay
-        startAutoPlay();
+        observer.observe(carouselContainer);
 
-        // Pause autoplay when hovering over carousel
-        const carousel = document.querySelector('.carousel-container');
-        carousel.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
-        carousel.addEventListener('mouseleave', startAutoPlay);
+        // Touch events for swipe
+        carouselContainer.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            clearInterval(autoPlayInterval);
+        });
 
-        // Initialize first dot as active
+        carouselContainer.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+            startAutoPlay();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    // Swipe left -> next
+                    nextSlide();
+                } else {
+                    // Swipe right -> prev
+                    currentIndex = (currentIndex - 1 + slideCount) % slideCount;
+                    updateCarousel();
+                }
+            }
+        }
+
+        // Dot click handler
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                goToSlide(index);
+                resetAutoPlay();
+            });
+        });
+
+        // Pause autoplay when hovering
+        carouselContainer.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
+        carouselContainer.addEventListener('mouseleave', startAutoPlay);
+
+        // Initialize
         updateCarousel();
 
         // Smooth scroll for anchor links
