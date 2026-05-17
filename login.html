@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/x-icon" href="favicon_io/favicon.ico">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AOLTD GATE · Login / Register</title>
@@ -12,9 +8,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Foldit:wght@400;600;700&family=Aubrey&display=swap" rel="stylesheet">
-    
-    <!-- PlayFab SDK - using latest stable -->
-    <script src="https://cdn.playfab.com/sdk/2023-12-11/PlayFabClientApi.js"></script>
     
     <style>
         * {
@@ -207,6 +200,21 @@
             padding: 0.3rem;
             border-radius: 20px;
             background: rgba(0,0,0,0.3);
+            cursor: pointer;
+        }
+
+        .retry-btn {
+            background: rgba(255,85,0,0.3);
+            border: 1px solid var(--orange);
+            border-radius: 20px;
+            padding: 0.2rem 0.8rem;
+            margin-left: 0.5rem;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+
+        .retry-btn:hover {
+            background: rgba(255,85,0,0.6);
         }
 
         @media (max-width: 550px) {
@@ -226,10 +234,13 @@
         <div id="message-area" class="message-box" style="display: none;"></div>
         
         <!-- PlayFab connection status -->
-        <div id="status-badge" class="status-badge" style="color: #ffaa44;">⏳ Checking PlayFab connection...</div>
+        <div id="status-badge" class="status-badge">
+            <span id="status-text">⏳ Loading PlayFab SDK...</span>
+            <span id="retry-button" class="retry-btn" style="display: none;">⟳ Retry</span>
+        </div>
 
         <!-- LOGIN FORM -->
-        <form id="login-form">
+        <form id="login-form" style="display: none;">
             <div class="input-group">
                 <label>⚡ USERNAME / EMAIL</label>
                 <input type="text" id="login-username" class="auth-input" placeholder="username or email@example.com">
@@ -268,26 +279,39 @@
             </div>
         </form>
 
-        <div class="status-badge" style="margin-top: 1rem; font-size: 0.65rem;">
+        <div class="status-badge" style="margin-top: 1rem; font-size: 0.65rem; cursor: default;">
             🐲 Title ID: 17CD1B
         </div>
     </div>
 </div>
 
 <script>
-    // ==================== PLAYFAB CONFIG ====================
+    // ==================== MULTI-CDN PLAYFAB LOADER ====================
     const TITLE_ID = "17CD1B";
     let playfabReady = false;
+    let sdkLoadAttempts = 0;
+    const maxAttempts = 3;
+    
+    // CDN sources to try
+    const cdnSources = [
+        "https://cdn.playfab.com/sdk/2023-12-11/PlayFabClientApi.js",
+        "https://playfab.com/sdk/2023-12-11/PlayFabClientApi.js",
+        "https://unpkg.com/playfab-web-sdk@latest/PlayFabClientApi.js"
+    ];
     
     // DOM elements
     const msgDiv = document.getElementById('message-area');
-    const statusBadge = document.getElementById('status-badge');
+    const statusSpan = document.getElementById('status-text');
+    const retryBtn = document.getElementById('retry-button');
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const formTitle = document.getElementById('form-title');
+    const subText = document.getElementById('sub-text');
     
     function showMessage(text, isError = true) {
         msgDiv.style.display = 'block';
         msgDiv.innerHTML = text;
         msgDiv.className = `message-box ${isError ? 'error-msg' : 'success-msg'}`;
-        // Auto-hide after 6 seconds
         setTimeout(() => {
             if (msgDiv.style.display === 'block' && msgDiv.innerHTML === text) {
                 msgDiv.style.opacity = '0';
@@ -313,51 +337,95 @@
         }
     }
     
-    // ========== TEST PLAYFAB CONNECTION ==========
-    async function testPlayFabConnection() {
-        statusBadge.innerHTML = "⏳ Testing connection to PlayFab servers...";
-        statusBadge.style.color = "#ffaa44";
-        
-        // First, initialize PlayFab settings
-        if (typeof PlayFab !== 'undefined' && PlayFab.settings) {
-            PlayFab.settings.titleId = TITLE_ID;
-            console.log("PlayFab initialized with Title ID:", TITLE_ID);
+    function updateStatus(text, isError = false, showRetry = false) {
+        statusSpan.innerHTML = text;
+        if (isError) {
+            statusSpan.style.color = "#ff6666";
         } else {
-            statusBadge.innerHTML = "⚠️ PlayFab SDK not loaded. Check internet or try again.";
-            statusBadge.style.color = "#ff6666";
-            return false;
+            statusSpan.style.color = "#ffaa44";
+        }
+        retryBtn.style.display = showRetry ? "inline-block" : "none";
+    }
+    
+    function enableForms() {
+        loginForm.style.display = 'block';
+        registerForm.style.display = 'none';
+        formTitle.innerHTML = 'ENTER THE GRID';
+        subText.innerHTML = 'Your cube awaits identity';
+    }
+    
+    // Load PlayFab SDK from specific URL
+    function loadPlayFabFromUrl(url) {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = url;
+            script.onload = () => {
+                if (typeof PlayFab !== 'undefined' && PlayFab.settings) {
+                    PlayFab.settings.titleId = TITLE_ID;
+                    console.log(`PlayFab loaded from: ${url}`);
+                    resolve(true);
+                } else {
+                    reject(new Error(`SDK loaded but PlayFab object not found from ${url}`));
+                }
+            };
+            script.onerror = () => reject(new Error(`Failed to load from ${url}`));
+            document.head.appendChild(script);
+        });
+    }
+    
+    // Try to load SDK from multiple CDNs
+    async function loadPlayFabSDK() {
+        updateStatus("⏳ Loading PlayFab SDK...");
+        
+        for (let i = 0; i < cdnSources.length; i++) {
+            try {
+                console.log(`Attempting to load from CDN ${i + 1}: ${cdnSources[i]}`);
+                updateStatus(`⏳ Trying CDN ${i + 1}/${cdnSources.length}...`);
+                await loadPlayFabFromUrl(cdnSources[i]);
+                
+                // Success! Test the connection
+                updateStatus("✅ SDK loaded! Testing connection...");
+                const connected = await testPlayFabConnection();
+                if (connected) {
+                    updateStatus("✅ PlayFab ready! You can login/register.", false);
+                    playfabReady = true;
+                    enableForms();
+                    return true;
+                }
+            } catch (err) {
+                console.warn(`CDN ${i + 1} failed:`, err.message);
+                updateStatus(`⚠️ CDN ${i + 1} failed, trying next...`, true);
+            }
         }
         
-        // Test API call - GetTitleData is a lightweight call to verify connection
+        updateStatus("❌ Could not load PlayFab SDK. Check your internet.", true, true);
+        playfabReady = false;
+        return false;
+    }
+    
+    // Test connection to PlayFab servers
+    async function testPlayFabConnection() {
         return new Promise((resolve) => {
+            if (typeof PlayFab === 'undefined' || !PlayFab.settings) {
+                resolve(false);
+                return;
+            }
+            
+            PlayFab.settings.titleId = TITLE_ID;
+            
+            // Simple ping to PlayFab
             PlayFabClientSDK.GetTitleData({
-                Keys: []  // empty keys, just testing connectivity
-            }, (error, result) => {
-                if (error) {
-                    console.error("PlayFab connection test FAILED:", error);
-                    let errorDetail = error.errorMessage || error.message || "Unknown error";
-                    if (error.error === "NotAuthenticated") {
-                        // This is actually GOOD - means server responded but we're not logged in
-                        // So connection works!
-                        statusBadge.innerHTML = "✅ PlayFab server reachable! Ready to login/register.";
-                        statusBadge.style.color = "#4cff9e";
-                        playfabReady = true;
-                        resolve(true);
-                    } else if (error.httpCode) {
-                        statusBadge.innerHTML = `⚠️ HTTP ${error.httpCode}: ${errorDetail.substring(0, 60)}`;
-                        statusBadge.style.color = "#ffaa44";
-                        resolve(false);
-                    } else {
-                        statusBadge.innerHTML = `❌ Connection failed: ${errorDetail.substring(0, 80)}`;
-                        statusBadge.style.color = "#ff6666";
-                        resolve(false);
-                    }
-                } else {
-                    // If it works, even better
-                    statusBadge.innerHTML = "✅ PlayFab connected! Your game account is ready.";
-                    statusBadge.style.color = "#4cff9e";
-                    playfabReady = true;
+                Keys: []
+            }, (error) => {
+                if (error && error.error === "NotAuthenticated") {
+                    // This means server responded! Connection works.
+                    console.log("PlayFab server reachable");
                     resolve(true);
+                } else if (!error) {
+                    resolve(true);
+                } else {
+                    console.error("Connection test error:", error);
+                    resolve(false);
                 }
             });
         });
@@ -369,7 +437,7 @@
         clearMessage();
         
         if (!playfabReady) {
-            showMessage("⏳ PlayFab is still connecting. Please wait 2 seconds and try again.", true);
+            showMessage("⏳ PlayFab not ready. Wait for connection or click retry.", true);
             return;
         }
         
@@ -381,7 +449,7 @@
         const password = document.getElementById('login-password').value.trim();
         
         if (!identifier || !password) {
-            showMessage("⚠️ Both fields are required, brave adventurer.", true);
+            showMessage("⚠️ Both fields are required.", true);
             setButtonLoading(loginBtn, false, originalText);
             return;
         }
@@ -391,7 +459,6 @@
         try {
             let result;
             if (isEmail) {
-                // Login with email
                 result = await new Promise((resolve, reject) => {
                     PlayFabClientSDK.LoginWithEmailAddress({
                         TitleId: TITLE_ID,
@@ -400,7 +467,6 @@
                     }, (err, res) => err ? reject(err) : resolve(res));
                 });
             } else {
-                // Login with username
                 result = await new Promise((resolve, reject) => {
                     PlayFabClientSDK.LoginWithPlayFab({
                         TitleId: TITLE_ID,
@@ -410,11 +476,10 @@
                 });
             }
             
-            // Success!
             localStorage.setItem('AOLTD_session', result.data.SessionTicket);
             localStorage.setItem('AOLTD_playFabId', result.data.PlayFabId);
             
-            showMessage(`✨ Welcome back, ${identifier}! Login successful. Redirecting... ✨`, false);
+            showMessage(`✨ Welcome back! Login successful. Redirecting... ✨`, false);
             setButtonLoading(loginBtn, false, originalText);
             
             setTimeout(() => {
@@ -422,14 +487,13 @@
             }, 1500);
             
         } catch (error) {
-            console.error("Login error FULL:", error);
+            console.error("Login error:", error);
             let errorMsg = "Login failed. ";
             if (error.errorMessage) errorMsg += error.errorMessage;
-            else if (error.message) errorMsg += error.message;
-            else errorMsg += "Check credentials or network.";
+            else errorMsg += "Check credentials.";
             
-            if (error.error === "InvalidUser") errorMsg = "❌ No account found with that username/email. Register first!";
-            else if (error.error === "InvalidPassword") errorMsg = "🔐 Incorrect password. Try again.";
+            if (error.error === "InvalidUser") errorMsg = "❌ No account found. Register first!";
+            else if (error.error === "InvalidPassword") errorMsg = "🔐 Incorrect password.";
             
             showMessage(errorMsg, true);
             setButtonLoading(loginBtn, false, originalText);
@@ -442,7 +506,7 @@
         clearMessage();
         
         if (!playfabReady) {
-            showMessage("⏳ PlayFab is still connecting. Please wait 2 seconds and try again.", true);
+            showMessage("⏳ PlayFab not ready. Please wait.", true);
             return;
         }
         
@@ -455,41 +519,31 @@
         const password = document.getElementById('reg-password').value.trim();
         const confirm = document.getElementById('reg-confirm').value.trim();
         
-        // Validation
         if (!username || !email || !password || !confirm) {
-            showMessage("All fields are required, lone developer.", true);
+            showMessage("All fields are required.", true);
             setButtonLoading(regBtn, false, originalText);
             return;
         }
         
         if (password !== confirm) {
-            showMessage("🔥 Passwords do not match! The dragon demands consistency.", true);
+            showMessage("🔥 Passwords do not match!", true);
             setButtonLoading(regBtn, false, originalText);
             return;
         }
         
         if (password.length < 6) {
-            showMessage("Password must be at least 6 characters (security first!).", true);
+            showMessage("Password must be at least 6 characters.", true);
             setButtonLoading(regBtn, false, originalText);
             return;
         }
         
-        if (!email.includes('@') || !email.includes('.')) {
-            showMessage("Enter a valid email address for dragon mail.", true);
+        if (!email.includes('@')) {
+            showMessage("Enter a valid email address.", true);
             setButtonLoading(regBtn, false, originalText);
             return;
         }
         
-        if (username.length < 3) {
-            showMessage("Username must be at least 3 characters.", true);
-            setButtonLoading(regBtn, false, originalText);
-            return;
-        }
-        
-        // Show "waiting" message so user knows something is happening
-        showMessage("⏳ Contacting PlayFab servers... Please wait.", false);
-        
-        console.log("Attempting registration with:", { username, email, passwordLength: password.length });
+        showMessage("⏳ Contacting PlayFab servers...", false);
         
         try {
             const result = await new Promise((resolve, reject) => {
@@ -500,48 +554,30 @@
                     Password: password,
                     RequireBothUsernameAndEmail: true
                 }, (error, result) => {
-                    if (error) {
-                        console.error("PlayFab registration ERROR:", error);
-                        reject(error);
-                    } else {
-                        console.log("PlayFab registration SUCCESS:", result);
-                        resolve(result);
-                    }
+                    if (error) reject(error);
+                    else resolve(result);
                 });
             });
             
-            // Registration success!
-            showMessage(`🎉 Account created! Welcome ${username}! Redirecting to login... 🎉`, false);
+            showMessage(`🎉 Account created! Welcome ${username}! 🎉`, false);
             setButtonLoading(regBtn, false, originalText);
             
-            // Auto switch to login form and fill email
             setTimeout(() => {
                 switchToLogin();
                 document.getElementById('login-username').value = email;
-                showMessage(`✨ Account created! Now login with your email or username. ✨`, false);
+                showMessage(`✨ Account created! Now login. ✨`, false);
             }, 1800);
             
         } catch (error) {
-            console.error("Registration error DETAILS:", error);
+            console.error("Registration error:", error);
+            let errorMsg = error.errorMessage || "Registration failed.";
             
-            let errorMsg = "";
-            if (error.errorMessage) {
-                errorMsg = error.errorMessage;
-            } else if (error.message) {
-                errorMsg = error.message;
-            } else {
-                errorMsg = "Registration failed. Check network or PlayFab settings.";
-            }
-            
-            // Make errors more user-friendly
-            if (errorMsg.includes("UsernameNotAvailable") || errorMsg.includes("username already")) {
-                errorMsg = "⚠️ Username already taken. Try another legendary alias.";
-            } else if (errorMsg.includes("EmailAlreadyInUse") || errorMsg.includes("email already")) {
-                errorMsg = "📧 Email already registered. Did you forget your password?";
+            if (errorMsg.includes("UsernameNotAvailable")) {
+                errorMsg = "⚠️ Username already taken. Try another.";
+            } else if (errorMsg.includes("EmailAlreadyInUse")) {
+                errorMsg = "📧 Email already registered.";
             } else if (errorMsg.includes("InvalidEmail")) {
-                errorMsg = "📧 Invalid email format. Please use a real email address.";
-            } else if (errorMsg.includes("network") || errorMsg.includes("fetch")) {
-                errorMsg = "🌐 Network error. Check your internet connection and try again.";
+                errorMsg = "📧 Invalid email format.";
             }
             
             showMessage(`❌ ${errorMsg}`, true);
@@ -549,20 +585,13 @@
         }
     }
     
-    // ========== UI SWITCHING ==========
-    const loginForm = document.getElementById('login-form');
-    const registerForm = document.getElementById('register-form');
-    const formTitle = document.getElementById('form-title');
-    const subText = document.getElementById('sub-text');
-    
+    // UI switching
     function switchToLogin() {
         loginForm.style.display = 'block';
         registerForm.style.display = 'none';
         formTitle.innerHTML = 'ENTER THE GRID';
         subText.innerHTML = 'Your cube awaits identity';
         clearMessage();
-        document.getElementById('login-username').value = '';
-        document.getElementById('login-password').value = '';
     }
     
     function switchToRegister() {
@@ -571,10 +600,13 @@
         formTitle.innerHTML = 'FORGE YOUR LEGEND';
         subText.innerHTML = 'create an account, join the tenacious';
         clearMessage();
-        document.getElementById('reg-username').value = '';
-        document.getElementById('reg-email').value = '';
-        document.getElementById('reg-password').value = '';
-        document.getElementById('reg-confirm').value = '';
+    }
+    
+    // Retry loading
+    function retryLoad() {
+        updateStatus("🔄 Retrying SDK load...", false);
+        retryBtn.style.display = "none";
+        loadPlayFabSDK();
     }
     
     // Event listeners
@@ -589,44 +621,10 @@
     
     loginForm.addEventListener('submit', handleLogin);
     registerForm.addEventListener('submit', handleRegister);
+    retryBtn.addEventListener('click', retryLoad);
     
-    // ========== INITIALIZE ==========
-    async function init() {
-        // Set PlayFab title ID immediately
-        if (typeof PlayFab !== 'undefined' && PlayFab.settings) {
-            PlayFab.settings.titleId = TITLE_ID;
-            console.log("PlayFab title ID set to:", TITLE_ID);
-        } else {
-            // Wait for SDK to load
-            const checkSDK = setInterval(() => {
-                if (typeof PlayFab !== 'undefined' && PlayFab.settings) {
-                    PlayFab.settings.titleId = TITLE_ID;
-                    console.log("PlayFab SDK loaded late, title ID set");
-                    clearInterval(checkSDK);
-                    testPlayFabConnection();
-                }
-            }, 200);
-            setTimeout(() => {
-                clearInterval(checkSDK);
-                if (typeof PlayFab === 'undefined') {
-                    statusBadge.innerHTML = "❌ PlayFab SDK failed to load. Check your internet connection.";
-                    statusBadge.style.color = "#ff6666";
-                }
-            }, 5000);
-            return;
-        }
-        
-        await testPlayFabConnection();
-    }
-    
-    // Start initialization
-    init();
-    
-    // Retry connection if user clicks status badge (hidden feature)
-    statusBadge.style.cursor = "pointer";
-    statusBadge.addEventListener('click', () => {
-        testPlayFabConnection();
-    });
+    // Start loading SDK
+    loadPlayFabSDK();
 </script>
 </body>
 </html>
