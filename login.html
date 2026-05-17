@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Favicon (using same paths as main site) -->
     <link rel="icon" type="image/x-icon" href="favicon_io/favicon.ico">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
-    <link rel="apple-touch-icon" href="favicon_io/apple-touch-icon.png">
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AOLTD GATE · Login / Register</title>
     
-    <!-- Fonts (same as main site) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Foldit:wght@400;600;700&family=Aubrey&display=swap" rel="stylesheet">
     
-    <!-- PlayFab SDK -->
+    <!-- PlayFab SDK - using latest stable -->
     <script src="https://cdn.playfab.com/sdk/2023-12-11/PlayFabClientApi.js"></script>
     
     <style>
@@ -29,13 +26,10 @@
         :root {
             --orange: #ff5500;
             --dark-blue: #0a1929;
-            --darker-blue: #0a141f;
-            --light-blue: #1e3a5f;
             --text-light: #ffffff;
             --text-dim: #b0b0b0;
-            --card-bg: rgba(20, 30, 45, 0.7);
+            --card-bg: rgba(20, 30, 45, 0.85);
             --gradient-1: linear-gradient(135deg, #ff5500, #ff3300);
-            --gradient-2: linear-gradient(135deg, #0a1929, #1e3a5f);
             --shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
             --error-red: #ff4d4d;
             --success-green: #4cff9e;
@@ -43,39 +37,22 @@
 
         body {
             font-family: 'Space Grotesk', sans-serif;
-            background-color: var(--dark-blue);
+            background-color: #0a1929;
             color: var(--text-light);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
             background-image: radial-gradient(circle at 10% 20%, rgba(255,85,0,0.08) 0%, rgba(10,25,41,0.95) 90%);
             padding: 2rem;
-        }
-
-        /* animated glitch background effect (light touch) */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(0deg, rgba(255,85,0,0.02) 0px, rgba(255,85,0,0.02) 2px, transparent 2px, transparent 6px);
-            pointer-events: none;
-            z-index: 0;
         }
 
         .auth-container {
             max-width: 500px;
             width: 100%;
             margin: 0 auto;
-            position: relative;
-            z-index: 2;
         }
 
-        /* main card */
         .auth-card {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
@@ -84,23 +61,6 @@
             box-shadow: var(--shadow);
             padding: 2.5rem 2rem;
             transition: all 0.3s ease;
-            animation: floatIn 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-        }
-
-        @keyframes floatIn {
-            0% {
-                opacity: 0;
-                transform: translateY(30px) scale(0.96);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .brand-glow {
-            text-align: center;
-            margin-bottom: 2rem;
         }
 
         .aoltd-logo {
@@ -109,10 +69,8 @@
             font-weight: 700;
             color: var(--orange);
             letter-spacing: 4px;
+            text-align: center;
             text-shadow: 0 0 8px rgba(255,85,0,0.5);
-            display: inline-block;
-            border-bottom: 2px dashed rgba(255,85,0,0.5);
-            padding-bottom: 0.3rem;
         }
 
         .form-title {
@@ -124,7 +82,6 @@
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
-            letter-spacing: -0.5px;
         }
 
         .sub {
@@ -134,10 +91,8 @@
             font-size: 0.9rem;
         }
 
-        /* form fields */
         .input-group {
             margin-bottom: 1.5rem;
-            position: relative;
         }
 
         .input-group label {
@@ -146,7 +101,6 @@
             font-size: 0.9rem;
             font-weight: 500;
             color: var(--orange);
-            letter-spacing: 0.5px;
         }
 
         .auth-input {
@@ -157,7 +111,6 @@
             padding: 0.9rem 1.5rem;
             font-size: 1rem;
             color: var(--text-light);
-            font-family: 'Space Grotesk', monospace;
             transition: all 0.25s ease;
         }
 
@@ -165,15 +118,8 @@
             outline: none;
             border-color: var(--orange);
             box-shadow: 0 0 0 3px rgba(255, 85, 0, 0.2);
-            background: rgba(10, 25, 41, 0.95);
         }
 
-        .auth-input::placeholder {
-            color: rgba(176, 176, 176, 0.5);
-            font-size: 0.9rem;
-        }
-
-        /* buttons */
         .auth-btn {
             width: 100%;
             background: var(--gradient-1);
@@ -183,11 +129,9 @@
             font-weight: 700;
             font-size: 1.2rem;
             color: white;
-            font-family: 'Space Grotesk', sans-serif;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
             box-shadow: 0 4px 12px rgba(255, 85, 0, 0.4);
-            margin-top: 0.5rem;
         }
 
         .auth-btn:hover {
@@ -195,11 +139,12 @@
             box-shadow: 0 12px 25px rgba(255, 85, 0, 0.5);
         }
 
-        .auth-btn:active {
-            transform: translateY(1px);
+        .auth-btn:disabled {
+            opacity: 0.7;
+            transform: none;
+            cursor: not-allowed;
         }
 
-        /* switch link */
         .switch-link {
             text-align: center;
             margin-top: 1.8rem;
@@ -211,26 +156,22 @@
             color: var(--orange);
             text-decoration: none;
             font-weight: 600;
-            border-bottom: 1px dashed rgba(255,85,0,0.4);
-            transition: all 0.2s;
             cursor: pointer;
+            border-bottom: 1px dashed rgba(255,85,0,0.4);
         }
 
         .switch-link a:hover {
             color: #ff7733;
-            border-bottom-color: var(--orange);
         }
 
-        /* messages */
         .message-box {
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
             border-radius: 60px;
             padding: 0.75rem 1.2rem;
             margin-bottom: 1.5rem;
             font-size: 0.85rem;
             text-align: center;
             border-left: 4px solid var(--orange);
-            backdrop-filter: blur(4px);
         }
 
         .error-msg {
@@ -259,50 +200,43 @@
             to { transform: rotate(360deg); }
         }
 
-        /* dragon footprint easter egg */
-        .dragon-whisper {
-            text-align: center;
-            margin-top: 1.5rem;
+        .status-badge {
             font-size: 0.7rem;
-            color: rgba(255,85,0,0.4);
-            font-family: 'Aubrey', cursive;
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0.3rem;
+            border-radius: 20px;
+            background: rgba(0,0,0,0.3);
         }
 
-        /* Responsive */
         @media (max-width: 550px) {
-            .auth-card {
-                padding: 1.8rem;
-            }
-            .aoltd-logo {
-                font-size: 2.3rem;
-            }
-            .form-title {
-                font-size: 1.6rem;
-            }
+            .auth-card { padding: 1.8rem; }
+            .aoltd-logo { font-size: 2.3rem; }
+            .form-title { font-size: 1.6rem; }
         }
     </style>
 </head>
 <body>
 <div class="auth-container">
     <div class="auth-card">
-        <div class="brand-glow">
-            <div class="aoltd-logo">AOLTD</div>
-            <div class="form-title" id="form-title">ENTER THE GRID</div>
-            <div class="sub" id="sub-text">Your cube awaits identity</div>
-        </div>
+        <div class="aoltd-logo">AOLTD</div>
+        <div class="form-title" id="form-title">ENTER THE GRID</div>
+        <div class="sub" id="sub-text">Your cube awaits identity</div>
 
-        <!-- dynamic message area -->
         <div id="message-area" class="message-box" style="display: none;"></div>
+        
+        <!-- PlayFab connection status -->
+        <div id="status-badge" class="status-badge" style="color: #ffaa44;">⏳ Checking PlayFab connection...</div>
 
-        <!-- LOGIN FORM (visible by default) -->
+        <!-- LOGIN FORM -->
         <form id="login-form">
             <div class="input-group">
                 <label>⚡ USERNAME / EMAIL</label>
-                <input type="text" id="login-username" class="auth-input" placeholder="e.g., tenaciousDev or aoltd@example.com" autocomplete="username">
+                <input type="text" id="login-username" class="auth-input" placeholder="username or email@example.com">
             </div>
             <div class="input-group">
                 <label>🔒 PASSWORD</label>
-                <input type="password" id="login-password" class="auth-input" placeholder="••••••••" autocomplete="current-password">
+                <input type="password" id="login-password" class="auth-input" placeholder="••••••••">
             </div>
             <button type="submit" class="auth-btn" id="login-btn">⟡ LOGIN ⟡</button>
             <div class="switch-link">
@@ -310,23 +244,23 @@
             </div>
         </form>
 
-        <!-- REGISTER FORM (hidden initially) -->
+        <!-- REGISTER FORM -->
         <form id="register-form" style="display: none;">
             <div class="input-group">
                 <label>✨ USERNAME</label>
-                <input type="text" id="reg-username" class="auth-input" placeholder="Choose a legendary name" autocomplete="username">
+                <input type="text" id="reg-username" class="auth-input" placeholder="Choose a legendary name">
             </div>
             <div class="input-group">
                 <label>📧 EMAIL</label>
-                <input type="email" id="reg-email" class="auth-input" placeholder="your@email.com" autocomplete="email">
+                <input type="email" id="reg-email" class="auth-input" placeholder="your@email.com">
             </div>
             <div class="input-group">
                 <label>🔐 PASSWORD</label>
-                <input type="password" id="reg-password" class="auth-input" placeholder="minimum 6 characters" autocomplete="new-password">
+                <input type="password" id="reg-password" class="auth-input" placeholder="minimum 6 characters">
             </div>
             <div class="input-group">
                 <label>✓ CONFIRM PASSWORD</label>
-                <input type="password" id="reg-confirm" class="auth-input" placeholder="same as above" autocomplete="off">
+                <input type="password" id="reg-confirm" class="auth-input" placeholder="same as above">
             </div>
             <button type="submit" class="auth-btn" id="register-btn">🐉 REGISTER & PLAY 🐉</button>
             <div class="switch-link">
@@ -334,46 +268,41 @@
             </div>
         </form>
 
-        <div class="dragon-whisper">
-            🐲 the ancient dragon watches over your credentials 🐲
+        <div class="status-badge" style="margin-top: 1rem; font-size: 0.65rem;">
+            🐲 Title ID: 17CD1B
         </div>
     </div>
 </div>
 
 <script>
-    // ==================== PLAYFAB CONFIGURATION ====================
-    const TITLE_ID = "17CD1B";   // provided title id
-
-    // initialize PlayFab
-    if (typeof PlayFab !== 'undefined' && PlayFab.settings) {
-        PlayFab.settings.titleId = TITLE_ID;
-        console.log("PlayFab initialized with Title ID:", TITLE_ID);
-    } else {
-        console.error("PlayFab SDK not loaded?");
-    }
-
-    // Helper: show message (error/success)
+    // ==================== PLAYFAB CONFIG ====================
+    const TITLE_ID = "17CD1B";
+    let playfabReady = false;
+    
+    // DOM elements
     const msgDiv = document.getElementById('message-area');
+    const statusBadge = document.getElementById('status-badge');
+    
     function showMessage(text, isError = true) {
         msgDiv.style.display = 'block';
         msgDiv.innerHTML = text;
         msgDiv.className = `message-box ${isError ? 'error-msg' : 'success-msg'}`;
-        // auto hide after 5 sec but keep important errors longer
+        // Auto-hide after 6 seconds
         setTimeout(() => {
-            if (msgDiv.style.display === 'block') {
-                msgDiv.style.opacity = '0.8';
+            if (msgDiv.style.display === 'block' && msgDiv.innerHTML === text) {
+                msgDiv.style.opacity = '0';
                 setTimeout(() => {
                     if (msgDiv.innerHTML === text) msgDiv.style.display = 'none';
-                }, 2000);
+                    msgDiv.style.opacity = '';
+                }, 300);
             }
-        }, 5000);
+        }, 6000);
     }
-
+    
     function clearMessage() {
         msgDiv.style.display = 'none';
     }
-
-    // loading state on buttons
+    
     function setButtonLoading(button, isLoading, originalText) {
         if (isLoading) {
             button.disabled = true;
@@ -383,186 +312,272 @@
             button.innerHTML = originalText;
         }
     }
-
-    // ---------- LOGIN logic (supports both username OR email) ----------
+    
+    // ========== TEST PLAYFAB CONNECTION ==========
+    async function testPlayFabConnection() {
+        statusBadge.innerHTML = "⏳ Testing connection to PlayFab servers...";
+        statusBadge.style.color = "#ffaa44";
+        
+        // First, initialize PlayFab settings
+        if (typeof PlayFab !== 'undefined' && PlayFab.settings) {
+            PlayFab.settings.titleId = TITLE_ID;
+            console.log("PlayFab initialized with Title ID:", TITLE_ID);
+        } else {
+            statusBadge.innerHTML = "⚠️ PlayFab SDK not loaded. Check internet or try again.";
+            statusBadge.style.color = "#ff6666";
+            return false;
+        }
+        
+        // Test API call - GetTitleData is a lightweight call to verify connection
+        return new Promise((resolve) => {
+            PlayFabClientSDK.GetTitleData({
+                Keys: []  // empty keys, just testing connectivity
+            }, (error, result) => {
+                if (error) {
+                    console.error("PlayFab connection test FAILED:", error);
+                    let errorDetail = error.errorMessage || error.message || "Unknown error";
+                    if (error.error === "NotAuthenticated") {
+                        // This is actually GOOD - means server responded but we're not logged in
+                        // So connection works!
+                        statusBadge.innerHTML = "✅ PlayFab server reachable! Ready to login/register.";
+                        statusBadge.style.color = "#4cff9e";
+                        playfabReady = true;
+                        resolve(true);
+                    } else if (error.httpCode) {
+                        statusBadge.innerHTML = `⚠️ HTTP ${error.httpCode}: ${errorDetail.substring(0, 60)}`;
+                        statusBadge.style.color = "#ffaa44";
+                        resolve(false);
+                    } else {
+                        statusBadge.innerHTML = `❌ Connection failed: ${errorDetail.substring(0, 80)}`;
+                        statusBadge.style.color = "#ff6666";
+                        resolve(false);
+                    }
+                } else {
+                    // If it works, even better
+                    statusBadge.innerHTML = "✅ PlayFab connected! Your game account is ready.";
+                    statusBadge.style.color = "#4cff9e";
+                    playfabReady = true;
+                    resolve(true);
+                }
+            });
+        });
+    }
+    
+    // ========== LOGIN ==========
     async function handleLogin(event) {
         event.preventDefault();
         clearMessage();
-        const loginBtn = document.getElementById('login-btn');
-        const originalBtnText = loginBtn.innerHTML;
-        setButtonLoading(loginBtn, true, "⟡ AUTHENTICATING ⟡");
-
-        const identifier = document.getElementById('login-username').value.trim();
-        const password = document.getElementById('login-password').value.trim();
-
-        if (!identifier || !password) {
-            showMessage("⚠️ Both fields are required, brave adventurer.", true);
-            setButtonLoading(loginBtn, false, originalBtnText);
+        
+        if (!playfabReady) {
+            showMessage("⏳ PlayFab is still connecting. Please wait 2 seconds and try again.", true);
             return;
         }
-
-        // PlayFab LoginWithPlayFab (handles both email and username automatically by PlayFab)
-        // Note: PlayFab's LoginWithPlayFab accepts either Username or Email in the 'Username' parameter.
-        // Actually PlayFab has separate: LoginWithEmailAddress and LoginWithPlayFab (username). For flexibility we try:
-        // Strategy: check if identifier looks like email (contains @) => LoginWithEmailAddress else LoginWithPlayFab (username)
+        
+        const loginBtn = document.getElementById('login-btn');
+        const originalText = loginBtn.innerHTML;
+        setButtonLoading(loginBtn, true, "⟡ AUTHENTICATING ⟡");
+        
+        const identifier = document.getElementById('login-username').value.trim();
+        const password = document.getElementById('login-password').value.trim();
+        
+        if (!identifier || !password) {
+            showMessage("⚠️ Both fields are required, brave adventurer.", true);
+            setButtonLoading(loginBtn, false, originalText);
+            return;
+        }
+        
         const isEmail = identifier.includes('@') && identifier.includes('.');
         
         try {
-            let loginRequest;
+            let result;
             if (isEmail) {
-                loginRequest = {
-                    TitleId: TITLE_ID,
-                    Email: identifier,
-                    Password: password
-                };
-                const result = await new Promise((resolve, reject) => {
-                    PlayFabClientSDK.LoginWithEmailAddress(loginRequest, (err, result) => {
-                        if (err) reject(err);
-                        else resolve(result);
-                    });
+                // Login with email
+                result = await new Promise((resolve, reject) => {
+                    PlayFabClientSDK.LoginWithEmailAddress({
+                        TitleId: TITLE_ID,
+                        Email: identifier,
+                        Password: password
+                    }, (err, res) => err ? reject(err) : resolve(res));
                 });
-                handleLoginSuccess(result);
             } else {
-                loginRequest = {
-                    TitleId: TITLE_ID,
-                    Username: identifier,
-                    Password: password
-                };
-                const result = await new Promise((resolve, reject) => {
-                    PlayFabClientSDK.LoginWithPlayFab(loginRequest, (err, result) => {
-                        if (err) reject(err);
-                        else resolve(result);
-                    });
+                // Login with username
+                result = await new Promise((resolve, reject) => {
+                    PlayFabClientSDK.LoginWithPlayFab({
+                        TitleId: TITLE_ID,
+                        Username: identifier,
+                        Password: password
+                    }, (err, res) => err ? reject(err) : resolve(res));
                 });
-                handleLoginSuccess(result);
             }
+            
+            // Success!
+            localStorage.setItem('AOLTD_session', result.data.SessionTicket);
+            localStorage.setItem('AOLTD_playFabId', result.data.PlayFabId);
+            
+            showMessage(`✨ Welcome back, ${identifier}! Login successful. Redirecting... ✨`, false);
+            setButtonLoading(loginBtn, false, originalText);
+            
+            setTimeout(() => {
+                window.location.href = "games/games.html";
+            }, 1500);
+            
         } catch (error) {
-            let errorMsg = error.errorMessage || "Login failed. Check credentials or internet.";
-            if (error.error === "InvalidUser") errorMsg = "❌ No user found with that username/email. Register first?";
+            console.error("Login error FULL:", error);
+            let errorMsg = "Login failed. ";
+            if (error.errorMessage) errorMsg += error.errorMessage;
+            else if (error.message) errorMsg += error.message;
+            else errorMsg += "Check credentials or network.";
+            
+            if (error.error === "InvalidUser") errorMsg = "❌ No account found with that username/email. Register first!";
             else if (error.error === "InvalidPassword") errorMsg = "🔐 Incorrect password. Try again.";
+            
             showMessage(errorMsg, true);
-            setButtonLoading(loginBtn, false, originalBtnText);
+            setButtonLoading(loginBtn, false, originalText);
         }
     }
-
-    function handleLoginSuccess(result) {
-        const loginBtn = document.getElementById('login-btn');
-        const originalText = "⟡ LOGIN ⟡";
-        const playFabId = result.data.PlayFabId;
-        const sessionTicket = result.data.SessionTicket;
-        // store if you need persistence later (optional)
-        localStorage.setItem('AOLTD_session', sessionTicket);
-        localStorage.setItem('AOLTD_playFabId', playFabId);
-        
-        showMessage(`✨ Welcome back, cube gladiator! Login successful. Redirecting to game realm... ✨`, false);
-        setButtonLoading(loginBtn, false, originalText);
-        
-        // After 1.3 seconds, redirect to games page or main page (like the games hub)
-        setTimeout(() => {
-            window.location.href = "games/games.html";   // as per main website structure
-        }, 1300);
-    }
-
-    // ---------- REGISTER Logic ----------
+    
+    // ========== REGISTER ==========
     async function handleRegister(event) {
         event.preventDefault();
         clearMessage();
+        
+        if (!playfabReady) {
+            showMessage("⏳ PlayFab is still connecting. Please wait 2 seconds and try again.", true);
+            return;
+        }
+        
         const regBtn = document.getElementById('register-btn');
         const originalText = regBtn.innerHTML;
-        setButtonLoading(regBtn, true, "🐉 FORGING...");
-
+        setButtonLoading(regBtn, true, "🐉 FORGING ACCOUNT...");
+        
         const username = document.getElementById('reg-username').value.trim();
         const email = document.getElementById('reg-email').value.trim();
         const password = document.getElementById('reg-password').value.trim();
         const confirm = document.getElementById('reg-confirm').value.trim();
-
+        
+        // Validation
         if (!username || !email || !password || !confirm) {
             showMessage("All fields are required, lone developer.", true);
             setButtonLoading(regBtn, false, originalText);
             return;
         }
+        
         if (password !== confirm) {
             showMessage("🔥 Passwords do not match! The dragon demands consistency.", true);
             setButtonLoading(regBtn, false, originalText);
             return;
         }
+        
         if (password.length < 6) {
             showMessage("Password must be at least 6 characters (security first!).", true);
             setButtonLoading(regBtn, false, originalText);
             return;
         }
+        
         if (!email.includes('@') || !email.includes('.')) {
             showMessage("Enter a valid email address for dragon mail.", true);
             setButtonLoading(regBtn, false, originalText);
             return;
         }
-
-        // Register using PlayFab RegisterPlayFabUser (supports Username, Email, Password)
-        const registerRequest = {
-            TitleId: TITLE_ID,
-            Username: username,
-            Email: email,
-            Password: password,
-            RequireBothUsernameAndEmail: true
-        };
-
+        
+        if (username.length < 3) {
+            showMessage("Username must be at least 3 characters.", true);
+            setButtonLoading(regBtn, false, originalText);
+            return;
+        }
+        
+        // Show "waiting" message so user knows something is happening
+        showMessage("⏳ Contacting PlayFab servers... Please wait.", false);
+        
+        console.log("Attempting registration with:", { username, email, passwordLength: password.length });
+        
         try {
             const result = await new Promise((resolve, reject) => {
-                PlayFabClientSDK.RegisterPlayFabUser(registerRequest, (err, result) => {
-                    if (err) reject(err);
-                    else resolve(result);
+                PlayFabClientSDK.RegisterPlayFabUser({
+                    TitleId: TITLE_ID,
+                    Username: username,
+                    Email: email,
+                    Password: password,
+                    RequireBothUsernameAndEmail: true
+                }, (error, result) => {
+                    if (error) {
+                        console.error("PlayFab registration ERROR:", error);
+                        reject(error);
+                    } else {
+                        console.log("PlayFab registration SUCCESS:", result);
+                        resolve(result);
+                    }
                 });
             });
-            // registration success
-            showMessage(`🎉 Account created! Welcome ${username}. You can now login with your credentials. 🎉`, false);
+            
+            // Registration success!
+            showMessage(`🎉 Account created! Welcome ${username}! Redirecting to login... 🎉`, false);
             setButtonLoading(regBtn, false, originalText);
-            // auto switch to login after 2 seconds
+            
+            // Auto switch to login form and fill email
             setTimeout(() => {
                 switchToLogin();
-                // optionally fill username/email for convenience
                 document.getElementById('login-username').value = email;
-                showMessage(`✨ Registration success! Now login with your email/username.`, false);
+                showMessage(`✨ Account created! Now login with your email or username. ✨`, false);
             }, 1800);
+            
         } catch (error) {
-            let friendly = error.errorMessage || "Registration failed.";
-            if (error.error === "UsernameNotAvailable") friendly = "⚠️ Username already taken. Try another legendary alias.";
-            else if (error.error === "EmailAlreadyInUse") friendly = "📧 Email already registered. Did you forget your password?";
-            showMessage(friendly, true);
+            console.error("Registration error DETAILS:", error);
+            
+            let errorMsg = "";
+            if (error.errorMessage) {
+                errorMsg = error.errorMessage;
+            } else if (error.message) {
+                errorMsg = error.message;
+            } else {
+                errorMsg = "Registration failed. Check network or PlayFab settings.";
+            }
+            
+            // Make errors more user-friendly
+            if (errorMsg.includes("UsernameNotAvailable") || errorMsg.includes("username already")) {
+                errorMsg = "⚠️ Username already taken. Try another legendary alias.";
+            } else if (errorMsg.includes("EmailAlreadyInUse") || errorMsg.includes("email already")) {
+                errorMsg = "📧 Email already registered. Did you forget your password?";
+            } else if (errorMsg.includes("InvalidEmail")) {
+                errorMsg = "📧 Invalid email format. Please use a real email address.";
+            } else if (errorMsg.includes("network") || errorMsg.includes("fetch")) {
+                errorMsg = "🌐 Network error. Check your internet connection and try again.";
+            }
+            
+            showMessage(`❌ ${errorMsg}`, true);
             setButtonLoading(regBtn, false, originalText);
         }
     }
-
-    // ---------- UI switching between Login & Register ----------
+    
+    // ========== UI SWITCHING ==========
     const loginForm = document.getElementById('login-form');
     const registerForm = document.getElementById('register-form');
     const formTitle = document.getElementById('form-title');
     const subText = document.getElementById('sub-text');
-
+    
     function switchToLogin() {
         loginForm.style.display = 'block';
         registerForm.style.display = 'none';
         formTitle.innerHTML = 'ENTER THE GRID';
         subText.innerHTML = 'Your cube awaits identity';
         clearMessage();
-        // reset fields to avoid confusion
         document.getElementById('login-username').value = '';
         document.getElementById('login-password').value = '';
     }
-
+    
     function switchToRegister() {
         loginForm.style.display = 'none';
         registerForm.style.display = 'block';
         formTitle.innerHTML = 'FORGE YOUR LEGEND';
         subText.innerHTML = 'create an account, join the tenacious';
         clearMessage();
-        // clear register fields
         document.getElementById('reg-username').value = '';
         document.getElementById('reg-email').value = '';
         document.getElementById('reg-password').value = '';
         document.getElementById('reg-confirm').value = '';
     }
-
-    // event listeners for toggles
+    
+    // Event listeners
     document.getElementById('goto-register').addEventListener('click', (e) => {
         e.preventDefault();
         switchToRegister();
@@ -571,42 +586,47 @@
         e.preventDefault();
         switchToLogin();
     });
-
-    // attach submit handlers
+    
     loginForm.addEventListener('submit', handleLogin);
     registerForm.addEventListener('submit', handleRegister);
-
-    // extra: little glitch hover on card (optional playful)
-    const authCard = document.querySelector('.auth-card');
-    authCard.addEventListener('mouseenter', () => {
-        authCard.style.transform = 'scale(1.01)';
-        authCard.style.transition = 'all 0.2s';
-    });
-    authCard.addEventListener('mouseleave', () => {
-        authCard.style.transform = 'scale(1)';
-    });
     
-    // Pre-check PlayFab initialization: title ID
-    if (PlayFab && PlayFab.settings) {
-        console.log("Active Title ID: " + PlayFab.settings.titleId);
-    } else {
-        setTimeout(() => {
-            if (typeof PlayFab === 'undefined') console.warn("PlayFab SDK not loaded, check network");
-            else if (PlayFab.settings) PlayFab.settings.titleId = TITLE_ID;
-        }, 100);
+    // ========== INITIALIZE ==========
+    async function init() {
+        // Set PlayFab title ID immediately
+        if (typeof PlayFab !== 'undefined' && PlayFab.settings) {
+            PlayFab.settings.titleId = TITLE_ID;
+            console.log("PlayFab title ID set to:", TITLE_ID);
+        } else {
+            // Wait for SDK to load
+            const checkSDK = setInterval(() => {
+                if (typeof PlayFab !== 'undefined' && PlayFab.settings) {
+                    PlayFab.settings.titleId = TITLE_ID;
+                    console.log("PlayFab SDK loaded late, title ID set");
+                    clearInterval(checkSDK);
+                    testPlayFabConnection();
+                }
+            }, 200);
+            setTimeout(() => {
+                clearInterval(checkSDK);
+                if (typeof PlayFab === 'undefined') {
+                    statusBadge.innerHTML = "❌ PlayFab SDK failed to load. Check your internet connection.";
+                    statusBadge.style.color = "#ff6666";
+                }
+            }, 5000);
+            return;
+        }
+        
+        await testPlayFabConnection();
     }
-
-    // small stylistic reminder: if user hits enter, same handling
-    window.onload = () => {
-        // tiny animation delay for extra polish
-        document.body.style.opacity = '0';
-        document.body.style.transition = 'opacity 0.2s';
-        setTimeout(() => document.body.style.opacity = '1', 50);
-        // if someone is already logged in maybe redirect? but we keep it clean
-        const session = localStorage.getItem('AOLTD_session');
-        // we don't auto-redirect because they might want to use another account.
-        // but we preserve style.
-    };
+    
+    // Start initialization
+    init();
+    
+    // Retry connection if user clicks status badge (hidden feature)
+    statusBadge.style.cursor = "pointer";
+    statusBadge.addEventListener('click', () => {
+        testPlayFabConnection();
+    });
 </script>
 </body>
 </html>
