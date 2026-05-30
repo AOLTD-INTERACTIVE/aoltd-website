@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon_io/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
+    <link rel="apple-touch-icon" href="favicon_io/apple-touch-icon.png">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AOLTD - Account Deletion Request for CUBLY</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Request deletion of your AOLTD CUBLY game account and associated data.">
+    <meta name="robots" content="noindex">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Foldit:wght@400;600;700&family=Aubrey&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --orange: #ff5500;
+            --dark-blue: #0a1929;
+            --darker-blue: #0a141f;
+            --light-blue: #1e3a5f;
+            --text-light: #ffffff;
+            --text-dim: #b0b0b0;
+            --card-bg: rgba(20, 30, 45, 0.7);
+            --gradient-1: linear-gradient(135deg, #ff5500, #ff3300);
+            --gradient-2: linear-gradient(135deg, #0a1929, #1e3a5f);
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            --warning-red: #ff3b30;
+            --success-green: #00c853;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--dark-blue);
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* ===== NAVIGATION ===== */
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 25, 41, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 85, 0, 0.2);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--orange);
+            text-decoration: none;
+            font-family: 'Foldit', cursive;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--orange);
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--orange);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::before {
+            width: 100%;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            padding: 4rem 0 6rem;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--orange);
+            font-family: 'Foldit', cursive;
+            letter-spacing: 2px;
+        }
+
+        .game-badge {
+            display: inline-block;
+            background: rgba(255, 85, 0, 0.2);
+            border: 1px solid var(--orange);
+            border-radius: 50px;
+            padding: 0.25rem 1rem;
+            font-size: 0.85rem;
+            color: var(--orange);
+            margin-bottom: 1rem;
+        }
+
+        .title-underline {
+            width: 80px;
+            height: 4px;
+            background: var(--orange);
+            margin-bottom: 2rem;
+            border-radius: 2px;
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 85, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .info-card h2 {
+            color: var(--orange);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-card p {
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+        }
+
+        .info-card ul, .info-card ol {
+            color: var(--text-dim);
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-card li {
+            margin-bottom: 0.5rem;
+        }
+
+        .warning-box {
+            background: rgba(255, 59, 48, 0.1);
+            border-left: 4px solid var(--warning-red);
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+        }
+
+        .warning-box p {
+            margin-bottom: 0;
+            color: var(--text-light);
+        }
+
+        .warning-box strong {
+            color: var(--warning-red);
+        }
+
+        .email-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--gradient-1);
+            color: var(--text-light);
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 85, 0, 0.3);
+            font-size: 1.1rem;
+        }
+
+        .email-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 85, 0, 0.5);
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .step {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(10, 25, 41, 0.5);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 85, 0, 0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateY(-5px);
+            border-color: var(--orange);
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--orange);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 0 auto 1rem;
+        }
+
+        .step h3 {
+            color: var(--orange);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .step p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        .data-list {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .data-list h4 {
+            color: var(--orange);
+            margin-bottom: 0.5rem;
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 85, 0, 0.1);
+            padding-bottom: 1rem;
+        }
+
+        .faq-item h4 {
+            color: var(--orange);
+            margin-bottom: 0.5rem;
+        }
+
+        .faq-item p {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--orange);
+            text-decoration: none;
+            margin-top: 2rem;
+            transition: gap 0.3s ease;
+        }
+
+        .back-link:hover {
+            gap: 0.75rem;
+        }
+
+        .cubly-icon {
+            display: inline-block;
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2rem 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 85, 0, 0.2);
+        }
+
+        .footer a {
+            color: var(--orange);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .page-title { font-size: 2rem; }
+            .steps-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+            .container { padding: 0 1.5rem; }
+            .info-card { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">AOLTD</a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="games/games.html" class="nav-link">Games</a>
+                <a href="index.html#devlog-section" class="nav-link">Blog</a>
+                <a href="index.html#philosophy-section" class="nav-link">Philosophy</a>
+                <a href="index.html#press-section" class="nav-link">Press</a>
+                <a href="index.html#footer" class="nav-link">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <div class="game-badge">🎮 AOLTD: CUBLY</div>
+            <h1 class="page-title">Account Deletion Request</h1>
+            <div class="title-underline"></div>
+
+            <div class="info-card">
+                <h2>📋 How It Works</h2>
+                <p>We take your privacy seriously. If you wish to delete your CUBLY account and all associated data, follow the simple process below.</p>
+                
+                <div class="warning-box">
+                    <p>⚠️ <strong>IMPORTANT:</strong> Account deletion is permanent. All your CUBLY game progress, scores, purchases, and data will be irretrievably deleted. This action cannot be undone.</p>
+                </div>
+
+                <div class="steps-grid">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>Email Us</h3>
+                        <p>Send an email to aoltdinquiry@gmail.com</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>Provide Info</h3>
+                        <p>Include your PlayFab ID (if known) and confirm your request</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>Wait for Confirmation</h3>
+                        <p>We'll reply to confirm your request before processing</p>
+                    </div>
+                </div>
+
+                <a href="mailto:aoltdinquiry@gmail.com?subject=Account%20Deletion%20Requests-AOLTD%3A%20CUBLY&body=Hello%2C%0A%0AI%20would%20like%20to%20request%20permanent%20deletion%20of%20my%20CUBLY%20game%20account.%0A%0AMy%20PlayFab%20ID%20(if%20known)%3A%20%0A%0APlease%20confirm%20this%20request.%0A%0AThank%20you." class="email-button">
+                    📧 Send Deletion Request Email
+                </a>
+            </div>
+
+            <div class="info-card">
+                <h2>🗂️ What Data Gets Deleted</h2>
+                <div class="data-list">
+                    <h4>✅ Permanently Removed from CUBLY:</h4>
+                    <ul>
+                        <li>Game progress and save data</li>
+                        <li>High scores and leaderboard entries</li>
+                        <li>In-game purchases and virtual currency</li>
+                        <li>Display name and profile settings</li>
+                        <li>Account credentials (email/username/password if registered)</li>
+                        <li>Device association data</li>
+                        <li>Profile background and avatar choices</li>
+                    </ul>
+                </div>
+                <div class="data-list">
+                    <h4>📝 What We Keep (by legal requirement):</h4>
+                    <ul>
+                        <li>Transaction records for tax/audit purposes (anonymized)</li>
+                        <li>Aggregated analytics (non-personally identifiable)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <h2>⏱️ Timeline</h2>
+                <p>Once you email us with the subject "<strong>Account Deletion Requests-AOLTD: CUBLY</strong>":</p>
+                <ul>
+                    <li><strong>Within 48 hours:</strong> We'll reply to confirm you want to proceed</li>
+                    <li><strong>After your confirmation:</strong> Your account will be deleted within 30 days (as required by GDPR and Google Play policies)</li>
+                    <li><strong>Completion notification:</strong> We'll email you when deletion is complete</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h2>❓ Frequently Asked Questions</h2>
+                
+                <div class="faq-item">
+                    <h4>What if I don't know my PlayFab ID?</h4>
+                    <p>That's okay! Just send us the email address associated with your account or describe your account as best you can. We'll work with you to identify the correct account before deletion.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h4>Can I delete my account from within the game?</h4>
+                    <p>Not yet. For now, email requests are the only way. We're working on adding an in-app deletion option in a future update.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h4>How long does it take?</h4>
+                    <p>We process all deletion requests within 30 days of your confirmation, as required by data protection laws. Most requests are completed within 7-14 days.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h4>Can I recover my account after deletion?</h4>
+                    <p>No. Deletion is permanent. If you reinstall CUBLY, a brand new account will be created.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h4>What about GDPR/California privacy rights?</h4>
+                    <p>We comply with all applicable data protection regulations. This deletion process fulfills your "right to be forgotten" under GDPR, CCPA, and similar laws.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h4>Will this affect my accounts in other AOLTD games?</h4>
+                    <p>Currently, deletion requests are per game. If you play multiple AOLTD games, you'll need to submit separate requests for each game. We're working on a unified account system for the future.</p>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <h2>📞 Need Help?</h2>
+                <p>If you're having trouble with the deletion process or have questions about your data, contact us directly:</p>
+                <p><strong>Email:</strong> <a href="mailto:aoltdinquiry@gmail.com" style="color: var(--orange);">aoltdinquiry@gmail.com</a></p>
+                <p><strong>Response time:</strong> Usually within 48 hours (business days)</p>
+            </div>
+
+            <a href="index.html" class="back-link">← Back to AOLTD Home</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer">
+            <div class="container">
+                <p>© 2026 AOLTD - Art Of Lone Tenacious Developer. All rights reserved.</p>
+                <p style="margin-top: 0.5rem; font-size: 0.8rem;">
+                    <a href="privacy.html">Privacy Policy</a> • 
+                    <a href="terms.html">Terms of Use</a> • 
+                    <a href="account_deletion_cubly.html">Account Deletion</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
