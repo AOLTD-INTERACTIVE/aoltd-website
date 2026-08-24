@@ -195,7 +195,7 @@ svg#lines{position:absolute;inset:0;width:100%;height:100%;}
 #giftbox{font-size:90px; cursor:pointer; animation:float 3s ease-in-out infinite; filter:drop-shadow(0 0 20px rgba(244,213,141,.5));}
 #finale h1{font-size:46px; background:linear-gradient(180deg,#fff,var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent;}
 #lyricPanel{
-  width:92%; max-width:360px; height:150px; overflow-y:auto;
+  width:92%; max-width:360px; height:180px; overflow-y:auto;
   margin-top:4px; padding:10px 6px; scroll-behavior:auto;
   -webkit-mask-image:linear-gradient(to bottom, transparent 0, #000 14%, #000 86%, transparent 100%);
   mask-image:linear-gradient(to bottom, transparent 0, #000 14%, #000 86%, transparent 100%);
@@ -203,8 +203,8 @@ svg#lines{position:absolute;inset:0;width:100%;height:100%;}
 #lyricPanel::-webkit-scrollbar{width:3px;}
 #lyricPanel::-webkit-scrollbar-thumb{background:rgba(244,213,141,.4); border-radius:4px;}
 .lyric-section{font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); opacity:.6; margin:14px 0 6px;}
-.lyric-line{font-family:'Playfair Display'; font-style:italic; font-size:16px; line-height:1.7; margin:2px 0; opacity:.4; transition:opacity .3s, color .3s;}
-.lyric-line .tag{font-family:'Quicksand'; font-style:normal; font-weight:700; font-size:9.5px; letter-spacing:.08em; color:var(--sky); opacity:.7; margin-right:6px; border:1px solid rgba(174,227,245,.4); border-radius:20px; padding:1px 6px;}
+.lyric-line{font-family:'Playfair Display'; font-style:italic; font-size:15px; line-height:1.7; margin:2px 0; opacity:.4; transition:opacity .3s, color .3s; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;}
+.lyric-line .tag{font-family:'Quicksand'; font-style:normal; font-weight:700; font-size:9.5px; letter-spacing:.08em; color:var(--sky); opacity:.7; margin-right:6px; border:1px solid rgba(174,227,245,.4); border-radius:20px; padding:1px 6px; display:inline-block;}
 .lyric-line.near{opacity:.75; color:#fff;}
 .lyric-line.active{opacity:1; color:var(--gold);}
 .scrollhint{font-size:10.5px; color:var(--sky); opacity:.6; margin-top:2px;}
@@ -267,6 +267,22 @@ audio{width:90%; max-width:340px; margin-top:6px; filter: invert(0.85) sepia(1) 
 @keyframes chestShake{0%,100%{transform:rotate(0);}20%{transform:rotate(-8deg) scale(1.05);}40%{transform:rotate(8deg) scale(1.05);}60%{transform:rotate(-6deg) scale(1.08);}80%{transform:rotate(6deg) scale(1.08);}}
 @keyframes chestGlow{0%{filter:drop-shadow(0 0 20px rgba(244,213,141,.5));}50%{filter:drop-shadow(0 0 55px rgba(244,213,141,1)) brightness(1.3);transform:scale(1.15);}100%{filter:drop-shadow(0 0 20px rgba(244,213,141,.5));}}
 #giftTapHint{font-size:12px; color:var(--sky); opacity:.8; margin-top:4px;}
+
+/* Proposal Modal */
+#proposalOverlay{position:fixed; inset:0; z-index:100; background:rgba(6,18,37,.92); backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center; padding:24px;}
+#proposalModal{max-width:400px; padding:40px 30px; text-align:center;}
+#proposalModal h2{font-family:'Playfair Display'; font-size:32px; color:var(--gold); margin:10px 0 20px;}
+#proposalModal p{font-size:16px; color:var(--sky); line-height:1.8; margin-bottom:30px;}
+.proposal-buttons{display:flex; gap:30px; justify-content:center;}
+.proposal-btn{font-size:28px; padding:16px 40px; border-radius:60px; border:2px solid var(--gold); background:rgba(244,213,141,.1); color:var(--gold); cursor:pointer; transition:transform .2s, box-shadow .2s; font-weight:700;}
+.proposal-btn:hover{transform:scale(1.05);}
+.proposal-btn.yes{background:linear-gradient(180deg, var(--sky), var(--sky-deep)); color:var(--navy-deep); border:none; padding:16px 50px;}
+.proposal-btn.yes:hover{box-shadow:0 0 40px rgba(174,227,245,.6);}
+.proposal-btn.no{position:relative; transition:all 0.1s;}
+.proposal-btn.no:hover{transform:scale(0.95);}
+.proposal-btn.no.dodging{animation:dodge .3s ease forwards;}
+@keyframes dodge{0%{transform:translate(0,0);}100%{transform:translate(40px,-30px);}}
+.proposal-sub{font-size:12px; color:rgba(244,213,141,.5); margin-top:20px;}
 </style>
 </head>
 <body>
@@ -274,7 +290,7 @@ audio{width:90%; max-width:340px; margin-top:6px; filter: invert(0.85) sepia(1) 
 <div id="app"></div>
 
 <script>
-/* ============ DEV SKIP SHORTCUT ============ */
+/* ============ DEV SKIP SHORTCUTS ============ */
 let currentLevelId = null;
 document.addEventListener('keydown', function(e) {
   if(e.key === 's' || e.key === 'S') {
@@ -288,6 +304,22 @@ document.addEventListener('keydown', function(e) {
         completeAndReturn(currentLevelId, '⭐ Skipped (dev)');
       }
     }
+  }
+  if(e.key === 't' || e.key === 'T') {
+    e.preventDefault();
+    e.stopPropagation();
+    // Complete all levels 1-9
+    for(let i = 1; i <= 9; i++) {
+      if(!state.completed[i]) {
+        markComplete(i);
+      }
+    }
+    Sound.sfx('success');
+    if(document.getElementById('level-screen')) {
+      closeLevel();
+    }
+    renderMap();
+    burstConfetti(40);
   }
 });
 
@@ -350,7 +382,7 @@ const Sound = (function(){
     bgmEl = new Audio('assets/bgm.mp3');
     bgmEl.loop = true;
     bgmEl.volume = muted?0:BGM_VOLUME;
-    bgmEl.play().catch(()=>{}); // ignored if autoplay is blocked until a tap happens
+    bgmEl.play().catch(()=>{});
   }
   function setMuted(m){
     muted = m;
@@ -456,7 +488,7 @@ const LEVELS = [
 ];
 
 let state = {
-  unlocked: 1, // highest unlocked level
+  unlocked: 1,
   completed: {},
 };
 
@@ -484,13 +516,16 @@ function renderSplash(){
   initSoundToggle();
 }
 
-function goMap(){ Sound.start(); Sound.sfx('whoosh'); renderMap(); }
+function goMap(){ 
+  Sound.start(); 
+  Sound.sfx('whoosh'); 
+  renderMap(); 
+}
 
 function renderMap(){
   const doneCount = Object.keys(state.completed).length;
   const pct = Math.round((doneCount/LEVELS.length)*100);
 
-  // positions for a gentle vertical constellation path (percent based)
   const positions = [
     [22,6],[70,14],[30,24],[74,34],[24,44],[70,54],[26,64],[72,74],[26,88],[64,99]
   ];
@@ -510,7 +545,6 @@ function renderMap(){
       </div>`;
   });
 
-  // svg lines connecting points
   let lines = '';
   for(let i=0;i<pathPts.length-1;i++){
     const [x1,y1]=pathPts[i], [x2,y2]=pathPts[i+1];
@@ -836,7 +870,7 @@ function renderSlice(lv){
     const el = document.createElement('div');
     el.className='slice-item';
     const roll = Math.random();
-    const isGood = roll < 0.45; // heart
+    const isGood = roll < 0.45;
     el.textContent = isGood ? '💙' : (Math.random()<0.5 ? '⭐' : '☁️');
     el.style.left = (Math.random()*76)+'%';
     el.style.top = (Math.random()*76)+'%';
@@ -877,7 +911,7 @@ function renderSlice(lv){
 /* ============ LEVEL 6: RACE ============ */
 function renderRace(lv){
   const body = document.getElementById('level-body');
-  const lanes = [20,50,80]; // percent
+  const lanes = [20,50,80];
   const target = 14;
   let laneIdx = 1, score=0, timeLeft=40, spawner, ticker, moveLoop, ended=false;
   body.innerHTML = `
@@ -995,8 +1029,6 @@ function renderWhack(lv){
     h.style.touchAction = 'manipulation';
     grid.appendChild(h);
     holes.push(h);
-    // whole-circle collision, instant response: pointerdown fires immediately
-    // (no ~300ms click delay), and works the same for touch, pen, and mouse.
     const hit = (e)=>{
       if(e && e.cancelable) e.preventDefault();
       if(ended || h!==activeHole || !h.classList.contains('up')) return;
@@ -1029,7 +1061,7 @@ function renderWhack(lv){
     activeHole = h;
     h.classList.add('up');
     h.innerHTML = '<span class="star-el">⭐</span>';
-    vanishTimer = setTimeout(hideActive, 620); // stays up almost the full spawn cycle
+    vanishTimer = setTimeout(hideActive, 620);
   }, 700);
   timers.push(spawner);
   ticker = setInterval(()=>{
@@ -1057,7 +1089,6 @@ function renderWhack(lv){
 /* ============ LEVEL 8: CONNECT THE HEART ============ */
 function renderConnect(lv){
   const body = document.getElementById('level-body');
-  // heart-shaped points, order matters
   const pts = [
     [50,15],[35,5],[15,15],[8,35],[20,55],[50,80],[80,55],[92,35],[85,15],[65,5],[50,15]
   ];
@@ -1072,7 +1103,7 @@ function renderConnect(lv){
   let next = 0;
   const circles = [];
   pts.forEach((p,idx)=>{
-    if(idx===pts.length-1) return; // last point duplicates first, used only for closing line
+    if(idx===pts.length-1) return;
     const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
     c.setAttribute('cx', p[0]); c.setAttribute('cy', p[1]); c.setAttribute('r', 3.2);
     c.classList.add('cpoint');
@@ -1197,11 +1228,65 @@ function tapGift(){
     Sound.sfx('chest');
     box.onclick = null;
     hint.textContent = '';
-    openGift();
+    showProposal();
   }
 }
 
-// Structured lyrics for "Mi Ayla", synced to the real .lrc timestamps
+/* ============ PROPOSAL MODAL ============ */
+function showProposal(){
+  Sound.pauseBGM();
+  burstConfetti(40);
+  
+  let overlay = document.createElement('div');
+  overlay.id = 'proposalOverlay';
+  overlay.innerHTML = `
+    <div class="card" id="proposalModal">
+      <div style="font-size:48px; margin-bottom:6px;">💍</div>
+      <h2>Mi Ayla...</h2>
+      <p>Every star tonight was for you. I love you more than any of these games could ever show.<br><br>So, mi Ayla... will you marry me?</p>
+      <div class="proposal-buttons">
+        <button class="proposal-btn yes" id="proposalYes">💖 Yes</button>
+        <button class="proposal-btn no" id="proposalNo">😢 No</button>
+      </div>
+      <div class="proposal-sub">— AOLTD</div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  
+  const yesBtn = document.getElementById('proposalYes');
+  const noBtn = document.getElementById('proposalNo');
+  
+  // Make No button dodge
+  noBtn.addEventListener('mouseenter', function() {
+    dodgeNo(this);
+  });
+  noBtn.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    dodgeNo(this);
+  });
+  noBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    dodgeNo(this);
+  });
+  
+  // Yes button - proceed to the gift reveal
+  yesBtn.addEventListener('click', function() {
+    overlay.remove();
+    openGift();
+  });
+  
+  function dodgeNo(btn) {
+    if(btn.classList.contains('dodging')) return;
+    btn.classList.add('dodging');
+    const x = (Math.random() - 0.5) * 200;
+    const y = (Math.random() - 0.5) * 100;
+    btn.style.transform = `translate(${x}px, ${y}px)`;
+    setTimeout(() => {
+      btn.classList.remove('dodging');
+    }, 300);
+  }
+}
+
 const LYRIC_SECTIONS = [
   { section: "Verse 1", lines: [
     {tag:"M", text:"Ayla, it's your day, I pull up with the prize", t:6.58},
@@ -1291,75 +1376,73 @@ function buildLyricHtml(){
 }
 
 function openGift(){
-  Sound.pauseBGM();
   burstConfetti(60);
-  const box = document.getElementById('giftbox');
-  box.style.transition='transform .4s ease, opacity .4s ease';
-  box.style.transform='scale(1.6) rotate(15deg)';
-  box.style.opacity='0';
-  speak("Mi Ayla, before you see this, I need you to hear it too. Every star tonight was for you. I love you, more than any of these games could ever show. So, mi Ayla... will you marry me?", {rate:0.88});
-  setTimeout(()=>{
-    const finale = document.getElementById('finale');
-    const {html: lyricsHtml, total: lyricCount, flatMap: lyricFlatMap} = buildLyricHtml();
-    finale.innerHTML = `
-      <div class="eyebrow">Happy 21st, Luna</div>
-      <h1>Mi Ayla</h1>
-      <div class="sparkline"></div>
-      <audio id="songPlayer" controls preload="auto">
-        <source src="assets/song.mp3" type="audio/mpeg">
-      </audio>
-      <div id="lyricPanel">${lyricsHtml}</div>
-      <div class="scrollhint">follows the song — scroll anytime to read at your own pace</div>
-      <div id="photoStrip">
-        <img src="assets/photo1.webp" alt="">
-        <img src="assets/photo2.webp" alt="">
-        <img src="assets/photo3.webp" alt="">
-      </div>
-      <p style="max-width:340px; font-size:14px; color:var(--sky); line-height:1.7; margin-top:6px;">
-        Ten stars, one journey, and this — a song made only for you.
-        Happy 21st birthday, mi Ayla. Every level was a small way of saying
-        you are the ultimate gift, always.
-      </p>
-      <div style="color:var(--gold); font-family:'Playfair Display'; font-style:italic; font-size:15px; margin-top:4px;">
-        — AOLTD
-      </div>`;
-    const player = document.getElementById('songPlayer');
-    const panel = document.getElementById('lyricPanel');
-    const lineEls = Array.from(panel.querySelectorAll('.lyric-line'));
-    let userScrolling = false, userScrollTimeout = null;
+  
+  // Show the gift reveal with music and lyrics
+  const finale = document.getElementById('finale');
+  const {html: lyricsHtml, total: lyricCount, flatMap: lyricFlatMap} = buildLyricHtml();
+  finale.innerHTML = `
+    <div class="eyebrow">Happy 21st, Luna</div>
+    <h1>Mi Ayla</h1>
+    <div class="sparkline"></div>
+    <audio id="songPlayer" controls preload="auto" autoplay>
+      <source src="assets/song.mp3" type="audio/mpeg">
+    </audio>
+    <div id="lyricPanel">${lyricsHtml}</div>
+    <div class="scrollhint">follows the song — scroll anytime to read at your own pace</div>
+    <div id="photoStrip">
+      <img src="assets/photo1.webp" alt="">
+      <img src="assets/photo2.webp" alt="">
+      <img src="assets/photo3.webp" alt="">
+    </div>
+    <p style="max-width:340px; font-size:14px; color:var(--sky); line-height:1.7; margin-top:6px;">
+      Ten stars, one journey, and this — a song made only for you.
+      Happy 21st birthday, mi Ayla. Every level was a small way of saying
+      you are the ultimate gift, always.
+    </p>
+    <div style="color:var(--gold); font-family:'Playfair Display'; font-style:italic; font-size:15px; margin-top:4px;">
+      — AOLTD
+    </div>`;
+  
+  const player = document.getElementById('songPlayer');
+  const panel = document.getElementById('lyricPanel');
+  const lineEls = Array.from(panel.querySelectorAll('.lyric-line'));
+  let userScrolling = false, userScrollTimeout = null;
 
-    panel.addEventListener('scroll', ()=>{
-      userScrolling = true;
-      clearTimeout(userScrollTimeout);
-      userScrollTimeout = setTimeout(()=>{ userScrolling = false; }, 4000);
-    });
+  panel.addEventListener('scroll', ()=>{
+    userScrolling = true;
+    clearTimeout(userScrollTimeout);
+    userScrollTimeout = setTimeout(()=>{ userScrolling = false; }, 4000);
+  });
 
-    const flatTimes = lyricFlatMap.map(l=>l.t);
-    let lastScrollIdx = -1;
-    player.addEventListener('timeupdate', ()=>{
-      const now = player.currentTime;
-      let idx = 0;
-      for(let k=0;k<flatTimes.length;k++){
-        if(flatTimes[k] <= now) idx = k; else break;
-      }
-      lineEls.forEach((el,i)=>{
-        el.classList.remove('active','near');
-        if(i===idx) el.classList.add('active');
-        else if(Math.abs(i-idx)===1) el.classList.add('near');
-      });
-      if(!userScrolling && idx !== lastScrollIdx) {
-        lastScrollIdx = idx;
-        const targetEl = lineEls[idx];
-        if(targetEl) {
-          const containerRect = panel.getBoundingClientRect();
-          const targetRect = targetEl.getBoundingClientRect();
-          const offset = targetRect.top - containerRect.top - containerRect.height/2 + targetRect.height/2;
-          panel.scrollBy({ top: offset, behavior: 'smooth' });
-        }
-      }
+  const flatTimes = lyricFlatMap.map(l=>l.t);
+  let lastScrollIdx = -1;
+  player.addEventListener('timeupdate', ()=>{
+    const now = player.currentTime;
+    let idx = 0;
+    for(let k=0;k<flatTimes.length;k++){
+      if(flatTimes[k] <= now) idx = k; else break;
+    }
+    lineEls.forEach((el,i)=>{
+      el.classList.remove('active','near');
+      if(i===idx) el.classList.add('active');
+      else if(Math.abs(i-idx)===1) el.classList.add('near');
     });
-    markComplete(10);
-  }, 450);
+    if(!userScrolling && idx !== lastScrollIdx) {
+      lastScrollIdx = idx;
+      const targetEl = lineEls[idx];
+      if(targetEl) {
+        const containerRect = panel.getBoundingClientRect();
+        const targetRect = targetEl.getBoundingClientRect();
+        const offset = targetRect.top - containerRect.top - containerRect.height/2 + targetRect.height/2;
+        panel.scrollBy({ top: offset, behavior: 'smooth' });
+      }
+    }
+  });
+  
+  // Start playing the song
+  player.play().catch(()=>{});
+  markComplete(10);
 }
 
 /* ============ INIT ============ */
