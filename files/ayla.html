@@ -19,19 +19,21 @@
   --glass: rgba(174,227,245,0.08);
 }
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-html,body{margin:0;padding:0;height:100%;overscroll-behavior:none;}
+html,body{margin:0;padding:0;height:100%;overscroll-behavior:none;overflow:hidden;position:fixed;width:100%;}
 body{
   font-family:'Quicksand', sans-serif;
   background: radial-gradient(ellipse at 50% -10%, #16305c 0%, var(--navy) 45%, var(--navy-deep) 100%);
   color:var(--white);
   min-height:100vh;
   overflow-x:hidden;
+  overflow-y:auto;
   position:relative;
+  -webkit-overflow-scrolling:touch;
 }
 #stars-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
 .star-pt{position:absolute;background:var(--white);border-radius:50%;opacity:.7;animation:twinkle 3s ease-in-out infinite;}
 @keyframes twinkle{0%,100%{opacity:.15;transform:scale(.8);}50%{opacity:1;transform:scale(1.3);}}
-#app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 60px;}
+#app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 60px;overflow-y:auto;}
 
 h1,h2,h3{font-family:'Playfair Display', serif; margin:0;}
 .eyebrow{
@@ -131,21 +133,21 @@ svg#lines{position:absolute;inset:0;width:100%;height:100%;}
 #final-node .dot{width:74px;height:74px; font-size:26px;}
 
 /* ---------- LEVEL MODAL ---------- */
-#level-screen{position:fixed; inset:0; z-index:20; background:linear-gradient(180deg, var(--navy-deep), var(--navy) 60%); display:flex; flex-direction:column; align-items:center; padding:18px 16px 30px; overflow-y:auto;}
-#level-top{width:100%; max-width:480px; display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
+#level-screen{position:fixed; inset:0; z-index:20; background:linear-gradient(180deg, var(--navy-deep), var(--navy) 60%); display:flex; flex-direction:column; align-items:center; padding:18px 16px 30px; overflow-y:auto; -webkit-overflow-scrolling:touch;}
+#level-top{width:100%; max-width:480px; display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; flex-shrink:0;}
 #level-top .back{font-family:'Quicksand'; color:var(--sky); font-size:14px; cursor:pointer; opacity:.85;}
 #level-top .title{font-family:'Playfair Display'; font-size:17px; color:var(--gold);}
-#level-body{width:100%; max-width:480px; flex:1; display:flex; flex-direction:column; align-items:center;}
-.instructions{font-size:13.5px; color:var(--sky); text-align:center; line-height:1.6; margin-bottom:16px; max-width:360px;}
-.hud{display:flex; gap:22px; justify-content:center; margin-bottom:14px; font-size:13px; color:var(--gold); font-weight:700; letter-spacing:.05em;}
+#level-body{width:100%; max-width:480px; flex:1; display:flex; flex-direction:column; align-items:center; overflow-y:auto; -webkit-overflow-scrolling:touch;}
+.instructions{font-size:13.5px; color:var(--sky); text-align:center; line-height:1.6; margin-bottom:16px; max-width:360px; flex-shrink:0;}
+.hud{display:flex; gap:22px; justify-content:center; margin-bottom:14px; font-size:13px; color:var(--gold); font-weight:700; letter-spacing:.05em; flex-shrink:0;}
 
 /* Star Catch */
-#catch-area{position:relative; width:100%; max-width:380px; height:420px; border-radius:18px; overflow:hidden; background:linear-gradient(180deg, rgba(174,227,245,.08), rgba(6,18,37,.4)); border:1px solid rgba(244,213,141,.25);}
-.falling{position:absolute; font-size:38px; cursor:pointer; user-select:none; filter:drop-shadow(0 0 6px rgba(244,213,141,.6));}
+#catch-area{position:relative; width:100%; max-width:380px; height:420px; border-radius:18px; overflow:hidden; background:linear-gradient(180deg, rgba(174,227,245,.08), rgba(6,18,37,.4)); border:1px solid rgba(244,213,141,.25); touch-action:none;}
+.falling{position:absolute; font-size:38px; cursor:pointer; user-select:none; filter:drop-shadow(0 0 6px rgba(244,213,141,.6)); touch-action:none;}
 
 /* Memory */
 #memGrid{display:grid; grid-template-columns:repeat(4,1fr); gap:9px; width:100%; max-width:360px;}
-.mcard{aspect-ratio:1; border-radius:12px; background:linear-gradient(160deg, rgba(174,227,245,.14), rgba(255,255,255,.02)); border:1px solid rgba(244,213,141,.3); display:flex; align-items:center; justify-content:center; font-size:26px; cursor:pointer; transition:transform .3s;}
+.mcard{aspect-ratio:1; border-radius:12px; background:linear-gradient(160deg, rgba(174,227,245,.14), rgba(255,255,255,.02)); border:1px solid rgba(244,213,141,.3); display:flex; align-items:center; justify-content:center; font-size:26px; cursor:pointer; transition:transform .3s; touch-action:manipulation;}
 .mcard.flipped{background:radial-gradient(circle at 35% 30%, rgba(244,213,141,.35), rgba(174,227,245,.1));}
 .mcard.matched{opacity:.35; pointer-events:none;}
 
@@ -158,25 +160,25 @@ svg#lines{position:absolute;inset:0;width:100%;height:100%;}
 /* Quiz */
 .quiz-q{font-family:'Playfair Display'; font-size:19px; text-align:center; margin:8px 0 20px; line-height:1.4; color:#fff;}
 .quiz-opts{display:flex; flex-direction:column; gap:10px; width:100%; max-width:340px;}
-.quiz-opt{padding:14px 18px; border-radius:16px; border:1px solid rgba(244,213,141,.35); background:rgba(255,255,255,.04); color:var(--sky); font-family:'Quicksand'; font-size:14.5px; text-align:left; cursor:pointer; transition:.2s;}
+.quiz-opt{padding:14px 18px; border-radius:16px; border:1px solid rgba(244,213,141,.35); background:rgba(255,255,255,.04); color:var(--sky); font-family:'Quicksand'; font-size:14.5px; text-align:left; cursor:pointer; transition:.2s; touch-action:manipulation;}
 .quiz-opt:active,.quiz-opt.chosen{background:rgba(244,213,141,.2); border-color:var(--gold); color:#fff;}
 .quiz-feedback{margin-top:16px; text-align:center; font-size:13.5px; color:var(--gold); min-height:20px;}
 
 /* Slice */
-#slice-area{position:relative; width:100%; max-width:380px; height:420px; border-radius:18px; overflow:hidden; background:linear-gradient(180deg, rgba(174,227,245,.08), rgba(6,18,37,.4)); border:1px solid rgba(244,213,141,.25);}
-.slice-item{position:absolute; font-size:44px; cursor:pointer;}
+#slice-area{position:relative; width:100%; max-width:380px; height:420px; border-radius:18px; overflow:hidden; background:linear-gradient(180deg, rgba(174,227,245,.08), rgba(6,18,37,.4)); border:1px solid rgba(244,213,141,.25); touch-action:none;}
+.slice-item{position:absolute; font-size:44px; cursor:pointer; touch-action:none;}
 
 /* Racing */
-#road{position:relative; width:100%; max-width:300px; height:440px; margin:0 auto; border-radius:18px; overflow:hidden; background:repeating-linear-gradient(180deg, #1b2a44 0 40px, #16233a 40px 80px); border:1px solid rgba(244,213,141,.25);}
+#road{position:relative; width:100%; max-width:300px; height:440px; margin:0 auto; border-radius:18px; overflow:hidden; background:repeating-linear-gradient(180deg, #1b2a44 0 40px, #16233a 40px 80px); border:1px solid rgba(244,213,141,.25); touch-action:none;}
 .lane-line{position:absolute; top:0; bottom:0; width:2px; background:repeating-linear-gradient(180deg, rgba(255,255,255,.35) 0 16px, transparent 16px 32px);}
-.car{position:absolute; bottom:14px; font-size:34px; transition:left .16s ease;}
-.obst{position:absolute; font-size:28px;}
-#road-controls{display:flex; gap:60px; margin-top:16px;}
-.pad{width:64px;height:64px;border-radius:50%;border:1.5px solid var(--gold);background:rgba(244,213,141,.08);color:var(--gold);font-size:24px;display:flex;align-items:center;justify-content:center;}
+.car{position:absolute; bottom:14px; font-size:34px; transition:left .16s ease; touch-action:none;}
+.obst{position:absolute; font-size:28px; touch-action:none;}
+#road-controls{display:flex; gap:60px; margin-top:16px; flex-shrink:0;}
+.pad{width:64px;height:64px;border-radius:50%;border:1.5px solid var(--gold);background:rgba(244,213,141,.08);color:var(--gold);font-size:24px;display:flex;align-items:center;justify-content:center;touch-action:manipulation;cursor:pointer;}
 
 /* Whack */
 #whackGrid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; width:100%; max-width:300px;}
-.hole{aspect-ratio:1; border-radius:50%; background:radial-gradient(circle at 40% 30%, rgba(174,227,245,.12), rgba(6,18,37,.5)); border:1px solid rgba(244,213,141,.25); display:flex; align-items:center; justify-content:center; font-size:0; cursor:pointer; overflow:hidden;}
+.hole{aspect-ratio:1; border-radius:50%; background:radial-gradient(circle at 40% 30%, rgba(174,227,245,.12), rgba(6,18,37,.5)); border:1px solid rgba(244,213,141,.25); display:flex; align-items:center; justify-content:center; font-size:0; cursor:pointer; overflow:hidden; touch-action:manipulation;}
 .hole.up{font-size:30px;}
 
 /* Constellation connect */
@@ -191,14 +193,15 @@ svg#lines{position:absolute;inset:0;width:100%;height:100%;}
 #letter-card .sign{font-family:'Playfair Display'; font-style:italic; color:var(--gold); font-size:16px; text-align:right; margin-top:6px;}
 
 /* Finale */
-#finale{min-height:88vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:18px; width:100%;}
-#giftbox{font-size:90px; cursor:pointer; animation:float 3s ease-in-out infinite; filter:drop-shadow(0 0 20px rgba(244,213,141,.5));}
+#finale{min-height:88vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:18px; width:100%; overflow-y:auto; -webkit-overflow-scrolling:touch;}
+#giftbox{font-size:90px; cursor:pointer; animation:float 3s ease-in-out infinite; filter:drop-shadow(0 0 20px rgba(244,213,141,.5)); touch-action:manipulation;}
 #finale h1{font-size:46px; background:linear-gradient(180deg,#fff,var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent;}
 #lyricPanel{
   width:92%; max-width:360px; height:150px; overflow-y:auto;
   margin-top:4px; padding:10px 6px; scroll-behavior:auto;
   -webkit-mask-image:linear-gradient(to bottom, transparent 0, #000 14%, #000 86%, transparent 100%);
   mask-image:linear-gradient(to bottom, transparent 0, #000 14%, #000 86%, transparent 100%);
+  -webkit-overflow-scrolling:touch;
 }
 #lyricPanel::-webkit-scrollbar{width:3px;}
 #lyricPanel::-webkit-scrollbar-thumb{background:rgba(244,213,141,.4); border-radius:4px;}
@@ -208,9 +211,9 @@ svg#lines{position:absolute;inset:0;width:100%;height:100%;}
 .lyric-line.near{opacity:.75; color:#fff;}
 .lyric-line.active{opacity:1; color:var(--gold);}
 .scrollhint{font-size:10.5px; color:var(--sky); opacity:.6; margin-top:2px;}
-#photoStrip{display:flex; gap:10px; overflow-x:auto; max-width:100%; padding:10px 4px;}
+#photoStrip{display:flex; gap:10px; overflow-x:auto; max-width:100%; padding:10px 4px; -webkit-overflow-scrolling:touch;}
 #photoStrip img, .photo-ph{width:110px; height:140px; object-fit:cover; border-radius:14px; border:1.5px solid var(--gold); flex-shrink:0;}
-.photo-ph{display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.05); color:var(--sky); font-size:11px; text-align:center; padding:8px;}
+.photo-ph{display:flex;align-items:center;justify-content:center; background:rgba(255,255,255,.05); color:var(--sky); font-size:11px; text-align:center; padding:8px;}
 audio{width:90%; max-width:340px; margin-top:6px; filter: invert(0.85) sepia(1) saturate(2) hue-rotate(160deg);}
 
 .confetti{position:fixed; top:-10px; z-index:30; pointer-events:none; font-size:20px; animation:fallC linear forwards;}
@@ -223,10 +226,10 @@ audio{width:90%; max-width:340px; margin-top:6px; filter: invert(0.85) sepia(1) 
 }
 
 /* ---------- SOUND TOGGLE ---------- */
-#soundToggle{position:fixed; top:14px; right:14px; z-index:50; width:40px; height:40px; border-radius:50%; border:1.5px solid rgba(244,213,141,.4); background:rgba(6,18,37,.55); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; font-size:17px; cursor:pointer;}
+#soundToggle{position:fixed; top:14px; right:14px; z-index:50; width:40px; height:40px; border-radius:50%; border:1.5px solid rgba(244,213,141,.4); background:rgba(6,18,37,.55); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; font-size:17px; cursor:pointer; touch-action:manipulation;}
 
 /* ---------- TUTORIAL MODAL ---------- */
-#tutorialOverlay{position:fixed; inset:0; z-index:60; background:rgba(6,18,37,.82); backdrop-filter:blur(3px); display:flex; align-items:center; justify-content:center; padding:24px;}
+#tutorialOverlay{position:fixed; inset:0; z-index:60; background:rgba(6,18,37,.82); backdrop-filter:blur(3px); display:flex; align-items:center; justify-content:center; padding:24px; overflow-y:auto;}
 #tutorialModal{max-width:340px; padding:26px 22px; text-align:center;}
 #tutorialModal .eyebrow{margin-bottom:8px;}
 #tutorialModal h3{font-size:19px; color:var(--gold); margin-bottom:12px;}
@@ -249,7 +252,7 @@ audio{width:90%; max-width:340px; margin-top:6px; filter: invert(0.85) sepia(1) 
 @keyframes holeJitter{0%,100%{transform:translate(0,0);}25%{transform:translate(3px,-2px);}50%{transform:translate(-2px,2px);}75%{transform:translate(2px,2px);}}
 
 /* Connect the heart HUD */
-.connect-hud{display:flex; gap:20px; justify-content:center; margin-bottom:10px; font-size:12.5px; color:var(--gold); font-weight:700;}
+.connect-hud{display:flex; gap:20px; justify-content:center; margin-bottom:10px; font-size:12.5px; color:var(--gold); font-weight:700; flex-shrink:0;}
 .cpoint.next-hint{animation:hintPulse 1.1s ease-in-out infinite;}
 @keyframes hintPulse{0%,100%{r:3.2;}50%{r:5;}}
 .cpoint.miss{fill:#e66e6e;}
@@ -274,6 +277,23 @@ audio{width:90%; max-width:340px; margin-top:6px; filter: invert(0.85) sepia(1) 
 <div id="app"></div>
 
 <script>
+/* ============ DEV SKIP SHORTCUT ============ */
+let currentLevelId = null;
+document.addEventListener('keydown', function(e) {
+  if(e.key === 's' || e.key === 'S') {
+    if(currentLevelId !== null) {
+      e.preventDefault();
+      e.stopPropagation();
+      Sound.sfx('success');
+      const lv = LEVELS.find(l=>l.id===currentLevelId);
+      if(lv) {
+        clearAllTimers();
+        completeAndReturn(currentLevelId, '⭐ Skipped (dev)');
+      }
+    }
+  }
+});
+
 /* ============ STAR FIELD BACKGROUND ============ */
 (function(){
   const bg = document.getElementById('stars-bg');
@@ -333,7 +353,7 @@ const Sound = (function(){
     bgmEl = new Audio('assets/bgm.mp3');
     bgmEl.loop = true;
     bgmEl.volume = muted?0:BGM_VOLUME;
-    bgmEl.play().catch(()=>{}); // ignored if autoplay is blocked until a tap happens
+    bgmEl.play().catch(()=>{});
   }
   function setMuted(m){
     muted = m;
@@ -439,7 +459,7 @@ const LEVELS = [
 ];
 
 let state = {
-  unlocked: 1, // highest unlocked level
+  unlocked: 1,
   completed: {},
 };
 
@@ -473,7 +493,6 @@ function renderMap(){
   const doneCount = Object.keys(state.completed).length;
   const pct = Math.round((doneCount/LEVELS.length)*100);
 
-  // positions for a gentle vertical constellation path (percent based)
   const positions = [
     [22,6],[70,14],[30,24],[74,34],[24,44],[70,54],[26,64],[72,74],[26,88],[64,99]
   ];
@@ -493,7 +512,6 @@ function renderMap(){
       </div>`;
   });
 
-  // svg lines connecting points
   let lines = '';
   for(let i=0;i<pathPts.length-1;i++){
     const [x1,y1]=pathPts[i], [x2,y2]=pathPts[i+1];
@@ -517,6 +535,7 @@ function renderMap(){
 }
 
 function openLevel(id){
+  currentLevelId = id;
   const lv = LEVELS.find(l=>l.id===id);
   const renderers = {
     catch: renderCatch,
@@ -552,6 +571,7 @@ function renderLevelShell(lv){
     <div id="level-body"></div>`;
 }
 function closeLevel(){
+  currentLevelId = null;
   const shell = document.getElementById('level-screen');
   if(shell) shell.remove();
   clearAllTimers();
@@ -559,6 +579,7 @@ function closeLevel(){
 }
 function completeAndReturn(id, msg){
   markComplete(id);
+  currentLevelId = null;
   const body = document.getElementById('level-body');
   if(body){
     body.innerHTML += `<div style="margin-top:22px; text-align:center;">
@@ -577,14 +598,31 @@ function clearAllTimers(){ timers.forEach(t=>clearInterval(t)); timers=[]; }
 function renderCatch(lv){
   const body = document.getElementById('level-body');
   const target = 15;
-  let score = 0, timeLeft = 40, spawner, ticker;
+  let score = 0, timeLeft = 40, spawner, ticker, ended = false;
   body.innerHTML = `
     <div class="instructions">Tap the falling stars before they disappear. Catch ${target} to win the star.</div>
     <div class="hud"><span id="catchScore">Stars: 0</span><span id="catchTime">Time: ${timeLeft}s</span></div>
     <div id="catch-area"></div>`;
   const area = document.getElementById('catch-area');
 
+  function endGame(win){
+    if(ended) return;
+    ended = true;
+    clearInterval(spawner); clearInterval(ticker);
+    if(win){
+      Sound.sfx('success');
+      completeAndReturn(lv.id, "You caught every star, Luna ✨");
+    } else {
+      Sound.sfx('fail');
+      body.innerHTML += `<div style="text-align:center;margin-top:18px;">
+        <div style="color:var(--sky);margin-bottom:10px;">So close — try again, this sky isn't going anywhere.</div>
+        <button class="btn" onclick="openLevel(${lv.id})">Try Again</button>
+      </div>`;
+    }
+  }
+
   spawner = setInterval(()=>{
+    if(ended) return;
     const el = document.createElement('div');
     el.className='falling';
     el.textContent = Math.random()<0.15 ? '🩵' : '⭐';
@@ -603,35 +641,25 @@ function renderCatch(lv){
     }
     requestAnimationFrame(fall);
     el.onclick = ()=>{
+      if(ended) return;
       score++;
       Sound.sfx('star');
       document.getElementById('catchScore').textContent = 'Stars: '+score;
       el.remove();
       if(score>=target){
-        clearInterval(spawner); clearInterval(ticker);
-        Sound.sfx('success');
-        completeAndReturn(lv.id, "You caught every star, Luna ✨");
+        endGame(true);
       }
     };
   }, 950);
   timers.push(spawner);
 
   ticker = setInterval(()=>{
+    if(ended) return;
     timeLeft--;
     const t = document.getElementById('catchTime');
     if(t) t.textContent = 'Time: '+timeLeft+'s';
     if(timeLeft<=0){
-      clearInterval(spawner); clearInterval(ticker);
-      if(score>=target){
-        Sound.sfx('success');
-        completeAndReturn(lv.id, "You caught every star, Luna ✨");
-      } else {
-        Sound.sfx('fail');
-        body.innerHTML += `<div style="text-align:center;margin-top:18px;">
-          <div style="color:var(--sky);margin-bottom:10px;">So close — try again, this sky isn't going anywhere.</div>
-          <button class="btn" onclick="openLevel(${lv.id})">Try Again</button>
-        </div>`;
-      }
+      endGame(score>=target);
     }
   },1000);
   timers.push(ticker);
@@ -796,11 +824,11 @@ function renderSlice(lv){
     <div id="slice-area"></div>`;
   const area = document.getElementById('slice-area');
 
-  function endNow(){
+  function endGame(win){
     if(ended) return;
     ended = true;
     clearInterval(spawner); clearInterval(ticker);
-    if(score>=target){
+    if(win){
       Sound.sfx('success');
       completeAndReturn(lv.id, "The whole sky, sliced with love 🍓");
     } else {
@@ -816,7 +844,7 @@ function renderSlice(lv){
     const el = document.createElement('div');
     el.className='slice-item';
     const roll = Math.random();
-    const isGood = roll < 0.45; // heart
+    const isGood = roll < 0.45;
     el.textContent = isGood ? '💙' : (Math.random()<0.5 ? '⭐' : '☁️');
     el.style.left = (Math.random()*76)+'%';
     el.style.top = (Math.random()*76)+'%';
@@ -831,15 +859,19 @@ function renderSlice(lv){
         timeLeft = Math.max(0, timeLeft-2);
         const t=document.getElementById('sliceTime');
         if(t) t.textContent='Time: '+timeLeft+'s';
-        area.classList.remove('penalty'); void area.offsetWidth; area.classList.add('penalty');
+        if(!ended){
+          area.classList.remove('penalty');
+          void area.offsetWidth;
+          area.classList.add('penalty');
+        }
         setTimeout(()=>el.remove(),260);
-        if(timeLeft<=0) endNow();
+        if(timeLeft<=0) endGame(false);
       } else {
         Sound.sfx('star');
         score++;
         document.getElementById('sliceScore').textContent='Sliced: '+score;
         el.remove();
-        if(score>=target) endNow();
+        if(score>=target) endGame(true);
       }
     };
   }, 700);
@@ -849,7 +881,7 @@ function renderSlice(lv){
     timeLeft--;
     const t=document.getElementById('sliceTime');
     if(t) t.textContent='Time: '+timeLeft+'s';
-    if(timeLeft<=0) endNow();
+    if(timeLeft<=0) endGame(score>=target);
   },1000);
   timers.push(ticker);
 }
@@ -857,7 +889,7 @@ function renderSlice(lv){
 /* ============ LEVEL 6: RACE ============ */
 function renderRace(lv){
   const body = document.getElementById('level-body');
-  const lanes = [20,50,80]; // percent
+  const lanes = [20,50,80];
   const target = 14;
   let laneIdx = 1, score=0, timeLeft=40, spawner, ticker, moveLoop, ended=false;
   body.innerHTML = `
@@ -888,12 +920,12 @@ function renderRace(lv){
   const road = document.getElementById('road');
   const objs = [];
 
-  function endRace(){
+  function endRace(win){
     if(ended) return;
     ended = true;
     clearInterval(spawner); clearInterval(moveLoop); clearInterval(ticker);
     document.removeEventListener('keydown', keyHandler);
-    if(score>=target){
+    if(win){
       Sound.sfx('success');
       completeAndReturn(lv.id, "Made it through the night — every star collected 🛸✨");
     } else {
@@ -931,14 +963,18 @@ function renderRace(lv){
           score++;
           Sound.sfx('star');
           document.getElementById('raceScore').textContent='Stars: '+score+' / '+target;
-          if(score>=target){ el.remove(); objs.splice(k,1); endRace(); return; }
+          if(score>=target){ el.remove(); objs.splice(k,1); endRace(true); return; }
         } else {
           Sound.sfx('fail');
           timeLeft = Math.max(0, timeLeft-2);
           const t=document.getElementById('raceTime');
           if(t) t.textContent='Time: '+timeLeft+'s';
-          road.classList.remove('penalty'); void road.offsetWidth; road.classList.add('penalty');
-          if(timeLeft<=0){ el.remove(); objs.splice(k,1); endRace(); return; }
+          if(!ended){
+            road.classList.remove('penalty');
+            void road.offsetWidth;
+            road.classList.add('penalty');
+          }
+          if(timeLeft<=0){ el.remove(); objs.splice(k,1); endRace(false); return; }
         }
         el.remove(); objs.splice(k,1);
         continue;
@@ -953,7 +989,7 @@ function renderRace(lv){
     timeLeft--;
     const t=document.getElementById('raceTime');
     if(t) t.textContent='Time: '+timeLeft+'s';
-    if(timeLeft<=0) endRace();
+    if(timeLeft<=0) endRace(score>=target);
   },1000);
   timers.push(ticker);
 }
@@ -975,8 +1011,6 @@ function renderWhack(lv){
     h.style.touchAction = 'manipulation';
     grid.appendChild(h);
     holes.push(h);
-    // whole-circle collision, instant response: pointerdown fires immediately
-    // (no ~300ms click delay), and works the same for touch, pen, and mouse.
     const hit = (e)=>{
       if(e && e.cancelable) e.preventDefault();
       if(ended || h!==activeHole || !h.classList.contains('up')) return;
@@ -1002,6 +1036,22 @@ function renderWhack(lv){
     clearTimeout(vanishTimer);
   }
 
+  function endGame(win){
+    if(ended) return;
+    ended = true;
+    clearInterval(spawner); clearInterval(ticker);
+    hideActive();
+    if(win){
+      Sound.sfx('success');
+      completeAndReturn(lv.id, "Quick hands, quicker heart ✨");
+    } else {
+      Sound.sfx('fail');
+      body.innerHTML += `<div style="text-align:center;margin-top:18px;">
+        <div style="color:var(--sky);margin-bottom:10px;">So close! One more try.</div>
+        <button class="btn" onclick="openLevel(${lv.id})">Try Again</button></div>`;
+    }
+  }
+
   spawner = setInterval(()=>{
     if(ended) return;
     hideActive();
@@ -1009,26 +1059,16 @@ function renderWhack(lv){
     activeHole = h;
     h.classList.add('up');
     h.innerHTML = '<span class="star-el">⭐</span>';
-    vanishTimer = setTimeout(hideActive, 620); // stays up almost the full spawn cycle
+    vanishTimer = setTimeout(hideActive, 620);
   }, 700);
   timers.push(spawner);
   ticker = setInterval(()=>{
+    if(ended) return;
     timeLeft--;
     const t=document.getElementById('whackTime');
     if(t) t.textContent='Time: '+timeLeft+'s';
     if(timeLeft<=0){
-      ended = true;
-      clearInterval(spawner); clearInterval(ticker);
-      hideActive();
-      if(score>=target){
-        Sound.sfx('success');
-        completeAndReturn(lv.id, "Quick hands, quicker heart ✨");
-      } else {
-        Sound.sfx('fail');
-        body.innerHTML += `<div style="text-align:center;margin-top:18px;">
-          <div style="color:var(--sky);margin-bottom:10px;">So close! One more try.</div>
-          <button class="btn" onclick="openLevel(${lv.id})">Try Again</button></div>`;
-      }
+      endGame(score>=target);
     }
   },1000);
   timers.push(ticker);
@@ -1037,7 +1077,6 @@ function renderWhack(lv){
 /* ============ LEVEL 8: CONNECT THE HEART ============ */
 function renderConnect(lv){
   const body = document.getElementById('level-body');
-  // heart-shaped points, order matters
   const pts = [
     [50,15],[35,5],[15,15],[8,35],[20,55],[50,80],[80,55],[92,35],[85,15],[65,5],[50,15]
   ];
@@ -1052,7 +1091,7 @@ function renderConnect(lv){
   let next = 0;
   const circles = [];
   pts.forEach((p,idx)=>{
-    if(idx===pts.length-1) return; // last point duplicates first, used only for closing line
+    if(idx===pts.length-1) return;
     const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
     c.setAttribute('cx', p[0]); c.setAttribute('cy', p[1]); c.setAttribute('r', 3.2);
     c.classList.add('cpoint');
@@ -1181,9 +1220,6 @@ function tapGift(){
   }
 }
 
-// Structured lyrics for "Mi Ayla", synced to the real .lrc timestamps you
-// provided — the panel now follows the actual audio position (not an even
-// paced estimate). She can still scroll freely at any time.
 const LYRIC_SECTIONS = [
   { section: "Verse 1", lines: [
     {tag:"M", text:"Ayla, it's your day, I pull up with the prize", t:6.58},
@@ -1279,9 +1315,6 @@ function openGift(){
   box.style.transition='transform .4s ease, opacity .4s ease';
   box.style.transform='scale(1.6) rotate(15deg)';
   box.style.opacity='0';
-  // Optional: a spoken confession + proposal, played only if the browser
-  // supports free built-in text-to-speech. If not available, the reveal
-  // just proceeds silently — this line is never required for the gift to work.
   speak("Mi Ayla, before you see this, I need you to hear it too. Every star tonight was for you. I love you, more than any of these games could ever show. So, mi Ayla... will you marry me?", {rate:0.88});
   setTimeout(()=>{
     const finale = document.getElementById('finale');
@@ -1311,16 +1344,16 @@ function openGift(){
     const player = document.getElementById('songPlayer');
     const panel = document.getElementById('lyricPanel');
     const lineEls = Array.from(panel.querySelectorAll('.lyric-line'));
-    let userScrolling = false, userScrollTimeout = null, programmaticScroll = false;
+    let userScrolling = false, userScrollTimeout = null;
 
     panel.addEventListener('scroll', ()=>{
-      if(programmaticScroll){ programmaticScroll=false; return; }
       userScrolling = true;
       clearTimeout(userScrollTimeout);
       userScrollTimeout = setTimeout(()=>{ userScrolling = false; }, 4000);
     });
 
     const flatTimes = lyricFlatMap.map(l=>l.t);
+    let lastScrollIdx = -1;
     player.addEventListener('timeupdate', ()=>{
       const now = player.currentTime;
       let idx = 0;
@@ -1332,10 +1365,15 @@ function openGift(){
         if(i===idx) el.classList.add('active');
         else if(Math.abs(i-idx)===1) el.classList.add('near');
       });
-      if(!userScrolling && lineEls[idx]){
-        programmaticScroll = true;
-        const target = lineEls[idx].offsetTop - panel.clientHeight/2 + 12;
-        panel.scrollTop = Math.max(0, target);
+      if(!userScrolling && idx !== lastScrollIdx) {
+        lastScrollIdx = idx;
+        const targetEl = lineEls[idx];
+        if(targetEl) {
+          const containerRect = panel.getBoundingClientRect();
+          const targetRect = targetEl.getBoundingClientRect();
+          const offset = targetRect.top - containerRect.top - containerRect.height/2 + targetRect.height/2;
+          panel.scrollBy({ top: offset, behavior: 'smooth' });
+        }
       }
     });
     markComplete(10);
