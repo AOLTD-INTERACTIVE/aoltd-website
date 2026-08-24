@@ -140,12 +140,12 @@ svg#lines{position:absolute;inset:0;width:100%;height:100%;}
 .hud{display:flex; gap:22px; justify-content:center; margin-bottom:14px; font-size:13px; color:var(--gold); font-weight:700; letter-spacing:.05em;}
 
 /* Star Catch */
-#catch-area{position:relative; width:100%; max-width:380px; height:420px; border-radius:18px; overflow:hidden; background:linear-gradient(180deg, rgba(174,227,245,.08), rgba(6,18,37,.4)); border:1px solid rgba(244,213,141,.25);}
-.falling{position:absolute; font-size:38px; cursor:pointer; user-select:none; filter:drop-shadow(0 0 6px rgba(244,213,141,.6));}
+#catch-area{position:relative; width:100%; max-width:380px; height:420px; border-radius:18px; overflow:hidden; background:linear-gradient(180deg, rgba(174,227,245,.08), rgba(6,18,37,.4)); border:1px solid rgba(244,213,141,.25); touch-action:none;}
+.falling{position:absolute; font-size:44px; cursor:pointer; user-select:none; filter:drop-shadow(0 0 6px rgba(244,213,141,.6)); touch-action:none; padding:8px;}
 
 /* Memory */
 #memGrid{display:grid; grid-template-columns:repeat(4,1fr); gap:9px; width:100%; max-width:360px;}
-.mcard{aspect-ratio:1; border-radius:12px; background:linear-gradient(160deg, rgba(174,227,245,.14), rgba(255,255,255,.02)); border:1px solid rgba(244,213,141,.3); display:flex; align-items:center; justify-content:center; font-size:26px; cursor:pointer; transition:transform .3s;}
+.mcard{aspect-ratio:1; border-radius:12px; background:linear-gradient(160deg, rgba(174,227,245,.14), rgba(255,255,255,.02)); border:1px solid rgba(244,213,141,.3); display:flex; align-items:center; justify-content:center; font-size:26px; cursor:pointer; transition:transform .3s; touch-action:manipulation;}
 .mcard.flipped{background:radial-gradient(circle at 35% 30%, rgba(244,213,141,.35), rgba(174,227,245,.1));}
 .mcard.matched{opacity:.35; pointer-events:none;}
 
@@ -158,25 +158,25 @@ svg#lines{position:absolute;inset:0;width:100%;height:100%;}
 /* Quiz */
 .quiz-q{font-family:'Playfair Display'; font-size:19px; text-align:center; margin:8px 0 20px; line-height:1.4; color:#fff;}
 .quiz-opts{display:flex; flex-direction:column; gap:10px; width:100%; max-width:340px;}
-.quiz-opt{padding:14px 18px; border-radius:16px; border:1px solid rgba(244,213,141,.35); background:rgba(255,255,255,.04); color:var(--sky); font-family:'Quicksand'; font-size:14.5px; text-align:left; cursor:pointer; transition:.2s;}
+.quiz-opt{padding:14px 18px; border-radius:16px; border:1px solid rgba(244,213,141,.35); background:rgba(255,255,255,.04); color:var(--sky); font-family:'Quicksand'; font-size:14.5px; text-align:left; cursor:pointer; transition:.2s; touch-action:manipulation;}
 .quiz-opt:active,.quiz-opt.chosen{background:rgba(244,213,141,.2); border-color:var(--gold); color:#fff;}
 .quiz-feedback{margin-top:16px; text-align:center; font-size:13.5px; color:var(--gold); min-height:20px;}
 
 /* Slice */
-#slice-area{position:relative; width:100%; max-width:380px; height:420px; border-radius:18px; overflow:hidden; background:linear-gradient(180deg, rgba(174,227,245,.08), rgba(6,18,37,.4)); border:1px solid rgba(244,213,141,.25);}
-.slice-item{position:absolute; font-size:44px; cursor:pointer;}
+#slice-area{position:relative; width:100%; max-width:380px; height:420px; border-radius:18px; overflow:hidden; background:linear-gradient(180deg, rgba(174,227,245,.08), rgba(6,18,37,.4)); border:1px solid rgba(244,213,141,.25); touch-action:none;}
+.slice-item{position:absolute; font-size:44px; cursor:pointer; touch-action:none; padding:8px;}
 
 /* Racing */
-#road{position:relative; width:100%; max-width:300px; height:440px; margin:0 auto; border-radius:18px; overflow:hidden; background:repeating-linear-gradient(180deg, #1b2a44 0 40px, #16233a 40px 80px); border:1px solid rgba(244,213,141,.25);}
+#road{position:relative; width:100%; max-width:300px; height:440px; margin:0 auto; border-radius:18px; overflow:hidden; background:repeating-linear-gradient(180deg, #1b2a44 0 40px, #16233a 40px 80px); border:1px solid rgba(244,213,141,.25); touch-action:none;}
 .lane-line{position:absolute; top:0; bottom:0; width:2px; background:repeating-linear-gradient(180deg, rgba(255,255,255,.35) 0 16px, transparent 16px 32px);}
-.car{position:absolute; bottom:14px; font-size:34px; transition:left .16s ease;}
-.obst{position:absolute; font-size:28px;}
+.car{position:absolute; bottom:14px; font-size:34px; transition:left .16s ease; touch-action:none;}
+.obst{position:absolute; font-size:28px; touch-action:none;}
 #road-controls{display:flex; gap:60px; margin-top:16px;}
-.pad{width:64px;height:64px;border-radius:50%;border:1.5px solid var(--gold);background:rgba(244,213,141,.08);color:var(--gold);font-size:24px;display:flex;align-items:center;justify-content:center;}
+.pad{width:64px;height:64px;border-radius:50%;border:1.5px solid var(--gold);background:rgba(244,213,141,.08);color:var(--gold);font-size:24px;display:flex;align-items:center;justify-content:center;touch-action:manipulation;cursor:pointer;}
 
 /* Whack */
 #whackGrid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; width:100%; max-width:300px;}
-.hole{aspect-ratio:1; border-radius:50%; background:radial-gradient(circle at 40% 30%, rgba(174,227,245,.12), rgba(6,18,37,.5)); border:1px solid rgba(244,213,141,.25); display:flex; align-items:center; justify-content:center; font-size:0; cursor:pointer; overflow:hidden;}
+.hole{aspect-ratio:1; border-radius:50%; background:radial-gradient(circle at 40% 30%, rgba(174,227,245,.12), rgba(6,18,37,.5)); border:1px solid rgba(244,213,141,.25); display:flex; align-items:center; justify-content:center; font-size:0; cursor:pointer; overflow:hidden; touch-action:manipulation;}
 .hole.up{font-size:30px;}
 
 /* Constellation connect */
@@ -192,7 +192,7 @@ svg#lines{position:absolute;inset:0;width:100%;height:100%;}
 
 /* Finale */
 #finale{min-height:88vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:18px; width:100%;}
-#giftbox{font-size:90px; cursor:pointer; animation:float 3s ease-in-out infinite; filter:drop-shadow(0 0 20px rgba(244,213,141,.5));}
+#giftbox{font-size:90px; cursor:pointer; animation:float 3s ease-in-out infinite; filter:drop-shadow(0 0 20px rgba(244,213,141,.5)); touch-action:manipulation;}
 #finale h1{font-size:46px; background:linear-gradient(180deg,#fff,var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent;}
 #lyricPanel{
   width:92%; max-width:360px; height:180px; overflow-y:auto;
@@ -203,8 +203,8 @@ svg#lines{position:absolute;inset:0;width:100%;height:100%;}
 #lyricPanel::-webkit-scrollbar{width:3px;}
 #lyricPanel::-webkit-scrollbar-thumb{background:rgba(244,213,141,.4); border-radius:4px;}
 .lyric-section{font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); opacity:.6; margin:14px 0 6px;}
-.lyric-line{font-family:'Playfair Display'; font-style:italic; font-size:15px; line-height:1.7; margin:2px 0; opacity:.4; transition:opacity .3s, color .3s; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;}
-.lyric-line .tag{font-family:'Quicksand'; font-style:normal; font-weight:700; font-size:9.5px; letter-spacing:.08em; color:var(--sky); opacity:.7; margin-right:6px; border:1px solid rgba(174,227,245,.4); border-radius:20px; padding:1px 6px; display:inline-block;}
+.lyric-line{font-family:'Playfair Display'; font-style:italic; font-size:17px; line-height:1.7; margin:2px 0; opacity:.4; transition:opacity .3s, color .3s; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;}
+.lyric-line .tag{display:none;}
 .lyric-line.near{opacity:.75; color:#fff;}
 .lyric-line.active{opacity:1; color:var(--gold);}
 .scrollhint{font-size:10.5px; color:var(--sky); opacity:.6; margin-top:2px;}
@@ -223,7 +223,7 @@ audio{width:90%; max-width:340px; margin-top:6px; filter: invert(0.85) sepia(1) 
 }
 
 /* ---------- SOUND TOGGLE ---------- */
-#soundToggle{position:fixed; top:14px; right:14px; z-index:50; width:40px; height:40px; border-radius:50%; border:1.5px solid rgba(244,213,141,.4); background:rgba(6,18,37,.55); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; font-size:17px; cursor:pointer;}
+#soundToggle{position:fixed; top:14px; right:14px; z-index:50; width:40px; height:40px; border-radius:50%; border:1.5px solid rgba(244,213,141,.4); background:rgba(6,18,37,.55); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; font-size:17px; cursor:pointer; touch-action:manipulation;}
 
 /* ---------- TUTORIAL MODAL ---------- */
 #tutorialOverlay{position:fixed; inset:0; z-index:60; background:rgba(6,18,37,.82); backdrop-filter:blur(3px); display:flex; align-items:center; justify-content:center; padding:24px;}
@@ -273,15 +273,15 @@ audio{width:90%; max-width:340px; margin-top:6px; filter: invert(0.85) sepia(1) 
 #proposalModal{max-width:400px; padding:40px 30px; text-align:center;}
 #proposalModal h2{font-family:'Playfair Display'; font-size:32px; color:var(--gold); margin:10px 0 20px;}
 #proposalModal p{font-size:16px; color:var(--sky); line-height:1.8; margin-bottom:30px;}
-.proposal-buttons{display:flex; gap:30px; justify-content:center;}
-.proposal-btn{font-size:28px; padding:16px 40px; border-radius:60px; border:2px solid var(--gold); background:rgba(244,213,141,.1); color:var(--gold); cursor:pointer; transition:transform .2s, box-shadow .2s; font-weight:700;}
+.proposal-buttons{display:flex; gap:30px; justify-content:center; align-items:center;}
+.proposal-btn{font-size:28px; padding:16px 40px; border-radius:60px; border:2px solid var(--gold); background:rgba(244,213,141,.1); color:var(--gold); cursor:pointer; transition:transform .2s, box-shadow .2s; font-weight:700; touch-action:manipulation;}
 .proposal-btn:hover{transform:scale(1.05);}
-.proposal-btn.yes{background:linear-gradient(180deg, var(--sky), var(--sky-deep)); color:var(--navy-deep); border:none; padding:16px 50px;}
+.proposal-btn.yes{background:linear-gradient(180deg, var(--sky), var(--sky-deep)); color:var(--navy-deep); border:none; padding:16px 50px; font-size:32px;}
 .proposal-btn.yes:hover{box-shadow:0 0 40px rgba(174,227,245,.6);}
-.proposal-btn.no{position:relative; transition:all 0.1s;}
+.proposal-btn.no{position:relative; padding:10px 24px; font-size:18px; background:rgba(230,80,80,.15); border-color:rgba(230,80,80,.5); color:#e66e6e; transition:all 0.1s;}
 .proposal-btn.no:hover{transform:scale(0.95);}
 .proposal-btn.no.dodging{animation:dodge .3s ease forwards;}
-@keyframes dodge{0%{transform:translate(0,0);}100%{transform:translate(40px,-30px);}}
+@keyframes dodge{0%{transform:translate(0,0);}100%{transform:translate(60px,-40px);}}
 .proposal-sub{font-size:12px; color:rgba(244,213,141,.5); margin-top:20px;}
 </style>
 </head>
@@ -656,7 +656,8 @@ function renderCatch(lv){
       requestAnimationFrame(fall);
     }
     requestAnimationFrame(fall);
-    el.onclick = ()=>{
+    el.onclick = (e)=>{
+      e.stopPropagation();
       score++;
       Sound.sfx('star');
       document.getElementById('catchScore').textContent = 'Stars: '+score;
@@ -1256,8 +1257,24 @@ function showProposal(){
   const yesBtn = document.getElementById('proposalYes');
   const noBtn = document.getElementById('proposalNo');
   
-  // Make No button dodge
-  noBtn.addEventListener('mouseenter', function() {
+  // Make No button dodge aggressively
+  function dodgeNo(btn) {
+    if(btn.classList.contains('dodging')) return;
+    btn.classList.add('dodging');
+    const x = (Math.random() - 0.5) * 300;
+    const y = (Math.random() - 0.5) * 200;
+    btn.style.transform = `translate(${x}px, ${y}px)`;
+    setTimeout(() => {
+      btn.classList.remove('dodging');
+    }, 350);
+  }
+  
+  noBtn.addEventListener('mouseenter', function(e) {
+    e.preventDefault();
+    dodgeNo(this);
+  });
+  noBtn.addEventListener('mousemove', function(e) {
+    e.preventDefault();
     dodgeNo(this);
   });
   noBtn.addEventListener('touchstart', function(e) {
@@ -1274,89 +1291,82 @@ function showProposal(){
     overlay.remove();
     openGift();
   });
-  
-  function dodgeNo(btn) {
-    if(btn.classList.contains('dodging')) return;
-    btn.classList.add('dodging');
-    const x = (Math.random() - 0.5) * 200;
-    const y = (Math.random() - 0.5) * 100;
-    btn.style.transform = `translate(${x}px, ${y}px)`;
-    setTimeout(() => {
-      btn.classList.remove('dodging');
-    }, 300);
-  }
+  yesBtn.addEventListener('touchstart', function() {
+    overlay.remove();
+    openGift();
+  });
 }
 
 const LYRIC_SECTIONS = [
   { section: "Verse 1", lines: [
-    {tag:"M", text:"Ayla, it's your day, I pull up with the prize", t:6.58},
-    {tag:"F", text:"Mi Ayla, baby girl, you the star in my eyes", t:11.78},
-    {tag:"M", text:"Eunice in the room, but you still the main one", t:14.58},
-    {tag:"F", text:"Wifey in my mouth, that's the name when I say love", t:17.61},
-    {tag:"M", text:"Luna when you glow, got the whole floor warm", t:20.54},
-    {tag:"F", text:"Aaliya in my heart, got me brave in the storm", t:23.45},
-    {tag:"M", text:"Rayyan on my lips when I'm wishing you more", t:26.29},
-    {tag:"F", text:"For you I keep it real, I'm the one at your door", t:29.30},
+    {text:"Ayla, it's your day, I pull up with the prize", t:6.58},
+    {text:"Mi Ayla, baby girl, you the star in my eyes", t:11.78},
+    {text:"Eunice in the room, but you still the main one", t:14.58},
+    {text:"Wifey in my mouth, that's the name when I say love", t:17.61},
+    {text:"Luna when you glow, got the whole floor warm", t:20.54},
+    {text:"Aaliya in my heart, got me brave in the storm", t:23.45},
+    {text:"Rayyan on my lips when I'm wishing you more", t:26.29},
+    {text:"For you I keep it real, I'm the one at your door", t:29.30},
   ]},
   { section: "Pre-Chorus", lines: [
-    {tag:"M", text:"Blow that candle, make a wish", t:32.21},
-    {tag:"F", text:"Ojos bellos, one more kiss", t:34.52},
-    {tag:"M", text:"Hayati, you deserve this glow", t:37.44},
-    {tag:"F", text:"Just say my name, and let it show", t:40.22},
+    {text:"Blow that candle, make a wish", t:32.21},
+    {text:"Ojos bellos, one more kiss", t:34.52},
+    {text:"Hayati, you deserve this glow", t:37.44},
+    {text:"Just say my name, and let it show", t:40.22},
   ]},
   { section: "Chorus", lines: [
-    {tag:"", text:"Mi Ayla, mi Ayla", t:43.20},
-    {tag:"", text:"Birthday queen, birthday maker", t:46.22},
-    {tag:"", text:"Mi Ayla, mi Ayla", t:49.17},
-    {tag:"", text:"I'm yours today, I'm yours forever", t:52.00},
-    {tag:"", text:"Mi Ayla, mi Ayla", t:55.01},
-    {tag:"", text:"Wifey, Luna, still my favorite", t:57.70},
-    {tag:"", text:"Mi Ayla, mi Ayla", t:60.53},
-    {tag:"", text:"Aaliya, Rayyan, we celebrate it", t:63.46},
+    {text:"Mi Ayla, mi Ayla", t:43.20},
+    {text:"Birthday queen, birthday maker", t:46.22},
+    {text:"Mi Ayla, mi Ayla", t:49.17},
+    {text:"I'm yours today, I'm yours forever", t:52.00},
+    {text:"Mi Ayla, mi Ayla", t:55.01},
+    {text:"Wifey, Luna, still my favorite", t:57.70},
+    {text:"Mi Ayla, mi Ayla", t:60.53},
+    {text:"Aaliya, Rayyan, we celebrate it", t:63.46},
   ]},
   { section: "Verse 2", lines: [
-    {tag:"M", text:"Got your name on the cake, got your smile in the room", t:66.62},
-    {tag:"F", text:"Every laugh that you give me put a bloom in the gloom", t:69.20},
-    {tag:"M", text:"Salamat, shukran, baby, you a whole blessing", t:72.26},
-    {tag:"F", text:"Soft touch, hard truth, yeah, you my best message", t:75.10},
-    {tag:"M", text:"Eunice when you teasing, got that fire in your grin", t:78.10},
-    {tag:"F", text:"Wifey when I hold you, let the good times begin", t:81.10},
-    {tag:"M", text:"Luna when you twirl, got me losing my frame", t:83.78},
-    {tag:"F", text:"Ayla, every language, still I call your name", t:86.97},
+    {text:"Got your name on the cake, got your smile in the room", t:66.62},
+    {text:"Every laugh that you give me put a bloom in the gloom", t:69.20},
+    {text:"Salamat, shukran, baby, you a whole blessing", t:72.26},
+    {text:"Soft touch, hard truth, yeah, you my best message", t:75.10},
+    {text:"Eunice when you teasing, got that fire in your grin", t:78.10},
+    {text:"Wifey when I hold you, let the good times begin", t:81.10},
+    {text:"Luna when you twirl, got me losing my frame", t:83.78},
+    {text:"Ayla, every language, still I call your name", t:86.97},
   ]},
   { section: "Pre-Chorus", lines: [
-    {tag:"M", text:"Blow that candle, make a wish", t:90.58},
-    {tag:"F", text:"Ojos bellos, one more kiss", t:92.92},
-    {tag:"M", text:"Hayati, you deserve this glow", t:95.93},
-    {tag:"F", text:"Just say my name, and let it show", t:98.54},
+    {text:"Blow that candle, make a wish", t:90.58},
+    {text:"Ojos bellos, one more kiss", t:92.92},
+    {text:"Hayati, you deserve this glow", t:95.93},
+    {text:"Just say my name, and let it show", t:98.54},
   ]},
   { section: "Chorus", lines: [
-    {tag:"", text:"Mi Ayla, mi Ayla", t:101.58},
-    {tag:"", text:"Birthday queen, birthday maker", t:104.50},
-    {tag:"", text:"Mi Ayla, mi Ayla", t:107.16},
-    {tag:"", text:"I'm yours today, I'm yours forever", t:109.97},
-    {tag:"", text:"Mi Ayla, mi Ayla", t:113.46},
-    {tag:"", text:"Wifey, Luna, still my favorite", t:115.88},
-    {tag:"", text:"Mi Ayla, mi Ayla", t:119.01},
-    {tag:"", text:"Aaliya, Rayyan, we celebrate it", t:121.94},
+    {text:"Mi Ayla, mi Ayla", t:101.58},
+    {text:"Birthday queen, birthday maker", t:104.50},
+    {text:"Mi Ayla, mi Ayla", t:107.16},
+    {text:"I'm yours today, I'm yours forever", t:109.97},
+    {text:"Mi Ayla, mi Ayla", t:113.46},
+    {text:"Wifey, Luna, still my favorite", t:115.88},
+    {text:"Mi Ayla, mi Ayla", t:119.01},
+    {text:"Aaliya, Rayyan, we celebrate it", t:121.94},
   ]},
   { section: "Bridge", lines: [
-    {tag:"M", text:"Feliz cumpleaños, my heart", t:126.00},
-    {tag:"F", text:"Kul sana wa anti, shining hard", t:128.68},
-    {tag:"M", text:"Jaan, you make the whole world sway", t:131.70},
-    {tag:"F", text:"Let me love you more today", t:134.97},
-    {tag:"M", text:"Eunice, Wifey, Luna too", t:137.41},
-    {tag:"F", text:"Ayla, every name leads back to you", t:142.74},
+    {text:"Feliz cumpleaños, my heart", t:126.00},
+    {text:"Kul sana wa anti, shining hard", t:128.68},
+    {text:"Jaan, you make the whole world sway", t:131.70},
+    {text:"Let me love you more today", t:134.97},
+    {text:"Eunice, Wifey, Luna too", t:137.41},
+    {text:"Ayla, every name leads back to you", t:142.74},
   ]},
   { section: "Final Chorus", lines: [
-    {tag:"", text:"Mi Ayla, mi Ayla", t:148.65},
-    {tag:"", text:"Birthday queen, birthday maker", t:151.84},
-    {tag:"", text:"Mi Ayla, mi Ayla", t:154.66},
-    {tag:"", text:"I'm yours today, I'm yours forever", t:157.54},
-    {tag:"", text:"Mi Ayla, mi Ayla", t:160.50},
-    {tag:"", text:"Wifey, Luna, still my favorite", t:163.13},
-    {tag:"", text:"Mi Ayla, mi Ayla", t:166.77},
-    {tag:"", text:"Aaliya, Rayyan, we celebrate it", t:169.12},
+    {text:"Mi Ayla, mi Ayla", t:148.65},
+    {text:"Birthday queen, birthday maker", t:151.84},
+    {text:"Mi Ayla, mi Ayla", t:154.66},
+    {text:"I'm yours today, I'm yours forever", t:157.54},
+    {text:"Mi Ayla, mi Ayla", t:160.50},
+    {text:"Wifey, Luna, still my favorite", t:163.13},
+    {text:"Mi Ayla, mi Ayla", t:166.77},
+    {text:"Aaliya, Rayyan, we celebrate it", t:169.12},
   ]},
 ];
 
@@ -1367,7 +1377,7 @@ function buildLyricHtml(){
   LYRIC_SECTIONS.forEach(sec=>{
     html += `<div class="lyric-section">${sec.section}</div>`;
     sec.lines.forEach(l=>{
-      html += `<div class="lyric-line" data-i="${flatIdx}">${l.tag?`<span class="tag">${l.tag}</span>`:''}${l.text}</div>`;
+      html += `<div class="lyric-line" data-i="${flatIdx}">${l.text}</div>`;
       flatMap.push(l);
       flatIdx++;
     });
