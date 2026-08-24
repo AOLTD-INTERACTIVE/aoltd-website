@@ -203,7 +203,7 @@ svg#lines{position:absolute;inset:0;width:100%;height:100%;}
 #lyricPanel::-webkit-scrollbar{width:3px;}
 #lyricPanel::-webkit-scrollbar-thumb{background:rgba(244,213,141,.4); border-radius:4px;}
 .lyric-section{font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); opacity:.6; margin:14px 0 6px; text-align:center;}
-.lyric-line{font-family:'Playfair Display'; font-style:italic; font-size:18px; line-height:1.8; margin:3px 0; opacity:.4; transition:opacity .3s, color .3s; text-align:center; white-space:normal; word-wrap:break-word;}
+.lyric-line{font-family:'Playfair Display'; font-style:italic; font-size:18px; line-height:1.8; margin:3px 0; opacity:.4; transition:opacity .3s, color .3s; text-align:center;}
 .lyric-line .tag{display:none;}
 .lyric-line.near{opacity:.75; color:#fff;}
 .lyric-line.active{opacity:1; color:var(--gold);}
@@ -1257,7 +1257,6 @@ function showProposal(){
   const yesBtn = document.getElementById('proposalYes');
   const noBtn = document.getElementById('proposalNo');
   
-  // Make No button dodge aggressively
   function dodgeNo(btn) {
     if(btn.classList.contains('dodging')) return;
     btn.classList.add('dodging');
@@ -1286,7 +1285,6 @@ function showProposal(){
     dodgeNo(this);
   });
   
-  // Yes button - proceed to the gift reveal
   yesBtn.addEventListener('click', function() {
     overlay.remove();
     openGift();
@@ -1388,7 +1386,6 @@ function buildLyricHtml(){
 function openGift(){
   burstConfetti(60);
   
-  // Show the gift reveal with music and lyrics
   const finale = document.getElementById('finale');
   const {html: lyricsHtml, total: lyricCount, flatMap: lyricFlatMap} = buildLyricHtml();
   finale.innerHTML = `
@@ -1450,7 +1447,6 @@ function openGift(){
     }
   });
   
-  // Start playing the song
   player.play().catch(()=>{});
   markComplete(10);
 }
