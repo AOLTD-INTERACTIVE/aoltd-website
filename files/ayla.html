@@ -195,15 +195,15 @@ svg#lines{position:absolute;inset:0;width:100%;height:100%;}
 #giftbox{font-size:90px; cursor:pointer; animation:float 3s ease-in-out infinite; filter:drop-shadow(0 0 20px rgba(244,213,141,.5)); touch-action:manipulation;}
 #finale h1{font-size:46px; background:linear-gradient(180deg,#fff,var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent;}
 #lyricPanel{
-  width:92%; max-width:360px; height:180px; overflow-y:auto;
+  width:92%; max-width:420px; height:200px; overflow-y:auto;
   margin-top:4px; padding:10px 6px; scroll-behavior:auto;
   -webkit-mask-image:linear-gradient(to bottom, transparent 0, #000 14%, #000 86%, transparent 100%);
   mask-image:linear-gradient(to bottom, transparent 0, #000 14%, #000 86%, transparent 100%);
 }
 #lyricPanel::-webkit-scrollbar{width:3px;}
 #lyricPanel::-webkit-scrollbar-thumb{background:rgba(244,213,141,.4); border-radius:4px;}
-.lyric-section{font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); opacity:.6; margin:14px 0 6px;}
-.lyric-line{font-family:'Playfair Display'; font-style:italic; font-size:17px; line-height:1.7; margin:2px 0; opacity:.4; transition:opacity .3s, color .3s; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;}
+.lyric-section{font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); opacity:.6; margin:14px 0 6px; text-align:center;}
+.lyric-line{font-family:'Playfair Display'; font-style:italic; font-size:18px; line-height:1.8; margin:3px 0; opacity:.4; transition:opacity .3s, color .3s; text-align:center; white-space:normal; word-wrap:break-word;}
 .lyric-line .tag{display:none;}
 .lyric-line.near{opacity:.75; color:#fff;}
 .lyric-line.active{opacity:1; color:var(--gold);}
