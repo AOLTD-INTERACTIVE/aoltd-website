@@ -310,7 +310,7 @@
             <h2 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[0.95] mb-2">
               <span class="text-orange-grad">CUBLY</span>
             </h2>
-            <p class="text-xl md:text-2xl font-bold text-white/90 mb-4">WELCOME TO YOUR NEW ADDICTION 🔥</p>
+            <p class="text-xl md:text-2xl font-bold text-white/90 mb-4">WELCOME TO YOUR NEW <span class="text-gradient">ADDICTION</span> 🔥</p>
             <p class="text-white/50 leading-relaxed">
               Not another boring flat grid. This is a CUBE. All 6 faces. All your problems.
             </p>
@@ -437,12 +437,12 @@
     <div class="max-w-6xl mx-auto px-5">
       <div class="mb-10 fade-up text-center">
         <p class="text-xs uppercase tracking-[0.3em] text-orange/70 mb-3">Dev Logs</p>
-        <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-3">Nothing here yet</h2>
+        <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-3">Nothing here <span class="text-gradient">yet</span></h2>
         <p class="text-white/40 text-sm md:text-base max-w-md mx-auto">The pages are still blank. Come back later — or just spin the coin.</p>
       </div>
 
       <div class="fade-up relative mx-auto max-w-xl" style="transition-delay:0.1s">
-        <div id="coin-container" class="relative w-full aspect-square max-h-[480px] rounded-3xl overflow-hidden glass" style="height: min(480px, 70vw);">
+        <div id="coin-container" class="relative w-full max-w-lg mx-auto rounded-3xl overflow-hidden glass" style="height: min(460px, 92vw); aspect-ratio: 1;">
           <!-- Three.js coin mounts here -->
         </div>
       </div>
@@ -455,7 +455,7 @@
       <div class="fade-up glass rounded-3xl p-8 md:p-12 text-center relative overflow-hidden">
         <div class="absolute -top-1/2 -right-1/2 w-full h-full bg-[radial-gradient(circle,rgba(255,85,0,0.06),transparent_60%)] pointer-events-none"></div>
         <div class="relative z-10">
-          <h3 class="text-2xl md:text-3xl font-extrabold mb-3">📬 Join the Inner Circle</h3>
+          <h3 class="text-2xl md:text-3xl font-extrabold mb-3">📬 Join the Inner <span class="text-gradient">Circle</span></h3>
           <p class="text-white/45 mb-8 text-sm md:text-base max-w-md mx-auto">
             Be the first to know when CUBLY drops. Early access, dev insights, and the occasional update from the studio.
           </p>
@@ -483,7 +483,7 @@
     <div class="max-w-6xl mx-auto px-5">
       <div class="mb-10 fade-up">
         <p class="text-xs uppercase tracking-[0.3em] text-orange/70 mb-3">Press & Media</p>
-        <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-4">For the curious media</h2>
+        <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-4">For the curious <span class="text-gradient">media</span></h2>
         <p class="text-white/45 max-w-2xl text-sm md:text-base">
           You want to write about us? You want to feature CUBLY? You want to interview a lone tenacious developer who talks to himself while coding? You've come to the right place.
         </p>
@@ -517,7 +517,7 @@
       </div>
 
       <div class="fade-up glass rounded-3xl p-8 md:p-10" style="transition-delay:0.15s">
-        <h3 class="text-xl md:text-2xl font-bold mb-3">📧 For Press Inquiries</h3>
+        <h3 class="text-xl md:text-2xl font-bold mb-3">📧 For Press <span class="text-gradient">Inquiries</span></h3>
         <p class="text-white/45 mb-6 text-sm md:text-base">
           Want early access? Want to interview the madman behind the cube? Looking for exclusive content? Hit us up:
         </p>
@@ -682,7 +682,7 @@
       });
     }
 
-    function turn(axis, layer, dir, dur = 350) {
+    function turn(axis, layer, dir, dur = 520) {
       return new Promise(resolve => {
         const layerCubies = getLayer(axis, layer);
         if (!layerCubies.length) return resolve();
@@ -723,21 +723,21 @@
       try {
         const steps = [];
         const axes = ['x', 'y', 'z'];
-        for (let i = 0; i < 11 + Math.floor(Math.random() * 3); i++) {
+        for (let i = 0; i < 8 + Math.floor(Math.random() * 3); i++) {
           const a = axes[Math.floor(Math.random() * 3)];
           const l = Math.random() < 0.5 ? -1 : 1;
           const d = Math.random() < 0.5 ? 1 : -1;
           steps.push({ a, l, d });
-          await turn(a, l, d, 300);
+          await turn(a, l, d, 480);
         }
-        await new Promise(r => setTimeout(r, 1000));
+        await new Promise(r => setTimeout(r, 1600));
         for (let i = steps.length - 1; i >= 0; i--) {
-          await turn(steps[i].a, steps[i].l, -steps[i].d, 300);
+          await turn(steps[i].a, steps[i].l, -steps[i].d, 480);
         }
-        await new Promise(r => setTimeout(r, 800));
+        await new Promise(r => setTimeout(r, 1400));
       } catch (e) {}
       animating = false;
-      setTimeout(loop, 300);
+      setTimeout(loop, 600);
     }
     loop();
 
@@ -841,261 +841,357 @@
     }
   </script>
 
-  <!-- GOLD COIN (empty state / 404 style) -->
+
+  <!-- GOLD COIN - exact original logic, container + scroll -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
-    (function() {
-      const container = document.getElementById('coin-container');
-      if (!container || typeof THREE === 'undefined') return;
+  (function () {
+    const container = document.getElementById('coin-container');
+    if (!container || typeof THREE === 'undefined') return;
 
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
-      camera.position.set(0, 0, 6.5);
+    const scene = new THREE.Scene();
 
-      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.15;
-      container.appendChild(renderer.domElement);
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+    camera.position.set(0, 0, 8.2);
 
-      function resize() {
-        const w = container.clientWidth;
-        const h = container.clientHeight;
-        camera.aspect = w / h;
-        camera.updateProjectionMatrix();
-        renderer.setSize(w, h);
-      }
-      resize();
-      new ResizeObserver(resize).observe(container);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.2;
+    container.appendChild(renderer.domElement);
 
-      // Magical nodes
-      const nodeCount = 120;
-      const nodeGeometry = new THREE.BufferGeometry();
-      const nodePositions = new Float32Array(nodeCount * 3);
-      const nodeVelocities = [];
+    function resize() {
+      const w = container.clientWidth || 320;
+      const h = container.clientHeight || 320;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h, false);
+    }
+    resize();
+    new ResizeObserver(resize).observe(container);
+
+    // Glowing Magical Nodes (original)
+    const nodeCount = 160;
+    const nodeGeometry = new THREE.BufferGeometry();
+    const nodePositions = new Float32Array(nodeCount * 3);
+    const nodeVelocities = [];
+
+    for (let i = 0; i < nodeCount; i++) {
+      nodePositions[i * 3] = (Math.random() - 0.5) * 16;
+      nodePositions[i * 3 + 1] = (Math.random() - 0.5) * 16;
+      nodePositions[i * 3 + 2] = -0.5 - Math.random() * 5.5;
+      nodeVelocities.push({
+        x: (Math.random() - 0.5) * 0.003,
+        y: Math.random() * 0.002 + 0.001,
+        z: (Math.random() - 0.5) * 0.001
+      });
+    }
+    nodeGeometry.setAttribute('position', new THREE.BufferAttribute(nodePositions, 3));
+
+    function createMagicalNodeTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 128;
+      canvas.height = 128;
+      const ctx = canvas.getContext('2d');
+      const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+      gradient.addColorStop(0, 'rgba(255, 220, 130, 1.0)');
+      gradient.addColorStop(0.2, 'rgba(240, 180, 50, 0.8)');
+      gradient.addColorStop(0.5, 'rgba(212, 175, 55, 0.3)');
+      gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 128, 128);
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.needsUpdate = true;
+      return texture;
+    }
+
+    const nodeMaterial = new THREE.PointsMaterial({
+      size: 0.3,
+      map: createMagicalNodeTexture(),
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthTest: true,
+      depthWrite: false
+    });
+    const magicalNodes = new THREE.Points(nodeGeometry, nodeMaterial);
+    magicalNodes.renderOrder = 0;
+    scene.add(magicalNodes);
+
+    const lineMaterial = new THREE.LineBasicMaterial({
+      color: 0xd4af37,
+      transparent: true,
+      opacity: 0.18,
+      blending: THREE.AdditiveBlending,
+      depthTest: true,
+      depthWrite: false
+    });
+    const lineGeometry = new THREE.BufferGeometry();
+    const nodeLines = new THREE.LineSegments(lineGeometry, lineMaterial);
+    nodeLines.renderOrder = 0;
+    scene.add(nodeLines);
+
+    function updateNodeConnections() {
+      const positions = nodeGeometry.attributes.position.array;
+      const linePos = [];
       for (let i = 0; i < nodeCount; i++) {
-        nodePositions[i * 3] = (Math.random() - 0.5) * 14;
-        nodePositions[i * 3 + 1] = (Math.random() - 0.5) * 14;
-        nodePositions[i * 3 + 2] = -0.5 - Math.random() * 5;
-        nodeVelocities.push({
-          x: (Math.random() - 0.5) * 0.003,
-          y: Math.random() * 0.002 + 0.001,
-          z: (Math.random() - 0.5) * 0.001
-        });
-      }
-      nodeGeometry.setAttribute('position', new THREE.BufferAttribute(nodePositions, 3));
-
-      function createNodeTexture() {
-        const c = document.createElement('canvas');
-        c.width = c.height = 128;
-        const ctx = c.getContext('2d');
-        const g = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
-        g.addColorStop(0, 'rgba(255,220,130,1)');
-        g.addColorStop(0.25, 'rgba(240,180,50,0.7)');
-        g.addColorStop(0.55, 'rgba(212,175,55,0.25)');
-        g.addColorStop(1, 'rgba(0,0,0,0)');
-        ctx.fillStyle = g;
-        ctx.fillRect(0, 0, 128, 128);
-        return new THREE.CanvasTexture(c);
-      }
-
-      const nodeMat = new THREE.PointsMaterial({
-        size: 0.28,
-        map: createNodeTexture(),
-        transparent: true,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false
-      });
-      const nodes = new THREE.Points(nodeGeometry, nodeMat);
-      scene.add(nodes);
-
-      const lineMat = new THREE.LineBasicMaterial({
-        color: 0xd4af37, transparent: true, opacity: 0.16,
-        blending: THREE.AdditiveBlending, depthWrite: false
-      });
-      const lineGeo = new THREE.BufferGeometry();
-      const lines = new THREE.LineSegments(lineGeo, lineMat);
-      scene.add(lines);
-
-      function updateConnections() {
-        const pos = nodeGeometry.attributes.position.array;
-        const lp = [];
-        for (let i = 0; i < nodeCount; i++) {
-          for (let j = i + 1; j < nodeCount; j++) {
-            const dx = pos[i*3]-pos[j*3], dy = pos[i*3+1]-pos[j*3+1], dz = pos[i*3+2]-pos[j*3+2];
-            if (Math.sqrt(dx*dx+dy*dy+dz*dz) < 1.9) {
-              lp.push(pos[i*3],pos[i*3+1],pos[i*3+2], pos[j*3],pos[j*3+1],pos[j*3+2]);
-            }
+        for (let j = i + 1; j < nodeCount; j++) {
+          const dx = positions[i * 3] - positions[j * 3];
+          const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
+          const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
+          const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+          if (dist < 2.0) {
+            linePos.push(
+              positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2],
+              positions[j * 3], positions[j * 3 + 1], positions[j * 3 + 2]
+            );
           }
         }
-        lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(lp, 3));
       }
+      lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(linePos, 3));
+    }
 
-      // Coin textures
-      function drawCircularText(ctx, text, radius, startA, endA, isTop, cx, cy) {
-        const chars = text.split('');
-        const step = (endA - startA) / (chars.length - 1 || 1);
-        chars.forEach((ch, i) => {
-          const a = startA + i * step;
-          ctx.save();
-          ctx.translate(cx + radius * Math.cos(a), cy + radius * Math.sin(a));
-          ctx.rotate(a + (isTop ? Math.PI/2 : -Math.PI/2));
-          ctx.fillText(ch, 0, 0);
-          ctx.restore();
-        });
-      }
-
-      function drawBorders(ctx, cx, cy, hasInner) {
-        ctx.fillStyle = '#808080';
-        ctx.fillRect(0, 0, 2048, 2048);
-        ctx.beginPath(); ctx.arc(cx, cy, 960, 0, Math.PI*2); ctx.fillStyle = '#fff'; ctx.fill();
-        ctx.beginPath(); ctx.arc(cx, cy, 905, 0, Math.PI*2); ctx.fillStyle = '#808080'; ctx.fill();
-        ctx.beginPath(); ctx.arc(cx, cy, 860, 0, Math.PI*2); ctx.strokeStyle = '#fff'; ctx.lineWidth = 14; ctx.stroke();
-        if (hasInner) {
-          ctx.beginPath(); ctx.arc(cx, cy, 620, 0, Math.PI*2); ctx.fillStyle = '#555'; ctx.fill();
-          ctx.strokeStyle = '#fff'; ctx.lineWidth = 18; ctx.stroke();
-        } else {
-          ctx.beginPath(); ctx.arc(cx, cy, 850, 0, Math.PI*2); ctx.fillStyle = '#606060'; ctx.fill();
-        }
-      }
-
-      function drawAOLTD(ctx, cx, cy, scale = 1) {
+    function drawCircularText(ctx, text, radius, startAngle, endAngle, isTop, cx, cy) {
+      const characters = text.split('');
+      const angleStep = (endAngle - startAngle) / (characters.length - 1 || 1);
+      characters.forEach((char, i) => {
+        const angle = startAngle + i * angleStep;
         ctx.save();
-        ctx.translate(cx, cy);
-        ctx.scale(scale, scale);
-        ctx.fillStyle = '#fff';
-        ctx.strokeStyle = '#d0d0d0';
-        ctx.lineWidth = 15;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.font = 'bold 400px "Comic Sans MS", cursive, sans-serif';
-        ctx.rotate(-0.05);
-        const letters = ['A','O','!','L','T','D'];
-        const xs = [-350,-150,-20,100,220,340];
-        const ys = [-20,20,-15,15,-25,10];
-        const rs = [-0.08,0.06,-0.03,0.05,-0.07,0.04];
-        letters.forEach((l, i) => {
-          ctx.save();
-          ctx.translate(xs[i], ys[i]);
-          ctx.rotate(rs[i]);
-          ctx.fillText(l, 0, 0);
-          ctx.strokeText(l, 0, 0);
-          ctx.restore();
-        });
+        ctx.translate(cx + radius * Math.cos(angle), cy + radius * Math.sin(angle));
+        const rotation = angle + (isTop ? Math.PI / 2 : -Math.PI / 2);
+        ctx.rotate(rotation);
+        ctx.fillText(char, 0, 0);
         ctx.restore();
-      }
+      });
+    }
 
-      function createFrontBump() {
-        const c = document.createElement('canvas');
-        c.width = c.height = 2048;
-        const ctx = c.getContext('2d');
-        const cx = 1024, cy = 1024;
-        drawBorders(ctx, cx, cy, true);
-        ctx.fillStyle = '#fff';
-        ctx.font = 'bold 70px Georgia, serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        drawCircularText(ctx, 'ART OF LONE', 740, -Math.PI*0.70, -Math.PI*0.30, true, cx, cy);
-        drawCircularText(ctx, 'TENACIOUS DEVELOPER', 740, Math.PI*0.75, Math.PI*0.25, false, cx, cy);
-        ctx.font = 'bold 78px Georgia, serif';
-        ctx.fillText('20', 280, cy);
-        ctx.fillText('08', 1768, cy);
-        drawAOLTD(ctx, cx, cy, 0.8);
-        return new THREE.CanvasTexture(c);
+    function drawCoinBorders(ctx, cx, cy, hasInnerPartition) {
+      ctx.fillStyle = '#808080';
+      ctx.fillRect(0, 0, 2048, 2048);
+      ctx.beginPath();
+      ctx.arc(cx, cy, 960, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(cx, cy, 905, 0, Math.PI * 2);
+      ctx.fillStyle = '#808080';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(cx, cy, 860, 0, Math.PI * 2);
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 14;
+      ctx.stroke();
+      if (hasInnerPartition) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, 620, 0, Math.PI * 2);
+        ctx.fillStyle = '#555555';
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 18;
+        ctx.stroke();
+      } else {
+        ctx.beginPath();
+        ctx.arc(cx, cy, 850, 0, Math.PI * 2);
+        ctx.fillStyle = '#606060';
+        ctx.fill();
       }
+    }
 
-      function createBackBump() {
-        const c = document.createElement('canvas');
-        c.width = c.height = 2048;
-        const ctx = c.getContext('2d');
-        const cx = 1024, cy = 1024;
-        drawBorders(ctx, cx, cy, false);
+    function drawAOLTD(ctx, cx, cy, scale = 1) {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(scale, scale);
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = '#d0d0d0';
+      ctx.lineWidth = 15;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = 'bold 400px "Comic Sans MS", "Chalkboard SE", cursive, sans-serif';
+      ctx.rotate(-0.05);
+      const letters = ['A', 'O', '!', 'L', 'T', 'D'];
+      const xOffsets = [-350, -150, -20, 100, 220, 340];
+      const yOffsets = [-20, 20, -15, 15, -25, 10];
+      const rotations = [-0.08, 0.06, -0.03, 0.05, -0.07, 0.04];
+      letters.forEach((letter, i) => {
         ctx.save();
-        ctx.translate(cx, cy); ctx.rotate(Math.PI); ctx.translate(-cx, -cy);
-        ctx.fillStyle = '#fff';
-        ctx.strokeStyle = '#d0d0d0';
-        ctx.lineWidth = 8;
-        ctx.font = 'bold 150px "Comic Sans MS", cursive, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('AoRom', cx, cy - 500);
-        ctx.strokeText('AoRom', cx, cy - 500);
-        ctx.font = 'bold 200px "Comic Sans MS", cursive, sans-serif';
-        ctx.fillText('47', cx, cy + 500);
-        ctx.strokeText('47', cx, cy + 500);
-        drawAOLTD(ctx, cx, cy, 0.9);
-        ctx.font = 'bold 80px "Comic Sans MS", cursive, sans-serif';
-        ctx.fillText("Something You'll Remember", cx, cy + 300);
-        ctx.strokeText("Something You'll Remember", cx, cy + 300);
+        ctx.translate(xOffsets[i], yOffsets[i]);
+        ctx.rotate(rotations[i]);
+        ctx.fillText(letter, 0, 0);
+        ctx.strokeText(letter, 0, 0);
         ctx.restore();
-        return new THREE.CanvasTexture(c);
+      });
+      ctx.restore();
+    }
+
+    function createFrontBumpTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 2048;
+      canvas.height = 2048;
+      const ctx = canvas.getContext('2d');
+      const cx = 1024, cy = 1024;
+      drawCoinBorders(ctx, cx, cy, true);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 70px Georgia, serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      drawCircularText(ctx, 'ART OF LONE', 740, -Math.PI * 0.70, -Math.PI * 0.30, true, cx, cy);
+      drawCircularText(ctx, 'TENACIOUS DEVELOPER', 740, Math.PI * 0.75, Math.PI * 0.25, false, cx, cy);
+      ctx.font = 'bold 78px Georgia, serif';
+      ctx.fillText('20', 280, cy);
+      ctx.fillText('08', 1768, cy);
+      drawAOLTD(ctx, cx, cy, 0.8);
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.needsUpdate = true;
+      return texture;
+    }
+
+    function createBackBumpTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 2048;
+      canvas.height = 2048;
+      const ctx = canvas.getContext('2d');
+      const cx = 1024, cy = 1024;
+      drawCoinBorders(ctx, cx, cy, false);
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(Math.PI);
+      ctx.translate(-cx, -cy);
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = '#d0d0d0';
+      ctx.lineWidth = 8;
+      ctx.font = 'bold 150px "Comic Sans MS", "Chalkboard SE", cursive, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('AoRom', cx, cy - 500);
+      ctx.strokeText('AoRom', cx, cy - 500);
+      ctx.font = 'bold 200px "Comic Sans MS", "Chalkboard SE", cursive, sans-serif';
+      ctx.fillText('47', cx, cy + 500);
+      ctx.strokeText('47', cx, cy + 500);
+      drawAOLTD(ctx, cx, cy, 0.9);
+      ctx.font = 'bold 80px "Comic Sans MS", "Chalkboard SE", cursive, sans-serif';
+      ctx.fillText("Something You'll Remember", cx, cy + 300);
+      ctx.strokeText("Something You'll Remember", cx, cy + 300);
+      ctx.restore();
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.needsUpdate = true;
+      return texture;
+    }
+
+    const geometry = new THREE.CylinderGeometry(1.85, 1.85, 0.22, 128, 1);
+    const metallicConfig = {
+      color: 0xd4af37,
+      metalness: 0.85,
+      roughness: 0.25,
+      bumpScale: 0.04
+    };
+    const sideMaterial = new THREE.MeshStandardMaterial({
+      color: metallicConfig.color,
+      metalness: metallicConfig.metalness,
+      roughness: 0.35
+    });
+    const frontMaterial = new THREE.MeshStandardMaterial({
+      ...metallicConfig,
+      bumpMap: createFrontBumpTexture()
+    });
+    const backMaterial = new THREE.MeshStandardMaterial({
+      ...metallicConfig,
+      bumpMap: createBackBumpTexture()
+    });
+
+    const coin = new THREE.Mesh(geometry, [sideMaterial, frontMaterial, backMaterial]);
+    coin.renderOrder = 1;
+
+    let baseRotationX = 1.1950;
+    let baseRotationY = 1.1900;
+    let baseRotationZ = 0.0000;
+    coin.rotation.x = baseRotationX;
+    coin.rotation.y = baseRotationY;
+    coin.rotation.z = baseRotationZ;
+    scene.add(coin);
+
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.1);
+    scene.add(ambientLight);
+    const keyLight = new THREE.DirectionalLight(0xfff5e6, 2.0);
+    keyLight.position.set(4, 6, 5);
+    scene.add(keyLight);
+    const fillLight = new THREE.DirectionalLight(0x7799cc, 0.9);
+    fillLight.position.set(-5, -3, -4);
+    scene.add(fillLight);
+    const rimLight = new THREE.PointLight(0xffb700, 1.5, 15);
+    rimLight.position.set(0, 5, -5);
+    scene.add(rimLight);
+
+    let isDragging = false;
+    let previousMousePosition = { x: 0, y: 0 };
+    let time = 0;
+    let scrollInfluence = 0;
+
+    const handlePointerDown = (x, y) => {
+      isDragging = true;
+      previousMousePosition = { x, y };
+    };
+    const handlePointerMove = (x, y) => {
+      if (!isDragging) return;
+      const deltaX = x - previousMousePosition.x;
+      const deltaY = y - previousMousePosition.y;
+      coin.rotation.y += deltaX * 0.004;
+      coin.rotation.x += deltaY * 0.004;
+      baseRotationX = coin.rotation.x;
+      baseRotationY = coin.rotation.y;
+      baseRotationZ = coin.rotation.z;
+      previousMousePosition = { x, y };
+    };
+    const handlePointerUp = () => { isDragging = false; };
+
+    container.addEventListener('mousedown', (e) => handlePointerDown(e.clientX, e.clientY));
+    window.addEventListener('mousemove', (e) => handlePointerMove(e.clientX, e.clientY));
+    window.addEventListener('mouseup', handlePointerUp);
+    container.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) handlePointerDown(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: true });
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches.length === 1) handlePointerMove(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: true });
+    window.addEventListener('touchend', handlePointerUp);
+
+    // Scroll sensitivity
+    function updateScrollInfluence() {
+      const rect = container.getBoundingClientRect();
+      const viewH = window.innerHeight;
+      const progress = 1 - (rect.top + rect.height / 2) / (viewH + rect.height / 2);
+      scrollInfluence = Math.max(-1, Math.min(1, (progress - 0.5) * 2));
+    }
+    window.addEventListener('scroll', updateScrollInfluence, { passive: true });
+    updateScrollInfluence();
+
+    function animate() {
+      requestAnimationFrame(animate);
+      time += 0.005;
+
+      if (!isDragging) {
+        coin.rotation.x = baseRotationX + Math.sin(time * 0.8) * 0.25 + Math.cos(time * 0.35) * 0.15 + scrollInfluence * 0.3;
+        coin.rotation.y = baseRotationY + Math.cos(time * 0.6) * 0.45 + Math.sin(time * 0.25) * 0.20 + scrollInfluence * 0.55;
+        coin.rotation.z = baseRotationZ + Math.sin(time * 0.45) * 0.18 + Math.cos(time * 0.7) * 0.08;
       }
 
-      const geo = new THREE.CylinderGeometry(2, 2, 0.25, 128, 1);
-      const metal = { color: 0xd4af37, metalness: 0.85, roughness: 0.25, bumpScale: 0.04 };
-      const sideMat = new THREE.MeshStandardMaterial({ color: metal.color, metalness: metal.metalness, roughness: 0.35 });
-      const frontMat = new THREE.MeshStandardMaterial({ ...metal, bumpMap: createFrontBump() });
-      const backMat = new THREE.MeshStandardMaterial({ ...metal, bumpMap: createBackBump() });
-      const coin = new THREE.Mesh(geo, [sideMat, frontMat, backMat]);
-
-      let baseX = 1.195, baseY = 1.19, baseZ = 0;
-      coin.rotation.set(baseX, baseY, baseZ);
-      scene.add(coin);
-
-      scene.add(new THREE.AmbientLight(0xffffff, 1.05));
-      const key = new THREE.DirectionalLight(0xfff5e6, 1.9);
-      key.position.set(4, 6, 5);
-      scene.add(key);
-      const fill = new THREE.DirectionalLight(0x7799cc, 0.85);
-      fill.position.set(-5, -3, -4);
-      scene.add(fill);
-      const rim = new THREE.PointLight(0xffb700, 1.4, 15);
-      rim.position.set(0, 5, -5);
-      scene.add(rim);
-
-      let dragging = false, prev = { x: 0, y: 0 }, t = 0;
-
-      const onDown = (x, y) => { dragging = true; prev = { x, y }; };
-      const onMove = (x, y) => {
-        if (!dragging) return;
-        coin.rotation.y += (x - prev.x) * 0.004;
-        coin.rotation.x += (y - prev.y) * 0.004;
-        baseX = coin.rotation.x; baseY = coin.rotation.y; baseZ = coin.rotation.z;
-        prev = { x, y };
-      };
-      const onUp = () => { dragging = false; };
-
-      container.addEventListener('mousedown', e => onDown(e.clientX, e.clientY));
-      window.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
-      window.addEventListener('mouseup', onUp);
-      container.addEventListener('touchstart', e => { if (e.touches.length === 1) onDown(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
-      window.addEventListener('touchmove', e => { if (e.touches.length === 1) onMove(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
-      window.addEventListener('touchend', onUp);
-
-      function animate() {
-        requestAnimationFrame(animate);
-        t += 0.005;
-        if (!dragging) {
-          coin.rotation.x = baseX + Math.sin(t * 0.8) * 0.25 + Math.cos(t * 0.35) * 0.15;
-          coin.rotation.y = baseY + Math.cos(t * 0.6) * 0.45 + Math.sin(t * 0.25) * 0.20;
-          coin.rotation.z = baseZ + Math.sin(t * 0.45) * 0.18 + Math.cos(t * 0.7) * 0.08;
+      const positions = nodeGeometry.attributes.position.array;
+      for (let i = 0; i < nodeCount; i++) {
+        positions[i * 3] += nodeVelocities[i].x;
+        positions[i * 3 + 1] += nodeVelocities[i].y;
+        positions[i * 3 + 2] += nodeVelocities[i].z;
+        if (positions[i * 3 + 1] > 8) {
+          positions[i * 3 + 1] = -8;
+          positions[i * 3] = (Math.random() - 0.5) * 16;
         }
-        const pos = nodeGeometry.attributes.position.array;
-        for (let i = 0; i < nodeCount; i++) {
-          pos[i*3] += nodeVelocities[i].x;
-          pos[i*3+1] += nodeVelocities[i].y;
-          pos[i*3+2] += nodeVelocities[i].z;
-          if (pos[i*3+1] > 7) {
-            pos[i*3+1] = -7;
-            pos[i*3] = (Math.random() - 0.5) * 14;
-          }
-        }
-        nodeGeometry.attributes.position.needsUpdate = true;
-        updateConnections();
-        renderer.render(scene, camera);
       }
-      animate();
-    })();
+      nodeGeometry.attributes.position.needsUpdate = true;
+      updateNodeConnections();
+
+      renderer.render(scene, camera);
+    }
+    animate();
+  })();
   </script>
 </body>
 </html>
