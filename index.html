@@ -432,18 +432,64 @@
     </div>
   </section>
 
-  <!-- DEVLOG / EMPTY STATE (Gold Coin) -->
+  <!-- DEVLOG / MINI GAME BOY -->
   <section id="devlog" class="py-24 md:py-32">
     <div class="max-w-6xl mx-auto px-5">
       <div class="mb-10 fade-up text-center">
         <p class="text-xs uppercase tracking-[0.3em] text-orange/70 mb-3">Dev Logs</p>
         <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-3">Nothing here <span class="text-gradient">yet</span></h2>
-        <p class="text-white/40 text-sm md:text-base max-w-md mx-auto">The pages are still blank. Come back later — or just spin the coin.</p>
+        <p class="text-white/40 text-sm md:text-base max-w-md mx-auto">No posts for now — but you can play a mini game while you wait.</p>
       </div>
 
-      <div class="fade-up relative mx-auto max-w-xl" style="transition-delay:0.1s">
-        <div id="coin-container" class="relative w-full max-w-lg mx-auto rounded-3xl overflow-hidden glass" style="height: min(460px, 92vw); aspect-ratio: 1;">
-          <!-- Three.js coin mounts here -->
+      <div class="fade-up flex justify-center" style="transition-delay:0.1s">
+        <!-- Game Boy shell -->
+        <div id="gameboy" class="relative select-none" style="width:min(320px,92vw);">
+          <!-- Body -->
+          <div class="rounded-[2rem] p-4 pt-5 pb-6 shadow-2xl border border-white/10"
+               style="background:linear-gradient(160deg,#1a1c22 0%,#0e1016 50%,#12141c 100%);box-shadow:0 25px 50px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.06);">
+            
+            <!-- Screen bezel -->
+            <div class="rounded-2xl p-3 mb-5" style="background:#0a0b0f;border:2px solid #22252e;">
+              <div class="relative rounded-lg overflow-hidden mx-auto" style="width:100%;aspect-ratio:10/9;background:#050508;">
+                <canvas id="gb-canvas" class="w-full h-full block" style="image-rendering:pixelated;"></canvas>
+                <!-- Overlay UI states drawn on canvas, but also HTML overlays for menus -->
+                <div id="gb-overlay" class="absolute inset-0 flex flex-col items-center justify-center text-center p-3 pointer-events-none">
+                  <!-- filled by JS -->
+                </div>
+              </div>
+              <p class="text-center text-[10px] tracking-[0.25em] text-white/25 mt-2 font-mono">AOLTD · RETRO</p>
+            </div>
+
+            <!-- Brand -->
+            <div class="flex items-center justify-between px-1 mb-4">
+              <span class="text-[11px] font-bold tracking-wider text-orange/80">AOLTD</span>
+              <span class="text-[10px] text-white/30 font-mono">MINI</span>
+            </div>
+
+            <!-- D-Pad + buttons -->
+            <div class="flex items-center justify-between px-2">
+              <!-- D-Pad -->
+              <div class="relative w-24 h-24">
+                <button data-dir="up" class="gb-btn absolute left-1/2 -translate-x-1/2 top-0 w-8 h-8 rounded-md bg-[#2a2d38] border border-white/10 active:bg-orange/40 text-white/40 text-xs">▲</button>
+                <button data-dir="left" class="gb-btn absolute top-1/2 -translate-y-1/2 left-0 w-8 h-8 rounded-md bg-[#2a2d38] border border-white/10 active:bg-orange/40 text-white/40 text-xs">◀</button>
+                <button data-dir="right" class="gb-btn absolute top-1/2 -translate-y-1/2 right-0 w-8 h-8 rounded-md bg-[#2a2d38] border border-white/10 active:bg-orange/40 text-white/40 text-xs">▶</button>
+                <button data-dir="down" class="gb-btn absolute left-1/2 -translate-x-1/2 bottom-0 w-8 h-8 rounded-md bg-[#2a2d38] border border-white/10 active:bg-orange/40 text-white/40 text-xs">▼</button>
+                <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-7 h-7 rounded-sm bg-[#1e2129]"></div>
+              </div>
+
+              <!-- A / B -->
+              <div class="flex gap-3 items-end">
+                <button id="gb-b" class="gb-action w-11 h-11 rounded-full bg-[#2a2d38] border border-white/10 text-[11px] font-bold text-white/50 active:bg-purple-500/40 active:text-white">B</button>
+                <button id="gb-a" class="gb-action w-12 h-12 rounded-full bg-gradient-to-br from-orange to-[#cc4400] text-[12px] font-bold text-white shadow-lg shadow-orange/30 active:scale-95 transition">A</button>
+              </div>
+            </div>
+
+            <!-- Start / Select -->
+            <div class="flex justify-center gap-6 mt-5">
+              <button id="gb-select" class="px-3 py-1 rounded-full text-[9px] tracking-widest uppercase bg-[#1e2129] border border-white/10 text-white/40 active:bg-white/10">Select</button>
+              <button id="gb-start" class="px-3 py-1 rounded-full text-[9px] tracking-widest uppercase bg-[#1e2129] border border-white/10 text-white/40 active:bg-orange/30 active:text-orange">Start</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -842,356 +888,630 @@
   </script>
 
 
-  <!-- GOLD COIN - exact original logic, container + scroll -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- MINI GAME BOY: Snake · Tetris · Pong -->
   <script>
-  (function () {
-    const container = document.getElementById('coin-container');
-    if (!container || typeof THREE === 'undefined') return;
+  (function() {
+    const canvas = document.getElementById('gb-canvas');
+    const overlay = document.getElementById('gb-overlay');
+    if (!canvas || !overlay) return;
+    const ctx = canvas.getContext('2d');
 
-    const scene = new THREE.Scene();
+    let W = 0, H = 0, cell = 12, cols = 0, rows = 0;
+    const C = {
+      bg: '#050508',
+      grid: 'rgba(168,85,247,0.07)',
+      orange: '#ff5500',
+      orangeSoft: '#ff8c1a',
+      purple: '#a855f7',
+      cyan: '#22d3ee',
+      text: '#f0f0f5',
+      dim: 'rgba(240,240,245,0.45)',
+      board: '#0a0b10'
+    };
 
-    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
-    camera.position.set(0, 0, 8.2);
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
-    container.appendChild(renderer.domElement);
-
-    function resize() {
-      const w = container.clientWidth || 320;
-      const h = container.clientHeight || 320;
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-      renderer.setSize(w, h, false);
+    function resizeCanvas() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = Math.floor(rect.width);
+      H = Math.floor(rect.height);
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cell = Math.max(9, Math.floor(Math.min(W, H) / 18));
+      cols = Math.floor(W / cell);
+      rows = Math.floor(H / cell);
     }
-    resize();
-    new ResizeObserver(resize).observe(container);
+    resizeCanvas();
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      if (state === 'play') draw();
+    });
 
-    // Glowing Magical Nodes (original)
-    const nodeCount = 160;
-    const nodeGeometry = new THREE.BufferGeometry();
-    const nodePositions = new Float32Array(nodeCount * 3);
-    const nodeVelocities = [];
+    // ----- state machine -----
+    let state = 'boot'; // boot | menu | play | gameover
+    let menuIndex = 0;
+    let currentGame = null;
+    let raf = 0;
+    let lastTime = 0;
 
-    for (let i = 0; i < nodeCount; i++) {
-      nodePositions[i * 3] = (Math.random() - 0.5) * 16;
-      nodePositions[i * 3 + 1] = (Math.random() - 0.5) * 16;
-      nodePositions[i * 3 + 2] = -0.5 - Math.random() * 5.5;
-      nodeVelocities.push({
-        x: (Math.random() - 0.5) * 0.003,
-        y: Math.random() * 0.002 + 0.001,
-        z: (Math.random() - 0.5) * 0.001
+    const games = [
+      { id: 'snake', name: 'SNAKE', desc: 'Eat · Grow · Survive' },
+      { id: 'tetris', name: 'TETRIS', desc: 'Stack · Clear · Drop' },
+      { id: 'pong', name: 'PONG', desc: 'Classic 1P vs CPU' }
+    ];
+
+    function setOverlay(html) {
+      overlay.innerHTML = html;
+      overlay.style.pointerEvents = 'none';
+    }
+
+    function clearOverlay() { setOverlay(''); }
+
+    function drawScreenBg() {
+      ctx.fillStyle = C.bg;
+      ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = 'rgba(255,255,255,0.015)';
+      for (let y = 0; y < H; y += 3) ctx.fillRect(0, y, W, 1);
+    }
+
+    function showBoot() {
+      state = 'boot';
+      currentGame = null;
+      cancelAnimationFrame(raf);
+      setOverlay(`
+        <div class="space-y-3">
+          <p class="text-[10px] tracking-[0.3em] text-orange/70 uppercase">No Devlogs</p>
+          <p class="text-sm font-bold text-white">Play a mini game</p>
+          <p class="text-[11px] text-white/40">Press <span class="text-orange">START</span> or <span class="text-orange">A</span></p>
+        </div>
+      `);
+      drawScreenBg();
+    }
+
+    function showMenu() {
+      state = 'menu';
+      currentGame = null;
+      cancelAnimationFrame(raf);
+      const items = games.map((g, i) => `
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded ${i===menuIndex?'bg-orange/20 text-orange':'text-white/60'}">
+          <span class="text-[10px] w-3">${i===menuIndex?'▶':' '}</span>
+          <div class="text-left">
+            <div class="text-xs font-bold">${g.name}</div>
+            <div class="text-[9px] opacity-60">${g.desc}</div>
+          </div>
+        </div>`).join('');
+      setOverlay(`
+        <div class="w-full px-2 space-y-1">
+          <p class="text-[9px] tracking-[0.25em] text-white/30 uppercase mb-2">Select Game</p>
+          ${items}
+          <p class="text-[9px] text-white/30 mt-3">A / Start · play &nbsp;·&nbsp; B · back</p>
+        </div>
+      `);
+      drawScreenBg();
+    }
+
+    function showGameOver(msg) {
+      state = 'gameover';
+      cancelAnimationFrame(raf);
+      setOverlay(`
+        <div class="space-y-2">
+          <p class="text-sm font-bold text-orange">${msg || 'GAME OVER'}</p>
+          <p class="text-xs text-white/70" id="gb-scoreline"></p>
+          <p class="text-[10px] text-white/40">A · retry &nbsp;·&nbsp; B · menu</p>
+        </div>
+      `);
+      const el = document.getElementById('gb-scoreline');
+      if (el && currentGame && typeof currentGame.score === 'number') {
+        el.textContent = 'Score: ' + currentGame.score;
+      }
+    }
+
+    // ===================== SNAKE =====================
+    function createSnake() {
+      const g = {
+        id: 'snake',
+        snake: [],
+        dir: {x:1,y:0},
+        nextDir: {x:1,y:0},
+        food: {x:0,y:0},
+        score: 0,
+        alive: true
+      };
+      const cx = Math.floor(cols/2), cy = Math.floor(rows/2);
+      g.snake = [{x:cx,y:cy},{x:cx-1,y:cy},{x:cx-2,y:cy}];
+      function placeFood() {
+        let ok = false;
+        while (!ok) {
+          g.food = { x: Math.floor(Math.random()*cols), y: Math.floor(Math.random()*rows) };
+          ok = !g.snake.some(s => s.x===g.food.x && s.y===g.food.y);
+        }
+      }
+      placeFood();
+      g.placeFood = placeFood;
+      return g;
+    }
+
+    function updateSnake(g) {
+      g.dir = g.nextDir;
+      const head = { x: g.snake[0].x + g.dir.x, y: g.snake[0].y + g.dir.y };
+      if (head.x < 0 || head.x >= cols || head.y < 0 || head.y >= rows ||
+          g.snake.some(s => s.x===head.x && s.y===head.y)) {
+        g.alive = false;
+        showGameOver('GAME OVER');
+        return;
+      }
+      g.snake.unshift(head);
+      if (head.x === g.food.x && head.y === g.food.y) {
+        g.score += 10;
+        g.placeFood();
+      } else g.snake.pop();
+    }
+
+    function drawSnake(g) {
+      drawScreenBg();
+      ctx.strokeStyle = C.grid; ctx.lineWidth = 1;
+      for (let x=0;x<=cols;x++){ctx.beginPath();ctx.moveTo(x*cell,0);ctx.lineTo(x*cell,rows*cell);ctx.stroke();}
+      for (let y=0;y<=rows;y++){ctx.beginPath();ctx.moveTo(0,y*cell);ctx.lineTo(cols*cell,y*cell);ctx.stroke();}
+      ctx.shadowColor = 'rgba(168,85,247,0.5)'; ctx.shadowBlur = 10;
+      ctx.fillStyle = C.purple;
+      ctx.fillRect(g.food.x*cell+2, g.food.y*cell+2, cell-4, cell-4);
+      ctx.shadowBlur = 0;
+      g.snake.forEach((s,i) => {
+        ctx.fillStyle = i===0 ? C.orangeSoft : C.orange;
+        ctx.fillRect(s.x*cell+1, s.y*cell+1, cell-2, cell-2);
       });
-    }
-    nodeGeometry.setAttribute('position', new THREE.BufferAttribute(nodePositions, 3));
-
-    function createMagicalNodeTexture() {
-      const canvas = document.createElement('canvas');
-      canvas.width = 128;
-      canvas.height = 128;
-      const ctx = canvas.getContext('2d');
-      const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
-      gradient.addColorStop(0, 'rgba(255, 220, 130, 1.0)');
-      gradient.addColorStop(0.2, 'rgba(240, 180, 50, 0.8)');
-      gradient.addColorStop(0.5, 'rgba(212, 175, 55, 0.3)');
-      gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, 128, 128);
-      const texture = new THREE.CanvasTexture(canvas);
-      texture.needsUpdate = true;
-      return texture;
+      ctx.fillStyle = C.dim; ctx.font = 'bold 11px monospace';
+      ctx.fillText('SCR '+g.score, 6, 14);
     }
 
-    const nodeMaterial = new THREE.PointsMaterial({
-      size: 0.3,
-      map: createMagicalNodeTexture(),
-      transparent: true,
-      blending: THREE.AdditiveBlending,
-      depthTest: true,
-      depthWrite: false
-    });
-    const magicalNodes = new THREE.Points(nodeGeometry, nodeMaterial);
-    magicalNodes.renderOrder = 0;
-    scene.add(magicalNodes);
+    // ===================== TETRIS =====================
+    const SHAPES = {
+      I: [[1,1,1,1]],
+      O: [[1,1],[1,1]],
+      T: [[0,1,0],[1,1,1]],
+      S: [[0,1,1],[1,1,0]],
+      Z: [[1,1,0],[0,1,1]],
+      J: [[1,0,0],[1,1,1]],
+      L: [[0,0,1],[1,1,1]]
+    };
+    const SHAPE_COLORS = {
+      I: C.cyan, O: C.orangeSoft, T: C.purple, S: '#4ade80', Z: C.orange, J: '#60a5fa', L: '#fbbf24'
+    };
+    const SHAPE_KEYS = Object.keys(SHAPES);
 
-    const lineMaterial = new THREE.LineBasicMaterial({
-      color: 0xd4af37,
-      transparent: true,
-      opacity: 0.18,
-      blending: THREE.AdditiveBlending,
-      depthTest: true,
-      depthWrite: false
-    });
-    const lineGeometry = new THREE.BufferGeometry();
-    const nodeLines = new THREE.LineSegments(lineGeometry, lineMaterial);
-    nodeLines.renderOrder = 0;
-    scene.add(nodeLines);
+    function createTetris() {
+      const tw = 10, th = 16;
+      const g = {
+        id: 'tetris',
+        tw, th,
+        board: Array.from({length: th}, () => Array(tw).fill(null)),
+        piece: null,
+        score: 0,
+        alive: true,
+        dropMs: 500,
+        acc: 0
+      };
+      spawn(g);
+      return g;
+    }
 
-    function updateNodeConnections() {
-      const positions = nodeGeometry.attributes.position.array;
-      const linePos = [];
-      for (let i = 0; i < nodeCount; i++) {
-        for (let j = i + 1; j < nodeCount; j++) {
-          const dx = positions[i * 3] - positions[j * 3];
-          const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
-          const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
-          const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-          if (dist < 2.0) {
-            linePos.push(
-              positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2],
-              positions[j * 3], positions[j * 3 + 1], positions[j * 3 + 2]
-            );
+    function spawn(g) {
+      const key = SHAPE_KEYS[Math.floor(Math.random()*SHAPE_KEYS.length)];
+      const matrix = SHAPES[key].map(r => r.slice());
+      g.piece = {
+        m: matrix,
+        x: Math.floor((g.tw - matrix[0].length)/2),
+        y: 0,
+        color: SHAPE_COLORS[key]
+      };
+      if (collides(g, g.piece.m, g.piece.x, g.piece.y)) {
+        g.alive = false;
+        showGameOver('GAME OVER');
+      }
+    }
+
+    function collides(g, m, ox, oy) {
+      for (let y=0;y<m.length;y++) for (let x=0;x<m[y].length;x++) {
+        if (!m[y][x]) continue;
+        const bx = ox+x, by = oy+y;
+        if (bx < 0 || bx >= g.tw || by >= g.th) return true;
+        if (by >= 0 && g.board[by][bx]) return true;
+      }
+      return false;
+    }
+
+    function merge(g) {
+      const {m,x,y,color} = g.piece;
+      for (let py=0;py<m.length;py++) for (let px=0;px<m[py].length;px++) {
+        if (m[py][px] && y+py >= 0) g.board[y+py][x+px] = color;
+      }
+    }
+
+    function clearLines(g) {
+      let cleared = 0;
+      for (let y = g.th-1; y >= 0; y--) {
+        if (g.board[y].every(c => c)) {
+          g.board.splice(y, 1);
+          g.board.unshift(Array(g.tw).fill(null));
+          cleared++;
+          y++;
+        }
+      }
+      if (cleared) g.score += [0,40,100,300,1200][cleared] || cleared*100;
+    }
+
+    function rotateMatrix(m) {
+      const h = m.length, w = m[0].length;
+      const res = Array.from({length:w}, () => Array(h).fill(0));
+      for (let y=0;y<h;y++) for (let x=0;x<w;x++) res[x][h-1-y] = m[y][x];
+      return res;
+    }
+
+    function tetrisMove(g, dx, dy) {
+      if (!g.piece || !g.alive) return;
+      const nx = g.piece.x + dx, ny = g.piece.y + dy;
+      if (!collides(g, g.piece.m, nx, ny)) {
+        g.piece.x = nx; g.piece.y = ny;
+        return true;
+      }
+      return false;
+    }
+
+    function tetrisRotate(g) {
+      if (!g.piece || !g.alive) return;
+      const rotated = rotateMatrix(g.piece.m);
+      // wall kicks
+      for (const kick of [0, -1, 1, -2, 2]) {
+        if (!collides(g, rotated, g.piece.x + kick, g.piece.y)) {
+          g.piece.m = rotated;
+          g.piece.x += kick;
+          return;
+        }
+      }
+    }
+
+    function tetrisHardDrop(g) {
+      if (!g.piece || !g.alive) return;
+      while (tetrisMove(g, 0, 1)) g.score += 1;
+      lockPiece(g);
+    }
+
+    function lockPiece(g) {
+      merge(g);
+      clearLines(g);
+      spawn(g);
+    }
+
+    function updateTetris(g, dt) {
+      if (!g.alive) return;
+      g.acc += dt;
+      const speed = Math.max(120, g.dropMs - Math.floor(g.score/200)*30);
+      if (g.acc >= speed) {
+        g.acc = 0;
+        if (!tetrisMove(g, 0, 1)) lockPiece(g);
+      }
+    }
+
+    function drawTetris(g) {
+      drawScreenBg();
+      const bw = g.tw * cell, bh = g.th * cell;
+      const ox = Math.floor((W - bw)/2), oy = Math.floor((H - bh)/2);
+      // board bg
+      ctx.fillStyle = C.board;
+      ctx.fillRect(ox, oy, bw, bh);
+      ctx.strokeStyle = C.grid; ctx.lineWidth = 1;
+      for (let x=0;x<=g.tw;x++){ctx.beginPath();ctx.moveTo(ox+x*cell,oy);ctx.lineTo(ox+x*cell,oy+bh);ctx.stroke();}
+      for (let y=0;y<=g.th;y++){ctx.beginPath();ctx.moveTo(ox,oy+y*cell);ctx.lineTo(ox+bw,oy+y*cell);ctx.stroke();}
+      // locked
+      for (let y=0;y<g.th;y++) for (let x=0;x<g.tw;x++) {
+        if (g.board[y][x]) {
+          ctx.fillStyle = g.board[y][x];
+          ctx.fillRect(ox+x*cell+1, oy+y*cell+1, cell-2, cell-2);
+        }
+      }
+      // active
+      if (g.piece) {
+        const {m,x,y,color} = g.piece;
+        ctx.fillStyle = color;
+        for (let py=0;py<m.length;py++) for (let px=0;px<m[py].length;px++) {
+          if (m[py][px] && y+py >= 0) {
+            ctx.fillRect(ox+(x+px)*cell+1, oy+(y+py)*cell+1, cell-2, cell-2);
           }
         }
       }
-      lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(linePos, 3));
+      ctx.fillStyle = C.dim; ctx.font = 'bold 11px monospace';
+      ctx.fillText('SCR '+g.score, 6, 14);
     }
 
-    function drawCircularText(ctx, text, radius, startAngle, endAngle, isTop, cx, cy) {
-      const characters = text.split('');
-      const angleStep = (endAngle - startAngle) / (characters.length - 1 || 1);
-      characters.forEach((char, i) => {
-        const angle = startAngle + i * angleStep;
-        ctx.save();
-        ctx.translate(cx + radius * Math.cos(angle), cy + radius * Math.sin(angle));
-        const rotation = angle + (isTop ? Math.PI / 2 : -Math.PI / 2);
-        ctx.rotate(rotation);
-        ctx.fillText(char, 0, 0);
-        ctx.restore();
-      });
+    // ===================== PONG =====================
+    function createPong() {
+      return {
+        id: 'pong',
+        paddleH: 0,
+        paddleW: 6,
+        ball: { x:0, y:0, vx:0, vy:0, r:5 },
+        playerY: 0,
+        cpuY: 0,
+        scoreP: 0,
+        scoreC: 0,
+        score: 0,
+        alive: true,
+        serve: true
+      };
     }
 
-    function drawCoinBorders(ctx, cx, cy, hasInnerPartition) {
-      ctx.fillStyle = '#808080';
-      ctx.fillRect(0, 0, 2048, 2048);
-      ctx.beginPath();
-      ctx.arc(cx, cy, 960, 0, Math.PI * 2);
-      ctx.fillStyle = '#ffffff';
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(cx, cy, 905, 0, Math.PI * 2);
-      ctx.fillStyle = '#808080';
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(cx, cy, 860, 0, Math.PI * 2);
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 14;
-      ctx.stroke();
-      if (hasInnerPartition) {
-        ctx.beginPath();
-        ctx.arc(cx, cy, 620, 0, Math.PI * 2);
-        ctx.fillStyle = '#555555';
-        ctx.fill();
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 18;
-        ctx.stroke();
-      } else {
-        ctx.beginPath();
-        ctx.arc(cx, cy, 850, 0, Math.PI * 2);
-        ctx.fillStyle = '#606060';
-        ctx.fill();
-      }
+    function resetBall(g, toPlayer) {
+      g.ball.x = W/2;
+      g.ball.y = H/2;
+      const speed = 2.8;
+      g.ball.vx = (toPlayer ? -1 : 1) * speed;
+      g.ball.vy = (Math.random()*2-1) * speed * 0.7;
+      g.serve = false;
     }
 
-    function drawAOLTD(ctx, cx, cy, scale = 1) {
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.scale(scale, scale);
-      ctx.fillStyle = '#ffffff';
-      ctx.strokeStyle = '#d0d0d0';
-      ctx.lineWidth = 15;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.font = 'bold 400px "Comic Sans MS", "Chalkboard SE", cursive, sans-serif';
-      ctx.rotate(-0.05);
-      const letters = ['A', 'O', '!', 'L', 'T', 'D'];
-      const xOffsets = [-350, -150, -20, 100, 220, 340];
-      const yOffsets = [-20, 20, -15, 15, -25, 10];
-      const rotations = [-0.08, 0.06, -0.03, 0.05, -0.07, 0.04];
-      letters.forEach((letter, i) => {
-        ctx.save();
-        ctx.translate(xOffsets[i], yOffsets[i]);
-        ctx.rotate(rotations[i]);
-        ctx.fillText(letter, 0, 0);
-        ctx.strokeText(letter, 0, 0);
-        ctx.restore();
-      });
-      ctx.restore();
+    function initPongLayout(g) {
+      g.paddleH = Math.max(36, H * 0.18);
+      g.playerY = H/2 - g.paddleH/2;
+      g.cpuY = H/2 - g.paddleH/2;
+      resetBall(g, false);
     }
 
-    function createFrontBumpTexture() {
-      const canvas = document.createElement('canvas');
-      canvas.width = 2048;
-      canvas.height = 2048;
-      const ctx = canvas.getContext('2d');
-      const cx = 1024, cy = 1024;
-      drawCoinBorders(ctx, cx, cy, true);
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 70px Georgia, serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      drawCircularText(ctx, 'ART OF LONE', 740, -Math.PI * 0.70, -Math.PI * 0.30, true, cx, cy);
-      drawCircularText(ctx, 'TENACIOUS DEVELOPER', 740, Math.PI * 0.75, Math.PI * 0.25, false, cx, cy);
-      ctx.font = 'bold 78px Georgia, serif';
-      ctx.fillText('20', 280, cy);
-      ctx.fillText('08', 1768, cy);
-      drawAOLTD(ctx, cx, cy, 0.8);
-      const texture = new THREE.CanvasTexture(canvas);
-      texture.needsUpdate = true;
-      return texture;
-    }
-
-    function createBackBumpTexture() {
-      const canvas = document.createElement('canvas');
-      canvas.width = 2048;
-      canvas.height = 2048;
-      const ctx = canvas.getContext('2d');
-      const cx = 1024, cy = 1024;
-      drawCoinBorders(ctx, cx, cy, false);
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.rotate(Math.PI);
-      ctx.translate(-cx, -cy);
-      ctx.fillStyle = '#ffffff';
-      ctx.strokeStyle = '#d0d0d0';
-      ctx.lineWidth = 8;
-      ctx.font = 'bold 150px "Comic Sans MS", "Chalkboard SE", cursive, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('AoRom', cx, cy - 500);
-      ctx.strokeText('AoRom', cx, cy - 500);
-      ctx.font = 'bold 200px "Comic Sans MS", "Chalkboard SE", cursive, sans-serif';
-      ctx.fillText('47', cx, cy + 500);
-      ctx.strokeText('47', cx, cy + 500);
-      drawAOLTD(ctx, cx, cy, 0.9);
-      ctx.font = 'bold 80px "Comic Sans MS", "Chalkboard SE", cursive, sans-serif';
-      ctx.fillText("Something You'll Remember", cx, cy + 300);
-      ctx.strokeText("Something You'll Remember", cx, cy + 300);
-      ctx.restore();
-      const texture = new THREE.CanvasTexture(canvas);
-      texture.needsUpdate = true;
-      return texture;
-    }
-
-    const geometry = new THREE.CylinderGeometry(1.85, 1.85, 0.22, 128, 1);
-    const metallicConfig = {
-      color: 0xd4af37,
-      metalness: 0.85,
-      roughness: 0.25,
-      bumpScale: 0.04
-    };
-    const sideMaterial = new THREE.MeshStandardMaterial({
-      color: metallicConfig.color,
-      metalness: metallicConfig.metalness,
-      roughness: 0.35
-    });
-    const frontMaterial = new THREE.MeshStandardMaterial({
-      ...metallicConfig,
-      bumpMap: createFrontBumpTexture()
-    });
-    const backMaterial = new THREE.MeshStandardMaterial({
-      ...metallicConfig,
-      bumpMap: createBackBumpTexture()
-    });
-
-    const coin = new THREE.Mesh(geometry, [sideMaterial, frontMaterial, backMaterial]);
-    coin.renderOrder = 1;
-
-    let baseRotationX = 1.1950;
-    let baseRotationY = 1.1900;
-    let baseRotationZ = 0.0000;
-    coin.rotation.x = baseRotationX;
-    coin.rotation.y = baseRotationY;
-    coin.rotation.z = baseRotationZ;
-    scene.add(coin);
-
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.1);
-    scene.add(ambientLight);
-    const keyLight = new THREE.DirectionalLight(0xfff5e6, 2.0);
-    keyLight.position.set(4, 6, 5);
-    scene.add(keyLight);
-    const fillLight = new THREE.DirectionalLight(0x7799cc, 0.9);
-    fillLight.position.set(-5, -3, -4);
-    scene.add(fillLight);
-    const rimLight = new THREE.PointLight(0xffb700, 1.5, 15);
-    rimLight.position.set(0, 5, -5);
-    scene.add(rimLight);
-
-    let isDragging = false;
-    let previousMousePosition = { x: 0, y: 0 };
-    let time = 0;
-    let scrollInfluence = 0;
-
-    const handlePointerDown = (x, y) => {
-      isDragging = true;
-      previousMousePosition = { x, y };
-    };
-    const handlePointerMove = (x, y) => {
-      if (!isDragging) return;
-      const deltaX = x - previousMousePosition.x;
-      const deltaY = y - previousMousePosition.y;
-      coin.rotation.y += deltaX * 0.004;
-      coin.rotation.x += deltaY * 0.004;
-      baseRotationX = coin.rotation.x;
-      baseRotationY = coin.rotation.y;
-      baseRotationZ = coin.rotation.z;
-      previousMousePosition = { x, y };
-    };
-    const handlePointerUp = () => { isDragging = false; };
-
-    container.addEventListener('mousedown', (e) => handlePointerDown(e.clientX, e.clientY));
-    window.addEventListener('mousemove', (e) => handlePointerMove(e.clientX, e.clientY));
-    window.addEventListener('mouseup', handlePointerUp);
-    container.addEventListener('touchstart', (e) => {
-      if (e.touches.length === 1) handlePointerDown(e.touches[0].clientX, e.touches[0].clientY);
-    }, { passive: true });
-    window.addEventListener('touchmove', (e) => {
-      if (e.touches.length === 1) handlePointerMove(e.touches[0].clientX, e.touches[0].clientY);
-    }, { passive: true });
-    window.addEventListener('touchend', handlePointerUp);
-
-    // Scroll sensitivity
-    function updateScrollInfluence() {
-      const rect = container.getBoundingClientRect();
-      const viewH = window.innerHeight;
-      const progress = 1 - (rect.top + rect.height / 2) / (viewH + rect.height / 2);
-      scrollInfluence = Math.max(-1, Math.min(1, (progress - 0.5) * 2));
-    }
-    window.addEventListener('scroll', updateScrollInfluence, { passive: true });
-    updateScrollInfluence();
-
-    function animate() {
-      requestAnimationFrame(animate);
-      time += 0.005;
-
-      if (!isDragging) {
-        coin.rotation.x = baseRotationX + Math.sin(time * 0.8) * 0.25 + Math.cos(time * 0.35) * 0.15 + scrollInfluence * 0.3;
-        coin.rotation.y = baseRotationY + Math.cos(time * 0.6) * 0.45 + Math.sin(time * 0.25) * 0.20 + scrollInfluence * 0.55;
-        coin.rotation.z = baseRotationZ + Math.sin(time * 0.45) * 0.18 + Math.cos(time * 0.7) * 0.08;
-      }
-
-      const positions = nodeGeometry.attributes.position.array;
-      for (let i = 0; i < nodeCount; i++) {
-        positions[i * 3] += nodeVelocities[i].x;
-        positions[i * 3 + 1] += nodeVelocities[i].y;
-        positions[i * 3 + 2] += nodeVelocities[i].z;
-        if (positions[i * 3 + 1] > 8) {
-          positions[i * 3 + 1] = -8;
-          positions[i * 3] = (Math.random() - 0.5) * 16;
+    function updatePong(g, dt) {
+      if (!g.alive) return;
+      const scale = dt / 16.67;
+      // ball
+      g.ball.x += g.ball.vx * scale;
+      g.ball.y += g.ball.vy * scale;
+      // walls
+      if (g.ball.y - g.ball.r < 0) { g.ball.y = g.ball.r; g.ball.vy *= -1; }
+      if (g.ball.y + g.ball.r > H) { g.ball.y = H - g.ball.r; g.ball.vy *= -1; }
+      // player paddle (left)
+      const pTop = g.playerY, pBot = g.playerY + g.paddleH;
+      if (g.ball.vx < 0 && g.ball.x - g.ball.r < 12 + g.paddleW && g.ball.x > 8) {
+        if (g.ball.y > pTop && g.ball.y < pBot) {
+          g.ball.vx *= -1.05;
+          g.ball.x = 12 + g.paddleW + g.ball.r;
+          const hit = (g.ball.y - (pTop + g.paddleH/2)) / (g.paddleH/2);
+          g.ball.vy += hit * 1.5;
         }
       }
-      nodeGeometry.attributes.position.needsUpdate = true;
-      updateNodeConnections();
+      // cpu paddle (right)
+      const cTop = g.cpuY, cBot = g.cpuY + g.paddleH;
+      if (g.ball.vx > 0 && g.ball.x + g.ball.r > W - 12 - g.paddleW && g.ball.x < W - 8) {
+        if (g.ball.y > cTop && g.ball.y < cBot) {
+          g.ball.vx *= -1.05;
+          g.ball.x = W - 12 - g.paddleW - g.ball.r;
+          const hit = (g.ball.y - (cTop + g.paddleH/2)) / (g.paddleH/2);
+          g.ball.vy += hit * 1.5;
+        }
+      }
+      // clamp ball speed
+      const maxS = 7;
+      g.ball.vx = Math.max(-maxS, Math.min(maxS, g.ball.vx));
+      g.ball.vy = Math.max(-maxS, Math.min(maxS, g.ball.vy));
 
-      renderer.render(scene, camera);
+      // scoring
+      if (g.ball.x < 0) {
+        g.scoreC++;
+        if (g.scoreC >= 7) { g.alive = false; showGameOver('CPU WINS'); return; }
+        resetBall(g, true);
+      } else if (g.ball.x > W) {
+        g.scoreP++;
+        g.score = g.scoreP;
+        if (g.scoreP >= 7) { g.alive = false; showGameOver('YOU WIN'); return; }
+        resetBall(g, false);
+      }
+
+      // CPU AI
+      const target = g.ball.y - g.paddleH/2;
+      const cpuSpeed = 2.4 * scale;
+      if (g.cpuY + g.paddleH/2 < g.ball.y - 4) g.cpuY += cpuSpeed;
+      else if (g.cpuY + g.paddleH/2 > g.ball.y + 4) g.cpuY -= cpuSpeed;
+      g.cpuY = Math.max(0, Math.min(H - g.paddleH, g.cpuY));
+      g.playerY = Math.max(0, Math.min(H - g.paddleH, g.playerY));
     }
-    animate();
+
+    function drawPong(g) {
+      drawScreenBg();
+      // center line
+      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+      ctx.setLineDash([6,6]);
+      ctx.beginPath(); ctx.moveTo(W/2, 0); ctx.lineTo(W/2, H); ctx.stroke();
+      ctx.setLineDash([]);
+      // paddles
+      ctx.fillStyle = C.orange;
+      ctx.fillRect(12, g.playerY, g.paddleW, g.paddleH);
+      ctx.fillStyle = C.cyan;
+      ctx.fillRect(W - 12 - g.paddleW, g.cpuY, g.paddleW, g.paddleH);
+      // ball
+      ctx.shadowColor = 'rgba(255,85,0,0.5)'; ctx.shadowBlur = 8;
+      ctx.fillStyle = C.text;
+      ctx.beginPath(); ctx.arc(g.ball.x, g.ball.y, g.ball.r, 0, Math.PI*2); ctx.fill();
+      ctx.shadowBlur = 0;
+      // scores
+      ctx.fillStyle = C.dim; ctx.font = 'bold 16px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(g.scoreP, W/2 - 30, 22);
+      ctx.fillText(g.scoreC, W/2 + 30, 22);
+      ctx.textAlign = 'left';
+    }
+
+    // ===================== MAIN LOOP =====================
+    function startGame(id) {
+      resizeCanvas();
+      clearOverlay();
+      state = 'play';
+      lastTime = performance.now();
+      if (id === 'snake') currentGame = createSnake();
+      else if (id === 'tetris') currentGame = createTetris();
+      else if (id === 'pong') {
+        currentGame = createPong();
+        initPongLayout(currentGame);
+      }
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(loop);
+    }
+
+    function draw() {
+      if (!currentGame) return;
+      if (currentGame.id === 'snake') drawSnake(currentGame);
+      else if (currentGame.id === 'tetris') drawTetris(currentGame);
+      else if (currentGame.id === 'pong') drawPong(currentGame);
+    }
+
+    function loop(now) {
+      if (state !== 'play' || !currentGame) return;
+      const dt = Math.min(50, now - lastTime);
+      lastTime = now;
+
+      if (currentGame.id === 'snake') {
+        // fixed step
+        if (!currentGame._acc) currentGame._acc = 0;
+        currentGame._acc += dt;
+        const speed = Math.max(70, 130 - Math.floor(currentGame.score/30)*8);
+        if (currentGame._acc >= speed) {
+          currentGame._acc = 0;
+          if (currentGame.alive) updateSnake(currentGame);
+        }
+      } else if (currentGame.id === 'tetris') {
+        updateTetris(currentGame, dt);
+      } else if (currentGame.id === 'pong') {
+        updatePong(currentGame, dt);
+      }
+
+      if (state === 'play') {
+        draw();
+        raf = requestAnimationFrame(loop);
+      }
+    }
+
+    // ===================== INPUT =====================
+    function setSnakeDir(nx, ny) {
+      if (!currentGame || currentGame.id !== 'snake') return;
+      if (nx === -currentGame.dir.x && ny === -currentGame.dir.y) return;
+      currentGame.nextDir = {x:nx, y:ny};
+    }
+
+    function pongMove(dy) {
+      if (!currentGame || currentGame.id !== 'pong') return;
+      currentGame.playerY += dy;
+      currentGame.playerY = Math.max(0, Math.min(H - currentGame.paddleH, currentGame.playerY));
+    }
+
+    document.querySelectorAll('.gb-btn').forEach(btn => {
+      const d = btn.dataset.dir;
+      const handler = (e) => {
+        e.preventDefault();
+        if (state === 'menu') {
+          if (d === 'up') menuIndex = (menuIndex - 1 + games.length) % games.length;
+          if (d === 'down') menuIndex = (menuIndex + 1) % games.length;
+          showMenu();
+        } else if (state === 'play' && currentGame) {
+          if (currentGame.id === 'snake') {
+            const map = {up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
+            if (map[d]) setSnakeDir(map[d][0], map[d][1]);
+          } else if (currentGame.id === 'tetris') {
+            if (d === 'left') tetrisMove(currentGame, -1, 0);
+            if (d === 'right') tetrisMove(currentGame, 1, 0);
+            if (d === 'down') tetrisMove(currentGame, 0, 1);
+            if (d === 'up') tetrisRotate(currentGame);
+            draw();
+          } else if (currentGame.id === 'pong') {
+            if (d === 'up') pongMove(-18);
+            if (d === 'down') pongMove(18);
+          }
+        }
+      };
+      btn.addEventListener('click', handler);
+      btn.addEventListener('touchstart', handler, { passive: false });
+    });
+
+    // hold support for pong / tetris soft drop
+    let holdTimer = null;
+    document.querySelectorAll('.gb-btn').forEach(btn => {
+      const d = btn.dataset.dir;
+      btn.addEventListener('mousedown', () => {
+        if (state !== 'play' || !currentGame) return;
+        holdTimer = setInterval(() => {
+          if (currentGame.id === 'pong') {
+            if (d === 'up') pongMove(-10);
+            if (d === 'down') pongMove(10);
+          } else if (currentGame.id === 'tetris' && d === 'down') {
+            tetrisMove(currentGame, 0, 1); draw();
+          }
+        }, 40);
+      });
+      ['mouseup','mouseleave','touchend'].forEach(ev =>
+        btn.addEventListener(ev, () => { clearInterval(holdTimer); holdTimer = null; })
+      );
+    });
+
+    function pressA() {
+      if (state === 'boot') showMenu();
+      else if (state === 'menu') startGame(games[menuIndex].id);
+      else if (state === 'gameover') startGame(currentGame ? currentGame.id : 'snake');
+      else if (state === 'play' && currentGame && currentGame.id === 'tetris') tetrisRotate(currentGame);
+    }
+    function pressB() {
+      if (state === 'play' || state === 'gameover') showMenu();
+      else if (state === 'menu') showBoot();
+    }
+    function pressStart() {
+      if (state === 'boot') showMenu();
+      else if (state === 'menu') pressA();
+      else if (state === 'gameover') pressA();
+      else if (state === 'play' && currentGame && currentGame.id === 'tetris') tetrisHardDrop(currentGame);
+    }
+
+    document.getElementById('gb-a')?.addEventListener('click', pressA);
+    document.getElementById('gb-b')?.addEventListener('click', pressB);
+    document.getElementById('gb-start')?.addEventListener('click', pressStart);
+    document.getElementById('gb-select')?.addEventListener('click', () => {
+      if (state === 'menu') { menuIndex = (menuIndex + 1) % games.length; showMenu(); }
+    });
+
+    window.addEventListener('keydown', (e) => {
+      const k = e.key.toLowerCase();
+      if (state === 'play' || state === 'menu' || state === 'gameover') {
+        if (['arrowup','arrowdown','arrowleft','arrowright','w','a','s','d',' ','enter','escape'].includes(k))
+          e.preventDefault();
+      }
+      if (state === 'play' && currentGame) {
+        if (currentGame.id === 'snake') {
+          if (k==='arrowup'||k==='w') setSnakeDir(0,-1);
+          if (k==='arrowdown'||k==='s') setSnakeDir(0,1);
+          if (k==='arrowleft'||k==='a') setSnakeDir(-1,0);
+          if (k==='arrowright'||k==='d') setSnakeDir(1,0);
+        } else if (currentGame.id === 'tetris') {
+          if (k==='arrowleft'||k==='a') tetrisMove(currentGame, -1, 0);
+          if (k==='arrowright'||k==='d') tetrisMove(currentGame, 1, 0);
+          if (k==='arrowdown'||k==='s') tetrisMove(currentGame, 0, 1);
+          if (k==='arrowup'||k==='w') tetrisRotate(currentGame);
+          if (k===' ') tetrisHardDrop(currentGame);
+          draw();
+        } else if (currentGame.id === 'pong') {
+          if (k==='arrowup'||k==='w') pongMove(-22);
+          if (k==='arrowdown'||k==='s') pongMove(22);
+        }
+      } else if (state === 'menu') {
+        if (k==='arrowup'||k==='w') { menuIndex = (menuIndex-1+games.length)%games.length; showMenu(); }
+        if (k==='arrowdown'||k==='s') { menuIndex = (menuIndex+1)%games.length; showMenu(); }
+        if (k==='enter'||k===' ') pressA();
+        if (k==='escape') pressB();
+      } else if (state === 'boot') {
+        if (k==='enter'||k===' ') pressA();
+      } else if (state === 'gameover') {
+        if (k==='enter'||k===' ') pressA();
+        if (k==='escape') pressB();
+      }
+    });
+
+    resizeCanvas();
+    showBoot();
   })();
   </script>
+
 </body>
 </html>
