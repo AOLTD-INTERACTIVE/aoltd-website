@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>GHOST NOTE · Submit Your Song</title>
+
+  
+
+  <!-- Fonts -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Foldit:wght@600;700&family=Aubrey&display=swap" rel="stylesheet">
+
+  
+
+  <!-- Tailwind -->
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  
+
+  <style>
+    /* ============================================
+       ALL STYLES - Matches AOLTD theme exactly
+       ============================================ */
+    :root {
+      --void: #050508;
+      --orange: #ff5500;
+      --accent: #a855f7;
+      --cyan: #22d3ee;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--void);
+      color: #f0f0f5;
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      overflow-x: hidden;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    .noise {
+      position: fixed; inset: 0; pointer-events: none; z-index: 9998;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .glass {
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .text-gradient {
+      background: linear-gradient(135deg, #ff5500 0%, #a855f7 45%, #22d3ee 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .glitch-title {
+      font-size: clamp(3rem, 10vw, 5.5rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.35rem;
+      position: relative;
+      color: #fff;
+      text-shadow: 0.04em 0 0 rgba(255, 85, 0, 0.85), -0.035em -0.02em 0 rgba(168, 85, 247, 0.5);
+      animation: glitch 500ms infinite;
+    }
+
+    @keyframes glitch {
+      0%   { text-shadow: 0.04em 0 0 rgba(255,85,0,0.85), -0.035em -0.02em 0 rgba(168,85,247,0.5); }
+      14%  { text-shadow: 0.04em 0 0 rgba(255,85,0,0.85), -0.035em -0.02em 0 rgba(168,85,247,0.5); }
+      15%  { text-shadow: -0.04em -0.02em 0 rgba(255,85,0,0.85), 0.025em 0.04em 0 rgba(168,85,247,0.5); }
+      49%  { text-shadow: -0.04em -0.02em 0 rgba(255,85,0,0.85), 0.025em 0.04em 0 rgba(168,85,247,0.5); }
+      50%  { text-shadow: 0.025em 0.04em 0 rgba(255,85,0,0.85), 0.04em 0 0 rgba(34,211,238,0.4); }
+      99%  { text-shadow: 0.025em 0.04em 0 rgba(255,85,0,0.85), 0.04em 0 0 rgba(34,211,238,0.4); }
+      100% { text-shadow: -0.025em 0 0 rgba(255,85,0,0.85), -0.02em -0.02em 0 rgba(168,85,247,0.5); }
+    }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.85s cubic-bezier(0.22,1,0.36,1), transform 0.85s cubic-bezier(0.22,1,0.36,1);
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .card-hover {
+      transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), border-color 0.3s, box-shadow 0.3s;
+    }
+    .card-hover:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255,85,0,0.25);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    .btn-glow {
+      background: linear-gradient(135deg, #ff5500, #e04500);
+      box-shadow: 0 0 25px rgba(255,85,0,0.3);
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    .btn-glow:hover:not(:disabled) {
+      box-shadow: 0 0 40px rgba(255,85,0,0.5);
+      transform: translateY(-2px);
+    }
+    .btn-glow:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    input, textarea, select {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #f0f0f5;
+      transition: all 0.3s;
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      font-size: 1rem;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #ff5500;
+      box-shadow: 0 0 20px rgba(255,85,0,0.15);
+      background: rgba(255,255,255,0.08);
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: rgba(255,255,255,0.25);
+    }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 0.5rem;
+    }
+
+    .required {
+      color: #ff5500;
+    }
+
+    /* File input */
+    .file-input-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      width: 100%;
+    }
+    .file-input-wrapper input[type=file] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+    .file-input-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: rgba(255,255,255,0.05);
+      border: 2px dashed rgba(255,255,255,0.15);
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      min-height: 60px;
+    }
+    .file-input-label:hover {
+      border-color: #ff5500;
+      background: rgba(255,85,0,0.05);
+    }
+    .file-input-label.has-file {
+      border-color: #22d3ee;
+      background: rgba(34,211,238,0.05);
+    }
+
+    /* Audio player - ORANGE */
+    .audio-player {
+      background: rgba(255,85,0,0.08);
+      border: 1px solid rgba(255,85,0,0.2);
+      border-radius: 0.75rem;
+      padding: 0.75rem;
+      margin-top: 0.75rem;
+    }
+    .audio-player audio {
+      width: 100%;
+      height: 40px;
+    }
+    audio::-webkit-media-controls-panel {
+      background: rgba(0,0,0,0.5);
+    }
+    audio::-webkit-media-controls-play-button {
+      background-color: #ff5500;
+      border-radius: 50%;
+    }
+
+    /* Cover preview */
+    .cover-preview {
+      width: 120px;
+      height: 120px;
+      border-radius: 0.5rem;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.1);
+      display: none;
+      margin-top: 0.75rem;
+    }
+    .cover-preview.visible {
+      display: block;
+    }
+
+    /* Checkbox - bigger and bolder */
+    .legal-checkbox {
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 4px;
+      background: rgba(255,255,255,0.05);
+      cursor: pointer;
+      transition: all 0.3s;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .legal-checkbox:checked {
+      background: #ff5500;
+      border-color: #ff5500;
+      position: relative;
+    }
+    .legal-checkbox:checked::after {
+      content: '✓';
+      color: white;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .legal-checkbox:focus {
+      border-color: #ff5500;
+      box-shadow: 0 0 20px rgba(255,85,0,0.2);
+    }
+
+    /* Legal terms - fully visible, big and bold */
+    .legal-terms-wrapper {
+      background: rgba(0,0,0,0.4);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .legal-terms-wrapper h3 {
+      color: #ff5500;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+    .legal-terms-wrapper p, .legal-terms-wrapper li {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .legal-terms-wrapper .highlight {
+      color: #f0f0f5;
+      font-weight: 600;
+    }
+    .legal-terms-wrapper .italic {
+      font-style: italic;
+      color: rgba(255,255,255,0.5);
+      padding-left: 1rem;
+      border-left: 2px solid rgba(255,85,0,0.3);
+    }
+    .legal-terms-wrapper ul, .legal-terms-wrapper ol {
+      padding-left: 1.5rem;
+      margin-top: 0.5rem;
+    }
+    .legal-terms-wrapper li {
+      margin-bottom: 0.25rem;
+    }
+
+    /* Success overlay */
+    .success-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(5,5,8,0.95);
+      backdrop-filter: blur(20px);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .success-overlay.active {
+      display: flex;
+    }
+    .success-content {
+      max-width: 500px;
+      text-align: center;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #0a0a0f; }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #ff5500, #a855f7);
+      border-radius: 3px;
+    }
+
+    .status-success { color: #22d3ee; }
+    .status-error { color: #ff5500; }
+
+    /* Form spacing */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    /* File status text */
+    .file-status {
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+    }
+
+    /* Error message styling */
+    .error-message {
+      background: rgba(255,85,0,0.1);
+      border: 1px solid rgba(255,85,0,0.3);
+      color: #ff5500;
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      font-size: 0.875rem;
+      display: none;
+      margin-bottom: 1rem;
+    }
+    .error-message.visible {
+      display: block;
+    }
+    .error-message ul {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0 0 0;
+    }
+    .error-message li {
+      padding: 0.25rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+    .error-message li::before {
+      content: '✗';
+      position: absolute;
+      left: 0;
+      color: #ff5500;
+    }
+
+    /* --- MAKE LINK & SOCIAL PROOF FIELDS SAME SIZE AS ARTIST NAME --- */
+    /* The input base styles already have uniform padding, 
+       but we add extra class to enforce consistent sizing */
+    .uniform-input {
+      padding: 0.75rem 1rem; /* matches artist name */
+      font-size: 1rem;
+      line-height: 1.5;
+      height: auto;
+      min-height: 3.5rem; /* same as artist name */
+    }
+    /* Ensure textarea stays as is, but for inputs we apply this */
+    input[type="text"],
+    input[type="email"],
+    input[type="url"] {
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      min-height: 3.5rem;
+    }
+    /* Override any Tailwind or default quirks */
+    .form-group input {
+      width: 100%;
+    }
+
+    /* Additional Notes - ensure proper padding like other fields */
+    textarea#notes {
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    textarea#notes::placeholder {
+      color: rgba(255,255,255,0.25);
+      font-style: normal;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <div class="noise" aria-hidden="true"></div>
+
+  
+
+  <!-- ============================================
+       SUCCESS OVERLAY
+       ============================================ -->
+
+  <div id="successOverlay" class="success-overlay">
+
+    <div class="success-content">
+
+      <div class="text-7xl mb-6">🎵</div>
+
+      <h2 class="text-3xl md:text-4xl font-extrabold text-gradient mb-4">Song Submitted!</h2>
+
+      <p class="text-white/60 text-lg mb-2">We'll review your track and email you at <span id="successEmail" class="text-orange"></span></p>
+
+      <p class="text-white/40 text-sm">Expect to hear back within 3-5 business days.</p>
+
+      <div class="mt-8 w-16 h-16 mx-auto border-4 border-orange/20 border-t-orange rounded-full animate-spin"></div>
+
+    </div>
+
+  </div>
+
+  <!-- ============================================
+       MAIN CONTENT
+       ============================================ -->
+
+  <main class="max-w-4xl mx-auto px-5 py-16 md:py-24 relative z-10">
+
+    
+
+    <!-- Header -->
+
+    <header class="text-center mb-12 fade-up">
+
+      <p class="text-xs uppercase tracking-[0.4em] text-orange/70 mb-4">GHOST NOTE</p>
+
+      <h1 class="glitch-title mb-4">Submit Your Song</h1>
+
+      <p class="text-xl md:text-2xl text-white/50 font-aubrey tracking-wide">
+
+        Want your music in our rhythm game? <span class="text-gradient">We want to hear it.</span>
+
+      </p>
+
+    </header>
+
+    <!-- Rules - Only 3 cards -->
+
+    <section class="grid sm:grid-cols-3 gap-4 mb-12 fade-up" style="transition-delay:0.05s">
+
+      <div class="glass rounded-2xl p-5 card-hover text-center">
+
+        <div class="text-3xl mb-2">🎵</div>
+
+        <h3 class="font-bold text-sm mb-1">Original Songs Only</h3>
+
+        <p class="text-white/40 text-xs">No covers, no samples — just your 100% original work.</p>
+
+      </div>
+
+      <div class="glass rounded-2xl p-5 card-hover text-center">
+
+        <div class="text-3xl mb-2">🔗</div>
+
+        <h3 class="font-bold text-sm mb-1">Proof of Ownership</h3>
+
+        <p class="text-white/40 text-xs">Link to your song on Spotify/YouTube/Instagram as proof.</p>
+
+      </div>
+
+      <div class="glass rounded-2xl p-5 card-hover text-center">
+
+        <div class="text-3xl mb-2">⚖️</div>
+
+        <h3 class="font-bold text-sm mb-1">Legal Agreement</h3>
+
+        <p class="text-white/40 text-xs">You keep 100% rights. We just get to use it in the game.</p>
+
+      </div>
+
+    </section>
+
+    <!-- ============================================
+         FORM - Formspark
+         ============================================ -->
+
+    <form id="submissionForm" action="https://submit-form.com/jYcxE91cs" method="POST" enctype="multipart/form-data" class="space-y-6 fade-up" style="transition-delay:0.1s">
+
+      
+
+      <!-- Error Message -->
+
+      <div id="errorMessage" class="error-message">
+
+        <strong>Please fix the following:</strong>
+
+        <ul id="errorList"></ul>
+
+      </div>
+
+      
+
+      <!-- Artist Name - wider -->
+
+      <div class="form-group">
+
+        <label>Artist Name <span class="required">*</span></label>
+
+        <input type="text" name="artistName" id="artistName" required placeholder="Your artist/band name" class="text-base py-3.5">
+
+      </div>
+
+      <!-- Song Title - wider -->
+
+      <div class="form-group">
+
+        <label>Song Title <span class="required">*</span></label>
+
+        <input type="text" name="songTitle" id="songTitle" required placeholder="The name of your track" class="text-base py-3.5">
+
+      </div>
+
+      <!-- Email - wider -->
+
+      <div class="form-group">
+
+        <label>Email <span class="required">*</span></label>
+
+        <input type="email" name="email" id="email" required placeholder="Where we'll reach you" class="text-base py-3.5">
+
+      </div>
+
+      <!-- Audio File -->
+
+      <div class="form-group">
+
+        <label>Audio File <span class="required">*</span></label>
+
+        <div class="file-input-wrapper">
+
+          <div class="file-input-label" id="audioLabel">
+
+            <span class="text-xl">🎧</span>
+
+            <span class="text-sm text-white/50" id="audioLabelText">Click to upload MP3, WAV, or OGG (max 10MB)</span>
+
+          </div>
+
+          <input type="file" name="audioFile" id="audioFile" accept=".mp3,.wav,.ogg,.m4a" required>
+
+        </div>
+
+        <div id="audioPreview" class="audio-player" style="display:none;">
+
+          <audio id="audioPlayer" controls></audio>
+
+        </div>
+
+        <p class="file-status" id="audioStatus"></p>
+
+      </div>
+
+      <!-- Cover Art -->
+
+      <div class="form-group">
+
+        <label>Cover Art <span class="required">*</span></label>
+
+        <p class="text-xs text-white/30 mb-2">Must be 1:1 square (PNG or JPG, max 2MB)</p>
+
+        <div class="file-input-wrapper">
+
+          <div class="file-input-label" id="coverLabel">
+
+            <span class="text-xl">🖼️</span>
+
+            <span class="text-sm text-white/50" id="coverLabelText">Click to upload square artwork</span>
+
+          </div>
+
+          <input type="file" name="coverArt" id="coverArt" accept=".png,.jpg,.jpeg" required>
+
+        </div>
+
+        <div class="flex items-center gap-4 mt-3">
+
+          <img id="coverPreview" class="cover-preview" alt="Cover preview">
+
+          <span class="file-status" id="coverStatus"></span>
+
+        </div>
+
+      </div>
+
+      <!-- Song Link -->
+
+      <div class="form-group">
+
+        <label>Link to your song <span class="required">*</span></label>
+
+        <input type="url" name="songLink" id="songLink" required placeholder="Spotify / Apple Music / YouTube / SoundCloud" class="text-base py-3.5">
+
+        <p class="text-xs text-white/30 mt-1">Where can we hear your song publicly?</p>
+
+      </div>
+
+      <!-- Social Proof -->
+
+      <div class="form-group">
+
+        <label>Social Proof <span class="required">*</span></label>
+
+        <input type="url" name="socialProof" id="socialProof" required placeholder="Instagram / TikTok / YouTube post with your song" class="text-base py-3.5">
+
+        <p class="text-xs text-white/30 mt-1">Link to a public post where you've shared this song as yourself.</p>
+
+      </div>
+
+      <!-- Additional Notes -->
+
+      <div class="form-group">
+
+        <label>Additional Notes</label>
+
+        <textarea name="notes" id="notes" rows="3" placeholder="Anything else you want us to know?" class="resize-none"></textarea>
+
+      </div>
+
+      <!-- ============================================
+           LEGAL SECTION - Fully visible with numbers
+           ============================================ -->
+
+      <div class="glass rounded-2xl p-6">
+
+        <div class="legal-terms-wrapper">
+
+          <h3>📜 Submission Agreement & Music License</h3>
+
+          
+
+          <p class="italic">
+
+            "Look, we hate reading legal documents as much as you do. But here's the deal: we're a small indie studio from Tanzania, and we want to make sure both your music and our game are fully protected.
+
+          </p>
+
+          <p class="italic">
+
+            By checking this box and submitting your music, you agree to the formal terms below. The human translation: you keep 100% ownership of your song, you give us permission to put it in our game, and you promise you didn't use stolen samples. Cool? Cool."
+
+          </p>
+
+          
+
+          <hr class="border-white/10 my-4">
+
+          
+
+          <h3>⚖️ Formal Terms and Conditions</h3>
+
+          
+
+          <p>
+
+            By clicking "I Agree" or submitting your musical composition and audio recording (collectively, the "Song"), you enter into a legally binding agreement with AOLTD (the "Studio") under the following terms:
+
+          </p>
+
+          
+
+          <ol style="list-style-type: decimal; padding-left: 1.8rem;">
+
+            <li><span class="highlight">Grant of License:</span> You hereby grant AOLTD a perpetual, irrevocable, worldwide, non-exclusive, sublicensable, and royalty-free license to use, reproduce, distribute, publicly perform, transmit, and display the Song (in whole or in part) within, and in connection with the marketing, promotion, and advertising of, the video game tentatively titled "GHOST NOTE" across all media and distribution platforms now known or hereafter devised.</li>
+
+            
+
+            <li><span class="highlight">Reservation of Ownership:</span> You retain 100% ownership, copyright, and title of the Song. This agreement is a non-exclusive license for use, not a transfer or assignment of copyright ownership to AOLTD.</li>
+
+            
+
+            <li><span class="highlight">Representations & Warranties:</span> You explicitly represent and warrant that:
+
+              <ul>
+
+                <li>You are the sole creator, author, and rightful owner of 100% of the rights to the Song (including both the underlying composition and the master recording).</li>
+
+                <li>The Song is entirely original and does not infringe upon the intellectual property, copyright, trademark, privacy, or any other rights of any third party.</li>
+
+                <li>The Song contains no unauthorized copyrighted samples, loops, melodies, or interpolations from other artists or media.</li>
+
+              </ul>
+
+            </li>
+
+            
+
+            <li><span class="highlight">Indemnification & Liability:</span> You agree to indemnify, defend, and hold harmless AOLTD, its developers, partners, and distributors from and against any and all claims, damages, liabilities, costs, losses, or expenses (including reasonable attorneys' fees) arising out of or resulting from a breach of your representations and warranties above, or any third-party claims of copyright infringement regarding the Song.</li>
+
+            
+
+            <li><span class="highlight">No Obligation to Use:</span> AOLTD is under no obligation to feature, use, or continue using the Song within GHOST NOTE or its promotional materials, and may remove the Song from the game at its sole discretion at any time without liability.</li>
+
+            
+
+            <li><span class="highlight">Governing Law:</span> This agreement shall be governed by and construed in accordance with the laws of the United Republic of Tanzania, without giving effect to any principles of conflicts of law. Any legal disputes arising under this agreement shall be subject to the exclusive jurisdiction of the courts of Tanzania.</li>
+
+          </ol>
+
+          
+
+          <!-- Checkbox at the END of terms -->
+
+          <div class="flex items-start gap-3 mt-6 pt-4 border-t border-white/10">
+
+            <input type="checkbox" id="legalCheck" class="legal-checkbox mt-1" required>
+
+            <label for="legalCheck" class="text-sm text-white/80 cursor-pointer font-medium">
+
+              I have read and agree to all the terms above. I confirm that I own 100% of the rights to this song.
+
+            </label>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Submit Button - Greyed out until checkbox checked -->
+
+      <button type="submit" id="submitBtn" class="btn-glow w-full py-4 rounded-xl font-bold text-white text-base" disabled>
+
+        Submit Your Song
+
+      </button>
+
+      <p class="text-center text-xs text-white/30">
+
+        By submitting, you agree to our terms. We'll review your song within 3-5 business days.
+
+      </p>
+
+    </form>
+
+  </main>
+
+  <!-- Footer -->
+
+  <footer class="border-t border-white/5 pt-8 pb-6 mt-8">
+
+    <div class="max-w-4xl mx-auto px-5 text-center">
+
+      <p class="text-xs text-white/25">© 2026 AOLTD · GHOST NOTE · Built with love from Tanzania</p>
+
+    </div>
+
+  </footer>
+
+  <!-- ============================================
+       JAVASCRIPT - Simple, just Formspark
+       ============================================ -->
+
+  <script>
+
+    // ============================================
+    // DOM REFS
+    // ============================================
+
+    const form = document.getElementById('submissionForm');
+
+    const artistName = document.getElementById('artistName');
+
+    const songTitle = document.getElementById('songTitle');
+
+    const email = document.getElementById('email');
+
+    const audioFile = document.getElementById('audioFile');
+
+    const coverArt = document.getElementById('coverArt');
+
+    const songLink = document.getElementById('songLink');
+
+    const socialProof = document.getElementById('socialProof');
+
+    const legalCheck = document.getElementById('legalCheck');
+
+    const submitBtn = document.getElementById('submitBtn');
+
+    const audioPreview = document.getElementById('audioPreview');
+
+    const audioPlayer = document.getElementById('audioPlayer');
+
+    const coverPreview = document.getElementById('coverPreview');
+
+    const audioStatus = document.getElementById('audioStatus');
+
+    const coverStatus = document.getElementById('coverStatus');
+
+    const successOverlay = document.getElementById('successOverlay');
+
+    const successEmail = document.getElementById('successEmail');
+
+    const errorMessage = document.getElementById('errorMessage');
+
+    const errorList = document.getElementById('errorList');
+
+    // ============================================
+    // CONSTANTS
+    // ============================================
+
+    const MAX_AUDIO_SIZE = 10 * 1024 * 1024; // 10MB
+
+    const MAX_COVER_SIZE = 2 * 1024 * 1024; // 2MB
+
+    const ALLOWED_AUDIO = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/m4a'];
+
+    const ALLOWED_IMAGE = ['image/png', 'image/jpeg'];
+
+    // ============================================
+    // ENABLE/DISABLE SUBMIT BUTTON BASED ON CHECKBOX
+    // ============================================
+
+    legalCheck.addEventListener('change', function() {
+      submitBtn.disabled = !this.checked;
+    });
+
+    // ============================================
+    // FILE VALIDATION - AUDIO
+    // ============================================
+
+    audioFile.addEventListener('change', function(e) {
+      const file = this.files[0];
+      if (!file) return;
+      if (!ALLOWED_AUDIO.includes(file.type)) {
+        audioStatus.textContent = 'Please upload MP3, WAV, or OGG file';
+        audioStatus.className = 'file-status status-error';
+        this.value = '';
+        audioPreview.style.display = 'none';
+        return;
+      }
+      if (file.size > MAX_AUDIO_SIZE) {
+        audioStatus.textContent = `File too large. Max 10MB (yours: ${(file.size/1024/1024).toFixed(1)}MB)`;
+        audioStatus.className = 'file-status status-error';
+        this.value = '';
+        audioPreview.style.display = 'none';
+        return;
+      }
+      audioStatus.textContent = `${file.name} (${(file.size/1024/1024).toFixed(1)}MB)`;
+      audioStatus.className = 'file-status status-success';
+      document.getElementById('audioLabelText').textContent = file.name;
+      document.getElementById('audioLabel').classList.add('has-file');
+      const url = URL.createObjectURL(file);
+      audioPlayer.src = url;
+      audioPreview.style.display = 'block';
+    });
+
+    // ============================================
+    // FILE VALIDATION - COVER ART
+    // ============================================
+
+    coverArt.addEventListener('change', function(e) {
+      const file = this.files[0];
+      if (!file) return;
+      if (!ALLOWED_IMAGE.includes(file.type)) {
+        coverStatus.textContent = 'Please upload PNG or JPG';
+        coverStatus.className = 'file-status status-error';
+        this.value = '';
+        coverPreview.classList.remove('visible');
+        return;
+      }
+      if (file.size > MAX_COVER_SIZE) {
+        coverStatus.textContent = `File too large. Max 2MB (yours: ${(file.size/1024/1024).toFixed(1)}MB)`;
+        coverStatus.className = 'file-status status-error';
+        this.value = '';
+        coverPreview.classList.remove('visible');
+        return;
+      }
+      const img = new Image();
+      img.onload = function() {
+        if (this.width !== this.height) {
+          coverStatus.textContent = `Must be 1:1 square (yours: ${this.width}x${this.height})`;
+          coverStatus.className = 'file-status status-error';
+          coverArt.value = '';
+          coverPreview.classList.remove('visible');
+          return;
+        }
+        coverStatus.textContent = `${file.name} (${this.width}x${this.height})`;
+        coverStatus.className = 'file-status status-success';
+        document.getElementById('coverLabelText').textContent = file.name;
+        document.getElementById('coverLabel').classList.add('has-file');
+        coverPreview.src = URL.createObjectURL(file);
+        coverPreview.classList.add('visible');
+      };
+      img.src = URL.createObjectURL(file);
+    });
+
+    // ============================================
+    // FADE-UP ANIMATIONS
+    // ============================================
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // ============================================
+    // FORM VALIDATION - Show errors before submit
+    // ============================================
+
+    form.addEventListener('submit', function(e) {
+      // Clear previous errors
+      errorMessage.classList.remove('visible');
+      errorList.innerHTML = '';
+
+      const errors = [];
+
+      // Check all required fields
+      if (!artistName.value.trim()) {
+        errors.push('Artist Name is required');
+      }
+      if (!songTitle.value.trim()) {
+        errors.push('Song Title is required');
+      }
+      if (!email.value.trim()) {
+        errors.push('Email is required');
+      } else if (!email.value.includes('@') || !email.value.includes('.')) {
+        errors.push('Please enter a valid email address');
+      }
+      if (!audioFile.files.length) {
+        errors.push('Audio File is required');
+      }
+      if (!coverArt.files.length) {
+        errors.push('Cover Art is required');
+      }
+      if (!songLink.value.trim()) {
+        errors.push('Link to your song is required');
+      }
+      if (!socialProof.value.trim()) {
+        errors.push('Social Proof link is required');
+      }
+      if (!legalCheck.checked) {
+        errors.push('You must agree to the Submission Agreement');
+      }
+
+      // If there are errors, prevent submission and show them
+      if (errors.length > 0) {
+        e.preventDefault();
+        errors.forEach(err => {
+          const li = document.createElement('li');
+          li.textContent = err;
+          errorList.appendChild(li);
+        });
+        errorMessage.classList.add('visible');
+
+        // Scroll to error message
+        errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      // If no errors, show success overlay after submission
+      setTimeout(() => {
+        successEmail.textContent = email.value;
+        successOverlay.classList.add('active');
+      }, 1000);
+    });
+  </script>
+
+</body>
+
+</html>
