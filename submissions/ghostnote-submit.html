@@ -108,7 +108,7 @@
       box-shadow: none;
     }
 
-    /* ========== LARGE FIELDS ========== */
+    /* ========== INPUTS - proper internal spacing ========== */
     input, textarea {
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1);
@@ -116,7 +116,7 @@
       transition: all 0.3s;
       font-family: 'Space Grotesk', system-ui, sans-serif;
       width: 100%;
-      padding: 1rem 1.25rem;
+      padding: 1rem 1.25rem;          /* good left/right + top/bottom spacing */
       border-radius: 0.75rem;
       font-size: 1rem;
       line-height: 1.5;
@@ -150,17 +150,25 @@
 
     .required { color: #ff5500; }
 
+    /* ========== SQUARE CHECKBOX FIX ========== */
     .legal-checkbox {
       appearance: none;
-      width: 24px;
-      height: 24px;
-      border: 2px solid rgba(255,255,255,0.3);
+      -webkit-appearance: none;
+      width: 22px !important;
+      height: 22px !important;
+      min-width: 22px;
+      min-height: 22px;
+      max-width: 22px;
+      max-height: 22px;
+      border: 2px solid rgba(255,255,255,0.35);
       border-radius: 4px;
       background: rgba(255,255,255,0.05);
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.2s;
       flex-shrink: 0;
-      margin-top: 2px;
+      margin: 0;
+      padding: 0;
+      vertical-align: middle;
     }
     .legal-checkbox:checked {
       background: #ff5500;
@@ -174,8 +182,9 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 16px;
+      font-size: 14px;
       font-weight: bold;
+      line-height: 1;
     }
 
     .legal-terms-wrapper {
@@ -411,8 +420,8 @@
           </ol>
           
           <div class="flex items-start gap-3 mt-6 pt-4 border-t border-white/10">
-            <input type="checkbox" id="legalCheck" class="legal-checkbox mt-1" required>
-            <label for="legalCheck" class="text-sm text-white/80 cursor-pointer font-medium">
+            <input type="checkbox" id="legalCheck" class="legal-checkbox" required>
+            <label for="legalCheck" class="text-sm text-white/80 cursor-pointer font-medium leading-snug">
               I have read and agree to all the terms above. I confirm that I own 100% of the rights to this song.
             </label>
           </div>
