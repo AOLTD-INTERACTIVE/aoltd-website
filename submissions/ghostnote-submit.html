@@ -498,10 +498,10 @@
     </section>
 
     <!-- ============================================
-         FORM - Google Drive Method
+         FORM - Google Drive Method with AJAX
          ============================================ -->
 
-    <form id="submissionForm" action="https://script.google.com/macros/s/AKfycbzDHB5Ra4mHoVs1udJ5idoEb__x9jhf01jImtL7L6PqimFm7v1xNymAyK2hNJ3JFdyk1Q/exec" method="POST" enctype="multipart/form-data" class="space-y-6 fade-up" style="transition-delay:0.1s" target="_blank">
+    <form id="submissionForm" class="space-y-6 fade-up" style="transition-delay:0.1s">
 
       <!-- Error Message -->
 
@@ -772,7 +772,7 @@
   </footer>
 
   <!-- ============================================
-       JAVASCRIPT - SIMPLIFIED (No overlay interference)
+       JAVASCRIPT - AJAX Submission with JSON Response
        ============================================ -->
 
   <script>
@@ -796,6 +796,8 @@
     const songLink = document.getElementById('songLink');
 
     const socialProof = document.getElementById('socialProof');
+
+    const notes = document.getElementById('notes');
 
     const legalCheck = document.getElementById('legalCheck');
 
@@ -830,6 +832,10 @@
     const ALLOWED_AUDIO = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/m4a'];
 
     const ALLOWED_IMAGE = ['image/png', 'image/jpeg'];
+
+    // Your Google Apps Script Web App URL
+
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwAu4YujYCUS33CIuSAWTrXM45OM1F4QkDCvPMwQ-WfHqGQAiOrA_4CH-oxUutPPcPDzw/exec';
 
     // ============================================
     // ENABLE/DISABLE SUBMIT BUTTON BASED ON CHECKBOX
@@ -920,10 +926,13 @@
     document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
     // ============================================
-    // FORM VALIDATION - Show errors before submit
+    // FORM SUBMISSION - AJAX to Google Apps Script
     // ============================================
 
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', async function(e) {
+      // Prevent default form submission
+      e.preventDefault();
+
       // Clear previous errors
       errorMessage.classList.remove('visible');
       errorList.innerHTML = '';
@@ -958,23 +967,76 @@
         errors.push('You must agree to the Submission Agreement');
       }
 
-      // If there are errors, prevent submission and show them
+      // If there are errors, show them and stop
       if (errors.length > 0) {
-        e.preventDefault();
         errors.forEach(err => {
           const li = document.createElement('li');
           li.textContent = err;
           errorList.appendChild(li);
         });
         errorMessage.classList.add('visible');
-
-        // Scroll to error message
         errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
       }
 
-      // Let the form submit naturally to Google Apps Script
-      // The success page will be shown by the Apps Script itself
+      // Disable button and show loading state
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+
+      try {
+        // Create FormData
+        const formData = new FormData();
+        formData.append('artistName', artistName.value.trim());
+        formData.append('songTitle', songTitle.value.trim());
+        formData.append('email', email.value.trim());
+        formData.append('songLink', songLink.value.trim());
+        formData.append('socialProof', socialProof.value.trim());
+        formData.append('notes', notes.value.trim());
+        formData.append('audioFile', audioFile.files[0]);
+        formData.append('coverArt', coverArt.files[0]);
+
+        // Send to Google Apps Script
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors', // Important for Google Apps Script
+          body: formData
+        });
+
+        // Since we're using no-cors, we can't read the response directly
+        // But the script will still process the data
+        // Show success overlay
+        successEmail.textContent = email.value.trim();
+        successOverlay.classList.add('active');
+
+        // Reset form after success
+        form.reset();
+        audioPreview.style.display = 'none';
+        coverPreview.classList.remove('visible');
+        document.getElementById('audioLabel').classList.remove('has-file');
+        document.getElementById('coverLabel').classList.remove('has-file');
+        document.getElementById('audioLabelText').textContent = 'Click to upload MP3, WAV, or OGG (max 10MB)';
+        document.getElementById('coverLabelText').textContent = 'Click to upload square artwork';
+        audioStatus.textContent = '';
+        coverStatus.textContent = '';
+        submitBtn.disabled = true;
+
+      } catch (error) {
+        // Show error
+        errors.push('Submission failed. Please try again.');
+        errors.forEach(err => {
+          const li = document.createElement('li');
+          li.textContent = err;
+          errorList.appendChild(li);
+        });
+        errorMessage.classList.add('visible');
+        errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } finally {
+        // Re-enable button
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Your Song';
+        // Re-check legal checkbox state
+        submitBtn.disabled = !legalCheck.checked;
+      }
     });
 
   </script>
