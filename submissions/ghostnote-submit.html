@@ -498,7 +498,7 @@
     </section>
 
     <!-- ============================================
-         FORM - FormSubmit
+         FORM - FormSubmit with Compression
          ============================================ -->
 
     <form id="submissionForm" action="https://formsubmit.co/music@aoltd.xyz" method="POST" enctype="multipart/form-data" class="space-y-6 fade-up" style="transition-delay:0.1s">
@@ -508,6 +508,12 @@
       <input type="hidden" name="_captcha" value="false">
       <input type="hidden" name="_template" value="table">
       <input type="hidden" name="_autoresponse" value="Thank you for submitting your song to GHOST NOTE! We'll review your track and get back to you within 3-5 business days. 🎵">
+
+      <!-- Compressed file storage (hidden, used for submission) -->
+      <input type="hidden" id="compressedAudioData" name="audioFileData">
+      <input type="hidden" id="compressedCoverData" name="coverArtData">
+      <input type="hidden" id="audioFileName" name="audioFileName">
+      <input type="hidden" id="coverFileName" name="coverFileName">
 
       <!-- Error Message -->
 
@@ -563,11 +569,11 @@
 
             <span class="text-xl">🎧</span>
 
-            <span class="text-sm text-white/50" id="audioLabelText">Click to upload MP3, WAV, or OGG (max 10MB)</span>
+            <span class="text-sm text-white/50" id="audioLabelText">Click to upload MP3, WAV, or OGG (max 10MB, auto-compressed)</span>
 
           </div>
 
-          <input type="file" name="audioFile" id="audioFile" accept=".mp3,.wav,.ogg,.m4a" required>
+          <input type="file" name="audioFileRaw" id="audioFile" accept=".mp3,.wav,.ogg,.m4a" required>
 
         </div>
 
@@ -587,7 +593,7 @@
 
         <label>Cover Art <span class="required">*</span></label>
 
-        <p class="text-xs text-white/30 mb-2">Must be 1:1 square (PNG or JPG, max 2MB)</p>
+        <p class="text-xs text-white/30 mb-2">Must be 1:1 square (PNG or JPG, max 2MB, auto-compressed)</p>
 
         <div class="file-input-wrapper">
 
@@ -599,7 +605,7 @@
 
           </div>
 
-          <input type="file" name="coverArt" id="coverArt" accept=".png,.jpg,.jpeg" required>
+          <input type="file" name="coverArtRaw" id="coverArt" accept=".png,.jpg,.jpeg" required>
 
         </div>
 
@@ -778,7 +784,7 @@
   </footer>
 
   <!-- ============================================
-       JAVASCRIPT
+       JAVASCRIPT - With File Compression
        ============================================ -->
 
   <script>
@@ -795,9 +801,9 @@
 
     const email = document.getElementById('email');
 
-    const audioFile = document.getElementById('audioFile');
+    const audioFileInput = document.getElementById('audioFile');
 
-    const coverArt = document.getElementById('coverArt');
+    const coverArtInput = document.getElementById('coverArt');
 
     const songLink = document.getElementById('songLink');
 
@@ -825,20 +831,24 @@
 
     const errorList = document.getElementById('errorList');
 
+    // Hidden fields for compressed data
+    const compressedAudioData = document.getElementById('compressedAudioData');
+    const compressedCoverData = document.getElementById('compressedCoverData');
+    const audioFileName = document.getElementById('audioFileName');
+    const coverFileName = document.getElementById('coverFileName');
+
     // ============================================
     // CONSTANTS
     // ============================================
 
     const MAX_AUDIO_SIZE = 10 * 1024 * 1024; // 10MB
-
     const MAX_COVER_SIZE = 2 * 1024 * 1024; // 2MB
-
+    const MAX_TOTAL_SIZE = 4 * 1024 * 1024; // 4MB total limit for FormSubmit
     const ALLOWED_AUDIO = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/m4a'];
-
     const ALLOWED_IMAGE = ['image/png', 'image/jpeg'];
 
     // ============================================
-    // ENABLE/DISABLE SUBMIT BUTTON BASED ON CHECKBOX
+    // ENABLE/DISABLE SUBMIT BUTTON
     // ============================================
 
     legalCheck.addEventListener('change', function() {
@@ -846,12 +856,194 @@
     });
 
     // ============================================
-    // FILE VALIDATION - AUDIO
+    // AUDIO COMPRESSION
     // ============================================
 
-    audioFile.addEventListener('change', function(e) {
+    function compressAudio(file) {
+      return new Promise((resolve, reject) => {
+        // If file is already small enough, just return it
+        if (file.size < 2 * 1024 * 1024) {
+          resolve(file);
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            audioContext.decodeAudioData(e.target.result, function(buffer) {
+              // Create a new buffer with reduced quality (mono, lower sample rate)
+              const sampleRate = Math.min(22050, buffer.sampleRate);
+              const duration = buffer.duration;
+              const channels = 1; // Convert to mono
+              const samples = Math.floor(duration * sampleRate);
+              const newBuffer = audioContext.createBuffer(channels, samples, sampleRate);
+              
+              // Mix down to mono
+              const channelData = newBuffer.getChannelData(0);
+              for (let i = 0; i < samples; i++) {
+                let sum = 0;
+                for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
+                  sum += buffer.getChannelData(channel)[i * Math.floor(buffer.length / samples)] || 0;
+                }
+                channelData[i] = sum / buffer.numberOfChannels;
+              }
+
+              // Encode to MP3-like quality using WAV (or we could use other formats)
+              // For simplicity, we'll encode as WAV with reduced quality
+              const wavData = encodeWav(newBuffer, sampleRate);
+              
+              // Check if compressed size is reasonable
+              if (wavData.length < file.size * 0.5) {
+                const compressedFile = new File([wavData], file.name.replace(/\.[^.]+$/, '.wav'), {
+                  type: 'audio/wav'
+                });
+                resolve(compressedFile);
+              } else {
+                // If compression didn't help much, return original
+                resolve(file);
+              }
+            }, function(error) {
+              // If decode fails, return original file
+              resolve(file);
+            });
+          } catch (error) {
+            // If anything fails, return original
+            resolve(file);
+          }
+        };
+        reader.onerror = function() {
+          resolve(file);
+        };
+        reader.readAsArrayBuffer(file);
+      });
+    }
+
+    function encodeWav(buffer, sampleRate) {
+      const data = buffer.getChannelData(0);
+      const length = data.length * 2;
+      const arrayBuffer = new ArrayBuffer(44 + length);
+      const view = new DataView(arrayBuffer);
+      
+      // RIFF header
+      writeString(view, 0, 'RIFF');
+      view.setUint32(4, 36 + length, true);
+      writeString(view, 8, 'WAVE');
+      writeString(view, 12, 'fmt ');
+      view.setUint32(16, 16, true);
+      view.setUint16(20, 1, true);
+      view.setUint16(22, 1, true);
+      view.setUint32(24, sampleRate, true);
+      view.setUint32(28, sampleRate * 2, true);
+      view.setUint16(32, 2, true);
+      view.setUint16(34, 16, true);
+      writeString(view, 36, 'data');
+      view.setUint32(40, length, true);
+      
+      // PCM data
+      for (let i = 0; i < data.length; i++) {
+        const sample = Math.max(-1, Math.min(1, data[i]));
+        view.setInt16(44 + i * 2, sample * 0x7FFF, true);
+      }
+      
+      return arrayBuffer;
+    }
+
+    function writeString(view, offset, string) {
+      for (let i = 0; i < string.length; i++) {
+        view.setUint8(offset + i, string.charCodeAt(i));
+      }
+    }
+
+    // ============================================
+    // COVER ART COMPRESSION
+    // ============================================
+
+    function compressCoverArt(file) {
+      return new Promise((resolve, reject) => {
+        // If file is already small enough
+        if (file.size < 500 * 1024) {
+          resolve(file);
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = new Image();
+          img.onload = function() {
+            // Calculate new size (max 600x600)
+            let width = this.width;
+            let height = this.height;
+            const maxSize = 600;
+            
+            if (width > maxSize || height > maxSize) {
+              const ratio = Math.min(maxSize / width, maxSize / height);
+              width = Math.round(width * ratio);
+              height = Math.round(height * ratio);
+            }
+            
+            // Ensure square
+            const size = Math.min(width, height);
+            
+            // Draw on canvas
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            // Center crop to square
+            const x = (this.width - size) / 2;
+            const y = (this.height - size) / 2;
+            ctx.drawImage(this, x, y, size, size, 0, 0, size, size);
+            
+            // Compress as JPEG with quality 70%
+            const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+            const compressedBlob = dataURLToBlob(compressedDataUrl);
+            
+            if (compressedBlob.size < file.size) {
+              const compressedFile = new File([compressedBlob], file.name.replace(/\.[^.]+$/, '.jpg'), {
+                type: 'image/jpeg'
+              });
+              resolve(compressedFile);
+            } else {
+              resolve(file);
+            }
+          };
+          img.onerror = function() {
+            resolve(file);
+          };
+          img.src = e.target.result;
+        };
+        reader.onerror = function() {
+          resolve(file);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function dataURLToBlob(dataURL) {
+      const parts = dataURL.split(',');
+      const mime = parts[0].match(/:(.*?);/)[1];
+      const bstr = atob(parts[1]);
+      const n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      for (let i = 0; i < n; i++) {
+        u8arr[i] = bstr.charCodeAt(i);
+      }
+      return new Blob([u8arr], { type: mime });
+    }
+
+    // ============================================
+    // FILE VALIDATION - AUDIO (with compression)
+    // ============================================
+
+    let compressedAudioFile = null;
+    let compressedCoverFile = null;
+
+    audioFileInput.addEventListener('change', async function(e) {
       const file = this.files[0];
       if (!file) return;
+      
       if (!ALLOWED_AUDIO.includes(file.type)) {
         audioStatus.textContent = 'Please upload MP3, WAV, or OGG file';
         audioStatus.className = 'file-status status-error';
@@ -859,6 +1051,7 @@
         audioPreview.style.display = 'none';
         return;
       }
+      
       if (file.size > MAX_AUDIO_SIZE) {
         audioStatus.textContent = `File too large. Max 10MB (yours: ${(file.size/1024/1024).toFixed(1)}MB)`;
         audioStatus.className = 'file-status status-error';
@@ -866,22 +1059,39 @@
         audioPreview.style.display = 'none';
         return;
       }
-      audioStatus.textContent = `${file.name} (${(file.size/1024/1024).toFixed(1)}MB)`;
-      audioStatus.className = 'file-status status-success';
-      document.getElementById('audioLabelText').textContent = file.name;
-      document.getElementById('audioLabel').classList.add('has-file');
-      const url = URL.createObjectURL(file);
-      audioPlayer.src = url;
-      audioPreview.style.display = 'block';
+
+      audioStatus.textContent = `Compressing audio...`;
+      audioStatus.className = 'file-status';
+
+      // Compress the audio
+      try {
+        compressedAudioFile = await compressAudio(file);
+        const originalSize = (file.size / 1024 / 1024).toFixed(1);
+        const compressedSize = (compressedAudioFile.size / 1024 / 1024).toFixed(1);
+        
+        audioStatus.textContent = `${compressedAudioFile.name} (${compressedSize}MB, original: ${originalSize}MB)`;
+        audioStatus.className = 'file-status status-success';
+        document.getElementById('audioLabelText').textContent = compressedAudioFile.name;
+        document.getElementById('audioLabel').classList.add('has-file');
+        
+        const url = URL.createObjectURL(compressedAudioFile);
+        audioPlayer.src = url;
+        audioPreview.style.display = 'block';
+      } catch (error) {
+        audioStatus.textContent = 'Compression failed, using original file';
+        audioStatus.className = 'file-status status-error';
+        compressedAudioFile = file;
+      }
     });
 
     // ============================================
-    // FILE VALIDATION - COVER ART
+    // FILE VALIDATION - COVER ART (with compression)
     // ============================================
 
-    coverArt.addEventListener('change', function(e) {
+    coverArtInput.addEventListener('change', async function(e) {
       const file = this.files[0];
       if (!file) return;
+      
       if (!ALLOWED_IMAGE.includes(file.type)) {
         coverStatus.textContent = 'Please upload PNG or JPG';
         coverStatus.className = 'file-status status-error';
@@ -889,6 +1099,7 @@
         coverPreview.classList.remove('visible');
         return;
       }
+      
       if (file.size > MAX_COVER_SIZE) {
         coverStatus.textContent = `File too large. Max 2MB (yours: ${(file.size/1024/1024).toFixed(1)}MB)`;
         coverStatus.className = 'file-status status-error';
@@ -896,23 +1107,28 @@
         coverPreview.classList.remove('visible');
         return;
       }
-      const img = new Image();
-      img.onload = function() {
-        if (this.width !== this.height) {
-          coverStatus.textContent = `Must be 1:1 square (yours: ${this.width}x${this.height})`;
-          coverStatus.className = 'file-status status-error';
-          coverArt.value = '';
-          coverPreview.classList.remove('visible');
-          return;
-        }
-        coverStatus.textContent = `${file.name} (${this.width}x${this.height})`;
+
+      coverStatus.textContent = `Compressing cover art...`;
+      coverStatus.className = 'file-status';
+
+      // Compress the cover
+      try {
+        compressedCoverFile = await compressCoverArt(file);
+        const originalSize = (file.size / 1024 / 1024).toFixed(1);
+        const compressedSize = (compressedCoverFile.size / 1024 / 1024).toFixed(1);
+        
+        coverStatus.textContent = `${compressedCoverFile.name} (${compressedSize}MB, original: ${originalSize}MB)`;
         coverStatus.className = 'file-status status-success';
-        document.getElementById('coverLabelText').textContent = file.name;
+        document.getElementById('coverLabelText').textContent = compressedCoverFile.name;
         document.getElementById('coverLabel').classList.add('has-file');
-        coverPreview.src = URL.createObjectURL(file);
+        
+        coverPreview.src = URL.createObjectURL(compressedCoverFile);
         coverPreview.classList.add('visible');
-      };
-      img.src = URL.createObjectURL(file);
+      } catch (error) {
+        coverStatus.textContent = 'Compression failed, using original file';
+        coverStatus.className = 'file-status status-error';
+        compressedCoverFile = file;
+      }
     });
 
     // ============================================
@@ -926,10 +1142,10 @@
     document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
     // ============================================
-    // FORM VALIDATION - Show errors before submit
+    // FORM SUBMISSION - With compression
     // ============================================
 
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', async function(e) {
       // Clear previous errors
       errorMessage.classList.remove('visible');
       errorList.innerHTML = '';
@@ -948,12 +1164,15 @@
       } else if (!email.value.includes('@') || !email.value.includes('.')) {
         errors.push('Please enter a valid email address');
       }
-      if (!audioFile.files.length) {
+      
+      // Check files
+      if (!compressedAudioFile && !audioFileInput.files.length) {
         errors.push('Audio File is required');
       }
-      if (!coverArt.files.length) {
+      if (!compressedCoverFile && !coverArtInput.files.length) {
         errors.push('Cover Art is required');
       }
+      
       if (!songLink.value.trim()) {
         errors.push('Link to your song is required');
       }
@@ -962,6 +1181,15 @@
       }
       if (!legalCheck.checked) {
         errors.push('You must agree to the Submission Agreement');
+      }
+
+      // Check total size
+      const audioSize = compressedAudioFile ? compressedAudioFile.size : 0;
+      const coverSize = compressedCoverFile ? compressedCoverFile.size : 0;
+      const totalSize = audioSize + coverSize;
+      
+      if (totalSize > MAX_TOTAL_SIZE) {
+        errors.push(`Total file size (${(totalSize/1024/1024).toFixed(1)}MB) exceeds 4MB limit. Please upload smaller files.`);
       }
 
       // If there are errors, prevent submission and show them
@@ -973,45 +1201,68 @@
           errorList.appendChild(li);
         });
         errorMessage.classList.add('visible');
-
-        // Scroll to error message
         errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
       }
 
-      // If no errors, show success overlay
-      setTimeout(() => {
-        successEmail.textContent = email.value;
-        successOverlay.classList.add('active');
-      }, 500);
-    });
-
-    // ============================================
-    // Handle FormSubmit redirect (prevent page change)
-    // ============================================
-
-    // FormSubmit redirects by default, but we want to stay on our page
-    // We'll use a hidden iframe to submit the form silently
-    // This keeps the user on our page with our success overlay
-
-    // Create a hidden iframe to handle form submission
-    const iframe = document.createElement('iframe');
-    iframe.name = 'hiddenSubmit';
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
-
-    // Set form target to the hidden iframe
-    form.target = 'hiddenSubmit';
-
-    // Listen for when the iframe loads (form submission complete)
-    iframe.addEventListener('load', function() {
-      // FormSubmit redirects to a thank you page, but we keep our overlay
-      // The success overlay is already shown
-      // Small delay to ensure everything is smooth
-      setTimeout(() => {
-        // The overlay stays visible
-        // User can close it if needed, or we can keep it
-      }, 1000);
+      // Prepare compressed files for submission
+      // Since FormSubmit doesn't support hidden file inputs well,
+      // we need to use FormData to send the compressed files
+      e.preventDefault();
+      
+      // Show loading state
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Compressing & Submitting...';
+      
+      try {
+        // Create FormData with compressed files
+        const formData = new FormData();
+        formData.append('artistName', artistName.value);
+        formData.append('songTitle', songTitle.value);
+        formData.append('email', email.value);
+        formData.append('songLink', songLink.value);
+        formData.append('socialProof', socialProof.value);
+        formData.append('notes', notes.value);
+        
+        // Add compressed files
+        if (compressedAudioFile) {
+          formData.append('audioFile', compressedAudioFile);
+        }
+        if (compressedCoverFile) {
+          formData.append('coverArt', compressedCoverFile);
+        }
+        
+        // Send to FormSubmit using fetch
+        const response = await fetch('https://formsubmit.co/music@aoltd.xyz', {
+          method: 'POST',
+          body: formData
+        });
+        
+        if (response.ok) {
+          // Show success
+          successEmail.textContent = email.value;
+          successOverlay.classList.add('active');
+        } else {
+          errors.push('Submission failed. Please try again.');
+          errorMessage.classList.add('visible');
+          errors.forEach(err => {
+            const li = document.createElement('li');
+            li.textContent = err;
+            errorList.appendChild(li);
+          });
+        }
+      } catch (error) {
+        errors.push('Network error. Please check your connection and try again.');
+        errorMessage.classList.add('visible');
+        errors.forEach(err => {
+          const li = document.createElement('li');
+          li.textContent = err;
+          errorList.appendChild(li);
+        });
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Your Song';
+      }
     });
 
   </script>
