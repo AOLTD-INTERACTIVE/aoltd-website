@@ -383,16 +383,6 @@
     }
 
     /* --- MAKE LINK & SOCIAL PROOF FIELDS SAME SIZE AS ARTIST NAME --- */
-    /* The input base styles already have uniform padding, 
-       but we add extra class to enforce consistent sizing */
-    .uniform-input {
-      padding: 0.75rem 1rem; /* matches artist name */
-      font-size: 1rem;
-      line-height: 1.5;
-      height: auto;
-      min-height: 3.5rem; /* same as artist name */
-    }
-    /* Ensure textarea stays as is, but for inputs we apply this */
     input[type="text"],
     input[type="email"],
     input[type="url"] {
@@ -401,12 +391,11 @@
       line-height: 1.5;
       min-height: 3.5rem;
     }
-    /* Override any Tailwind or default quirks */
     .form-group input {
       width: 100%;
     }
 
-    /* Additional Notes - ensure proper padding like other fields */
+    /* Additional Notes - proper padding */
     textarea#notes {
       padding: 0.75rem 1rem;
       font-size: 1rem;
@@ -509,12 +498,16 @@
     </section>
 
     <!-- ============================================
-         FORM - Formspark
+         FORM - FormSubmit
          ============================================ -->
 
-    <form id="submissionForm" action="https://submit-form.com/jYcxE91cs" method="POST" enctype="multipart/form-data" class="space-y-6 fade-up" style="transition-delay:0.1s">
+    <form id="submissionForm" action="https://formsubmit.co/music@aoltd.xyz" method="POST" enctype="multipart/form-data" class="space-y-6 fade-up" style="transition-delay:0.1s">
 
-      
+      <!-- FormSubmit Hidden Fields -->
+      <input type="hidden" name="_subject" value="🎵 New Song Submission - GHOST NOTE">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_autoresponse" value="Thank you for submitting your song to GHOST NOTE! We'll review your track and get back to you within 3-5 business days. 🎵">
 
       <!-- Error Message -->
 
@@ -528,7 +521,7 @@
 
       
 
-      <!-- Artist Name - wider -->
+      <!-- Artist Name -->
 
       <div class="form-group">
 
@@ -538,7 +531,7 @@
 
       </div>
 
-      <!-- Song Title - wider -->
+      <!-- Song Title -->
 
       <div class="form-group">
 
@@ -548,7 +541,7 @@
 
       </div>
 
-      <!-- Email - wider -->
+      <!-- Email -->
 
       <div class="form-group">
 
@@ -785,7 +778,7 @@
   </footer>
 
   <!-- ============================================
-       JAVASCRIPT - Simple, just Formspark
+       JAVASCRIPT
        ============================================ -->
 
   <script>
@@ -986,12 +979,41 @@
         return;
       }
 
-      // If no errors, show success overlay after submission
+      // If no errors, show success overlay
       setTimeout(() => {
         successEmail.textContent = email.value;
         successOverlay.classList.add('active');
+      }, 500);
+    });
+
+    // ============================================
+    // Handle FormSubmit redirect (prevent page change)
+    // ============================================
+
+    // FormSubmit redirects by default, but we want to stay on our page
+    // We'll use a hidden iframe to submit the form silently
+    // This keeps the user on our page with our success overlay
+
+    // Create a hidden iframe to handle form submission
+    const iframe = document.createElement('iframe');
+    iframe.name = 'hiddenSubmit';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    // Set form target to the hidden iframe
+    form.target = 'hiddenSubmit';
+
+    // Listen for when the iframe loads (form submission complete)
+    iframe.addEventListener('load', function() {
+      // FormSubmit redirects to a thank you page, but we keep our overlay
+      // The success overlay is already shown
+      // Small delay to ensure everything is smooth
+      setTimeout(() => {
+        // The overlay stays visible
+        // User can close it if needed, or we can keep it
       }, 1000);
     });
+
   </script>
 
 </body>
