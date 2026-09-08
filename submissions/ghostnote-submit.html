@@ -108,6 +108,7 @@
       box-shadow: none;
     }
 
+    /* ========== LARGE FIELDS ========== */
     input, textarea {
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1);
@@ -115,10 +116,11 @@
       transition: all 0.3s;
       font-family: 'Space Grotesk', system-ui, sans-serif;
       width: 100%;
-      padding: 0.875rem 1.1rem;
+      padding: 1rem 1.25rem;
       border-radius: 0.75rem;
       font-size: 1rem;
       line-height: 1.5;
+      min-height: 3.5rem;
     }
 
     input:focus, textarea:focus {
@@ -132,10 +134,9 @@
       color: rgba(255,255,255,0.25);
     }
 
-    /* Proper padding for the notes textarea */
     textarea#notes {
-      padding: 0.875rem 1.1rem;
-      min-height: 110px;
+      padding: 1rem 1.25rem;
+      min-height: 120px;
       resize: vertical;
     }
 
@@ -252,11 +253,11 @@
       background: rgba(255,85,0,0.15);
       border: 1px solid rgba(255,85,0,0.3);
       color: #ff5500;
-      width: 40px;
-      height: 40px;
+      width: 44px;
+      height: 44px;
       border-radius: 0.5rem;
       cursor: pointer;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -271,12 +272,13 @@
       background: rgba(255,255,255,0.05);
       border: 1px dashed rgba(255,255,255,0.2);
       color: rgba(255,255,255,0.6);
-      padding: 0.6rem 1rem;
-      border-radius: 0.5rem;
+      padding: 0.85rem 1rem;
+      border-radius: 0.75rem;
       cursor: pointer;
-      font-size: 0.875rem;
+      font-size: 0.9rem;
       transition: all 0.2s;
       width: 100%;
+      min-height: 3.2rem;
     }
     .add-link-btn:hover {
       border-color: #ff5500;
@@ -328,57 +330,47 @@
         <ul id="errorList"></ul>
       </div>
       
-      <!-- Artist Name -->
       <div class="form-group">
         <label>Artist Name <span class="required">*</span></label>
         <input type="text" name="artistName" id="artistName" required placeholder="Your artist/band name">
       </div>
 
-      <!-- Song Title -->
       <div class="form-group">
         <label>Song Title <span class="required">*</span></label>
         <input type="text" name="songTitle" id="songTitle" required placeholder="The name of your track">
       </div>
 
-      <!-- Email -->
       <div class="form-group">
         <label>Email <span class="required">*</span></label>
         <input type="email" name="email" id="email" required placeholder="Where we'll reach you">
       </div>
 
-      <!-- Main Song Link -->
       <div class="form-group">
         <label>Main Song Link <span class="required">*</span></label>
         <input type="url" name="songLink" id="songLink" required placeholder="YouTube, Spotify, SoundCloud, Apple Music, etc.">
         <p class="text-xs text-white/30 mt-1">The main place where people can listen to the song</p>
       </div>
 
-      <!-- Extra Platform Links (optional) -->
       <div class="form-group">
         <label>More Platform Links <span class="text-white/40 font-normal">(optional)</span></label>
-        <div id="extraLinksContainer">
-          <!-- extra links will be added here -->
-        </div>
+        <div id="extraLinksContainer"></div>
         <button type="button" id="addLinkBtn" class="add-link-btn">
           + Add another platform link
         </button>
         <p class="text-xs text-white/30 mt-1">Spotify, Apple Music, SoundCloud, Bandcamp, etc.</p>
       </div>
 
-      <!-- Social Proof -->
       <div class="form-group">
         <label>Social Proof / Ownership Link <span class="required">*</span></label>
         <input type="url" name="socialProof" id="socialProof" required placeholder="Instagram, TikTok, YouTube post, or profile that shows this is your song">
         <p class="text-xs text-white/30 mt-1">A public post or page that proves you own / created this song</p>
       </div>
 
-      <!-- Additional Notes -->
       <div class="form-group">
         <label>Additional Notes</label>
         <textarea name="notes" id="notes" rows="4" placeholder="Anything else you want us to know?"></textarea>
       </div>
 
-      <!-- Legal Section -->
       <div class="glass rounded-2xl p-6">
         <div class="legal-terms-wrapper">
           <h3>📜 Submission Agreement & Music License</h3>
@@ -454,12 +446,10 @@
 
     let extraLinkCount = 0;
 
-    // Enable/disable submit button
     legalCheck.addEventListener('change', function() {
       submitBtn.disabled = !this.checked;
     });
 
-    // Add extra platform link
     addLinkBtn.addEventListener('click', function() {
       extraLinkCount++;
       const row = document.createElement('div');
@@ -475,13 +465,11 @@
       });
     });
 
-    // Fade-up animation
     const observer = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.1 });
     document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-    // Form validation
     form.addEventListener('submit', function(e) {
       errorMessage.classList.remove('visible');
       errorList.innerHTML = '';
@@ -516,10 +504,8 @@
         return;
       }
 
-      // Validation passed → show loading state
       submitBtn.disabled = true;
       submitBtn.textContent = 'Submitting...';
-      // Let the form submit normally to Google Apps Script
     });
   </script>
 </body>
