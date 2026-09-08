@@ -108,35 +108,42 @@
       box-shadow: none;
     }
 
-    /* ========== INPUTS - proper internal spacing ========== */
-    input, textarea {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: #f0f0f5;
+    /* ========== FIXED INPUT PADDING (beats Tailwind reset) ========== */
+    input[type="text"],
+    input[type="email"],
+    input[type="url"],
+    textarea {
+      background: rgba(255,255,255,0.05) !important;
+      border: 1px solid rgba(255,255,255,0.1) !important;
+      color: #f0f0f5 !important;
       transition: all 0.3s;
-      font-family: 'Space Grotesk', system-ui, sans-serif;
+      font-family: 'Space Grotesk', system-ui, sans-serif !important;
       width: 100%;
-      padding: 1rem 1.25rem;          /* good left/right + top/bottom spacing */
-      border-radius: 0.75rem;
-      font-size: 1rem;
-      line-height: 1.5;
-      min-height: 3.5rem;
+      padding: 1rem 1.25rem !important;   /* left/right + top/bottom spacing */
+      border-radius: 0.75rem !important;
+      font-size: 1rem !important;
+      line-height: 1.5 !important;
+      min-height: 3.5rem !important;
+      box-sizing: border-box !important;
     }
 
-    input:focus, textarea:focus {
-      outline: none;
-      border-color: #ff5500;
-      box-shadow: 0 0 20px rgba(255,85,0,0.15);
-      background: rgba(255,255,255,0.08);
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="url"]:focus,
+    textarea:focus {
+      outline: none !important;
+      border-color: #ff5500 !important;
+      box-shadow: 0 0 20px rgba(255,85,0,0.15) !important;
+      background: rgba(255,255,255,0.08) !important;
     }
 
-    input::placeholder, textarea::placeholder {
-      color: rgba(255,255,255,0.25);
+    input::placeholder,
+    textarea::placeholder {
+      color: rgba(255,255,255,0.25) !important;
     }
 
     textarea#notes {
-      padding: 1rem 1.25rem;
-      min-height: 120px;
+      min-height: 120px !important;
       resize: vertical;
     }
 
@@ -150,7 +157,7 @@
 
     .required { color: #ff5500; }
 
-    /* ========== SQUARE CHECKBOX FIX ========== */
+    /* ========== SQUARE CHECKBOX ========== */
     .legal-checkbox {
       appearance: none;
       -webkit-appearance: none;
