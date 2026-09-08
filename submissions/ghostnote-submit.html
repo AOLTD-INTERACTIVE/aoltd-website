@@ -7,7 +7,7 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Aubrey&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <script src="https://cdn.tailwindcss.com"></script>
   
@@ -115,9 +115,10 @@
       transition: all 0.3s;
       font-family: 'Space Grotesk', system-ui, sans-serif;
       width: 100%;
-      padding: 0.75rem 1rem;
+      padding: 0.875rem 1.1rem;
       border-radius: 0.75rem;
       font-size: 1rem;
+      line-height: 1.5;
     }
 
     input:focus, textarea:focus {
@@ -131,6 +132,13 @@
       color: rgba(255,255,255,0.25);
     }
 
+    /* Proper padding for the notes textarea */
+    textarea#notes {
+      padding: 0.875rem 1.1rem;
+      min-height: 110px;
+      resize: vertical;
+    }
+
     label {
       display: block;
       font-size: 0.875rem;
@@ -141,63 +149,10 @@
 
     .required { color: #ff5500; }
 
-    .file-input-wrapper {
-      position: relative;
-      overflow: hidden;
-      display: inline-block;
-      width: 100%;
-    }
-    .file-input-wrapper input[type=file] {
-      position: absolute;
-      left: 0; top: 0;
-      opacity: 0;
-      width: 100%; height: 100%;
-      cursor: pointer;
-    }
-    .file-input-label {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
-      padding: 0.75rem 1rem;
-      background: rgba(255,255,255,0.05);
-      border: 2px dashed rgba(255,255,255,0.15);
-      border-radius: 0.75rem;
-      cursor: pointer;
-      transition: all 0.3s;
-      min-height: 60px;
-    }
-    .file-input-label:hover {
-      border-color: #ff5500;
-      background: rgba(255,85,0,0.05);
-    }
-    .file-input-label.has-file {
-      border-color: #22d3ee;
-      background: rgba(34,211,238,0.05);
-    }
-
-    .audio-player {
-      background: rgba(255,85,0,0.08);
-      border: 1px solid rgba(255,85,0,0.2);
-      border-radius: 0.75rem;
-      padding: 0.75rem;
-      margin-top: 0.75rem;
-    }
-    .audio-player audio { width: 100%; height: 40px; }
-
-    .cover-preview {
-      width: 120px; height: 120px;
-      border-radius: 0.5rem;
-      object-fit: cover;
-      border: 2px solid rgba(255,255,255,0.1);
-      display: none;
-      margin-top: 0.75rem;
-    }
-    .cover-preview.visible { display: block; }
-
     .legal-checkbox {
       appearance: none;
-      width: 24px; height: 24px;
+      width: 24px;
+      height: 24px;
       border: 2px solid rgba(255,255,255,0.3);
       border-radius: 4px;
       background: rgba(255,255,255,0.05);
@@ -215,7 +170,8 @@
       content: '✓';
       color: white;
       position: absolute;
-      top: 50%; left: 50%;
+      top: 50%;
+      left: 50%;
       transform: translate(-50%, -50%);
       font-size: 16px;
       font-weight: bold;
@@ -253,11 +209,7 @@
       margin-top: 0.5rem;
     }
 
-    .status-success { color: #22d3ee; }
-    .status-error { color: #ff5500; }
-
     .form-group { margin-bottom: 1.5rem; }
-    .file-status { font-size: 0.75rem; margin-top: 0.25rem; }
 
     .error-message {
       background: rgba(255,85,0,0.1);
@@ -287,41 +239,55 @@
       color: #ff5500;
     }
 
-    input[type="text"],
-    input[type="email"],
-    input[type="url"] {
-      padding: 0.75rem 1rem;
-      font-size: 1rem;
-      line-height: 1.5;
-      min-height: 3.5rem;
+    .extra-link-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      align-items: center;
     }
-
-    /* Loading overlay */
-    .loading-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(5,5,8,0.92);
-      backdrop-filter: blur(12px);
-      z-index: 10000;
+    .extra-link-row input {
+      flex: 1;
+    }
+    .remove-link-btn {
+      background: rgba(255,85,0,0.15);
+      border: 1px solid rgba(255,85,0,0.3);
+      color: #ff5500;
+      width: 40px;
+      height: 40px;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
       align-items: center;
       justify-content: center;
-      flex-direction: column;
-      gap: 1rem;
+      flex-shrink: 0;
+      transition: all 0.2s;
     }
-    .loading-overlay.active { display: flex; }
+    .remove-link-btn:hover {
+      background: rgba(255,85,0,0.3);
+    }
+
+    .add-link-btn {
+      background: rgba(255,255,255,0.05);
+      border: 1px dashed rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.6);
+      padding: 0.6rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+      width: 100%;
+    }
+    .add-link-btn:hover {
+      border-color: #ff5500;
+      color: #ff5500;
+      background: rgba(255,85,0,0.05);
+    }
   </style>
 </head>
 <body>
 
   <div class="noise" aria-hidden="true"></div>
-
-  <!-- Loading overlay -->
-  <div id="loadingOverlay" class="loading-overlay">
-    <div class="text-5xl">🎵</div>
-    <p class="text-xl font-semibold text-white/80" id="loadingText">Uploading your song...</p>
-    <div class="w-12 h-12 border-4 border-orange/30 border-t-orange rounded-full animate-spin"></div>
-  </div>
 
   <main class="max-w-4xl mx-auto px-5 py-16 md:py-24 relative z-10">
 
@@ -342,7 +308,7 @@
       <div class="glass rounded-2xl p-5 card-hover text-center">
         <div class="text-3xl mb-2">🔗</div>
         <h3 class="font-bold text-sm mb-1">Proof of Ownership</h3>
-        <p class="text-white/40 text-xs">Link to your song on Spotify/YouTube/Instagram as proof.</p>
+        <p class="text-white/40 text-xs">Link to a post or profile that shows the song is yours.</p>
       </div>
       <div class="glass rounded-2xl p-5 card-hover text-center">
         <div class="text-3xl mb-2">⚖️</div>
@@ -351,79 +317,68 @@
       </div>
     </section>
 
-    <form id="submissionForm" class="space-y-6 fade-up" style="transition-delay:0.1s">
+    <form id="submissionForm"
+          action="https://script.google.com/macros/s/AKfycbwPzOeib0HXkFmc4vnSqbRizIY1HUcCcTLlr-v8Wqw6B0NzFmRVpPPddmltSJsVay0iZw/exec"
+          method="POST"
+          class="space-y-6 fade-up"
+          style="transition-delay:0.1s">
 
       <div id="errorMessage" class="error-message">
         <strong>Please fix the following:</strong>
         <ul id="errorList"></ul>
       </div>
       
+      <!-- Artist Name -->
       <div class="form-group">
         <label>Artist Name <span class="required">*</span></label>
         <input type="text" name="artistName" id="artistName" required placeholder="Your artist/band name">
       </div>
 
+      <!-- Song Title -->
       <div class="form-group">
         <label>Song Title <span class="required">*</span></label>
         <input type="text" name="songTitle" id="songTitle" required placeholder="The name of your track">
       </div>
 
+      <!-- Email -->
       <div class="form-group">
         <label>Email <span class="required">*</span></label>
         <input type="email" name="email" id="email" required placeholder="Where we'll reach you">
       </div>
 
-      <!-- Audio File -->
+      <!-- Main Song Link -->
       <div class="form-group">
-        <label>Audio File <span class="required">*</span></label>
-        <div class="file-input-wrapper">
-          <div class="file-input-label" id="audioLabel">
-            <span class="text-xl">🎧</span>
-            <span class="text-sm text-white/50" id="audioLabelText">Click to upload MP3, WAV, or OGG (max 10MB)</span>
-          </div>
-          <input type="file" id="audioFile" accept=".mp3,.wav,.ogg,.m4a,audio/*" required>
-        </div>
-        <div id="audioPreview" class="audio-player" style="display:none;">
-          <audio id="audioPlayer" controls></audio>
-        </div>
-        <p class="file-status" id="audioStatus"></p>
+        <label>Main Song Link <span class="required">*</span></label>
+        <input type="url" name="songLink" id="songLink" required placeholder="YouTube, Spotify, SoundCloud, Apple Music, etc.">
+        <p class="text-xs text-white/30 mt-1">The main place where people can listen to the song</p>
       </div>
 
-      <!-- Cover Art -->
+      <!-- Extra Platform Links (optional) -->
       <div class="form-group">
-        <label>Cover Art <span class="required">*</span></label>
-        <p class="text-xs text-white/30 mb-2">Must be 1:1 square (PNG or JPG, max 2MB)</p>
-        <div class="file-input-wrapper">
-          <div class="file-input-label" id="coverLabel">
-            <span class="text-xl">🖼️</span>
-            <span class="text-sm text-white/50" id="coverLabelText">Click to upload square artwork</span>
-          </div>
-          <input type="file" id="coverArt" accept=".png,.jpg,.jpeg,image/png,image/jpeg" required>
+        <label>More Platform Links <span class="text-white/40 font-normal">(optional)</span></label>
+        <div id="extraLinksContainer">
+          <!-- extra links will be added here -->
         </div>
-        <div class="flex items-center gap-4 mt-3">
-          <img id="coverPreview" class="cover-preview" alt="Cover preview">
-          <span class="file-status" id="coverStatus"></span>
-        </div>
+        <button type="button" id="addLinkBtn" class="add-link-btn">
+          + Add another platform link
+        </button>
+        <p class="text-xs text-white/30 mt-1">Spotify, Apple Music, SoundCloud, Bandcamp, etc.</p>
       </div>
 
+      <!-- Social Proof -->
       <div class="form-group">
-        <label>Link to your song <span class="required">*</span></label>
-        <input type="url" name="songLink" id="songLink" required placeholder="Spotify / Apple Music / YouTube / SoundCloud">
-        <p class="text-xs text-white/30 mt-1">Where can we hear your song publicly?</p>
+        <label>Social Proof / Ownership Link <span class="required">*</span></label>
+        <input type="url" name="socialProof" id="socialProof" required placeholder="Instagram, TikTok, YouTube post, or profile that shows this is your song">
+        <p class="text-xs text-white/30 mt-1">A public post or page that proves you own / created this song</p>
       </div>
 
-      <div class="form-group">
-        <label>Social Proof <span class="required">*</span></label>
-        <input type="url" name="socialProof" id="socialProof" required placeholder="Instagram / TikTok / YouTube post with your song">
-        <p class="text-xs text-white/30 mt-1">Link to a public post where you've shared this song as yourself.</p>
-      </div>
-
+      <!-- Additional Notes -->
       <div class="form-group">
         <label>Additional Notes</label>
-        <textarea name="notes" id="notes" rows="3" placeholder="Anything else you want us to know?" class="resize-none"></textarea>
+        <textarea name="notes" id="notes" rows="4" placeholder="Anything else you want us to know?"></textarea>
       </div>
 
-      <!-- Legal -->
+      <!-- Legal Section -->
       <div class="glass rounded-2xl p-6">
         <div class="legal-terms-wrapper">
           <h3>📜 Submission Agreement & Music License</h3>
@@ -440,7 +395,7 @@
           <h3>⚖️ Formal Terms and Conditions</h3>
           
           <p>
-            By submitting your musical composition and audio recording (collectively, the "Song"), you enter into a legally binding agreement with AOLTD (the "Studio") under the following terms:
+            By submitting your musical composition (the "Song"), you enter into a legally binding agreement with AOLTD (the "Studio") under the following terms:
           </p>
           
           <ol style="list-style-type: decimal; padding-left: 1.8rem;">
@@ -489,157 +444,71 @@
   </footer>
 
   <script>
-    // ============ CONFIG ============
-    const CLOUD_NAME = 'pso9dl6g';
-    const UPLOAD_PRESET = 'ghostnote_uploads';
-    const SCRIPT_URL = 'https://script.google.com/macros/library/d/1xVcixB-dCyJka7PZ7DJmiSq-imCkGR4VxLkgQburE12sG0n6hbLRsVhT/5';
-
-    // ============ DOM ============
     const form = document.getElementById('submissionForm');
-    const artistName = document.getElementById('artistName');
-    const songTitle = document.getElementById('songTitle');
-    const email = document.getElementById('email');
-    const audioFile = document.getElementById('audioFile');
-    const coverArt = document.getElementById('coverArt');
-    const songLink = document.getElementById('songLink');
-    const socialProof = document.getElementById('socialProof');
-    const notes = document.getElementById('notes');
     const legalCheck = document.getElementById('legalCheck');
     const submitBtn = document.getElementById('submitBtn');
-    const audioPreview = document.getElementById('audioPreview');
-    const audioPlayer = document.getElementById('audioPlayer');
-    const coverPreview = document.getElementById('coverPreview');
-    const audioStatus = document.getElementById('audioStatus');
-    const coverStatus = document.getElementById('coverStatus');
     const errorMessage = document.getElementById('errorMessage');
     const errorList = document.getElementById('errorList');
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    const loadingText = document.getElementById('loadingText');
+    const extraLinksContainer = document.getElementById('extraLinksContainer');
+    const addLinkBtn = document.getElementById('addLinkBtn');
 
-    const MAX_AUDIO_SIZE = 10 * 1024 * 1024;
-    const MAX_COVER_SIZE = 2 * 1024 * 1024;
+    let extraLinkCount = 0;
 
-    // ============ CHECKBOX ============
+    // Enable/disable submit button
     legalCheck.addEventListener('change', function() {
       submitBtn.disabled = !this.checked;
     });
 
-    // ============ AUDIO VALIDATION ============
-    audioFile.addEventListener('change', function() {
-      const file = this.files[0];
-      if (!file) return;
+    // Add extra platform link
+    addLinkBtn.addEventListener('click', function() {
+      extraLinkCount++;
+      const row = document.createElement('div');
+      row.className = 'extra-link-row';
+      row.innerHTML = `
+        <input type="url" name="extraLink${extraLinkCount}" placeholder="Another platform link (Spotify, Apple Music, etc.)">
+        <button type="button" class="remove-link-btn" title="Remove">×</button>
+      `;
+      extraLinksContainer.appendChild(row);
 
-      const okType = /\.(mp3|wav|ogg|m4a)$/i.test(file.name) || file.type.startsWith('audio/');
-      if (!okType) {
-        audioStatus.textContent = 'Please upload MP3, WAV, OGG or M4A';
-        audioStatus.className = 'file-status status-error';
-        this.value = '';
-        return;
-      }
-      if (file.size > MAX_AUDIO_SIZE) {
-        audioStatus.textContent = `File too large. Max 10MB (yours: ${(file.size/1024/1024).toFixed(1)}MB)`;
-        audioStatus.className = 'file-status status-error';
-        this.value = '';
-        return;
-      }
-
-      audioStatus.textContent = `${file.name} (${(file.size/1024/1024).toFixed(1)}MB)`;
-      audioStatus.className = 'file-status status-success';
-      document.getElementById('audioLabelText').textContent = file.name;
-      document.getElementById('audioLabel').classList.add('has-file');
-      audioPlayer.src = URL.createObjectURL(file);
-      audioPreview.style.display = 'block';
+      row.querySelector('.remove-link-btn').addEventListener('click', function() {
+        row.remove();
+      });
     });
 
-    // ============ COVER VALIDATION ============
-    coverArt.addEventListener('change', function() {
-      const file = this.files[0];
-      if (!file) return;
-
-      const okType = /\.(png|jpe?g)$/i.test(file.name) || file.type === 'image/png' || file.type === 'image/jpeg';
-      if (!okType) {
-        coverStatus.textContent = 'Please upload PNG or JPG';
-        coverStatus.className = 'file-status status-error';
-        this.value = '';
-        return;
-      }
-      if (file.size > MAX_COVER_SIZE) {
-        coverStatus.textContent = `File too large. Max 2MB (yours: ${(file.size/1024/1024).toFixed(1)}MB)`;
-        coverStatus.className = 'file-status status-error';
-        this.value = '';
-        return;
-      }
-
-      const img = new Image();
-      img.onload = function() {
-        if (this.width !== this.height) {
-          coverStatus.textContent = `Must be 1:1 square (yours: ${this.width}x${this.height})`;
-          coverStatus.className = 'file-status status-error';
-          coverArt.value = '';
-          return;
-        }
-        coverStatus.textContent = `${file.name} (${this.width}x${this.height})`;
-        coverStatus.className = 'file-status status-success';
-        document.getElementById('coverLabelText').textContent = file.name;
-        document.getElementById('coverLabel').classList.add('has-file');
-        coverPreview.src = URL.createObjectURL(file);
-        coverPreview.classList.add('visible');
-      };
-      img.src = URL.createObjectURL(file);
-    });
-
-    // ============ FADE UP ============
+    // Fade-up animation
     const observer = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.1 });
     document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-    // ============ UPLOAD TO CLOUDINARY ============
-    async function uploadToCloudinary(file, resourceType = 'auto') {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', UPLOAD_PRESET);
-
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/${resourceType}/upload`, {
-        method: 'POST',
-        body: formData
-      });
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error?.message || 'Upload failed');
-      }
-
-      const data = await res.json();
-      return data.secure_url;   // public HTTPS URL
-    }
-
-    // ============ FORM SUBMIT ============
-    form.addEventListener('submit', async function(e) {
-      e.preventDefault();
-
-      // Clear errors
+    // Form validation
+    form.addEventListener('submit', function(e) {
       errorMessage.classList.remove('visible');
       errorList.innerHTML = '';
       const errors = [];
 
-      if (!artistName.value.trim()) errors.push('Artist Name is required');
-      if (!songTitle.value.trim())  errors.push('Song Title is required');
-      if (!email.value.trim()) {
-        errors.push('Email is required');
-      } else if (!email.value.includes('@')) {
-        errors.push('Please enter a valid email');
-      }
-      if (!audioFile.files.length) errors.push('Audio File is required');
-      if (!coverArt.files.length)  errors.push('Cover Art is required');
-      if (!songLink.value.trim())  errors.push('Link to your song is required');
-      if (!socialProof.value.trim()) errors.push('Social Proof is required');
-      if (!legalCheck.checked)     errors.push('You must agree to the terms');
+      const artistName = document.getElementById('artistName').value.trim();
+      const songTitle = document.getElementById('songTitle').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const songLink = document.getElementById('songLink').value.trim();
+      const socialProof = document.getElementById('socialProof').value.trim();
 
-      if (errors.length) {
-        errors.forEach(msg => {
+      if (!artistName) errors.push('Artist Name is required');
+      if (!songTitle) errors.push('Song Title is required');
+      if (!email) {
+        errors.push('Email is required');
+      } else if (!email.includes('@')) {
+        errors.push('Please enter a valid email address');
+      }
+      if (!songLink) errors.push('Main Song Link is required');
+      if (!socialProof) errors.push('Social Proof / Ownership Link is required');
+      if (!legalCheck.checked) errors.push('You must agree to the Submission Agreement');
+
+      if (errors.length > 0) {
+        e.preventDefault();
+        errors.forEach(err => {
           const li = document.createElement('li');
-          li.textContent = msg;
+          li.textContent = err;
           errorList.appendChild(li);
         });
         errorMessage.classList.add('visible');
@@ -647,59 +516,10 @@
         return;
       }
 
-      // Show loading
+      // Validation passed → show loading state
       submitBtn.disabled = true;
-      loadingOverlay.classList.add('active');
-      loadingText.textContent = 'Uploading audio...';
-
-      try {
-        // 1. Upload audio
-        const audioUrl = await uploadToCloudinary(audioFile.files[0], 'video'); // 'video' works for audio too
-        loadingText.textContent = 'Uploading cover art...';
-
-        // 2. Upload cover
-        const coverUrl = await uploadToCloudinary(coverArt.files[0], 'image');
-        loadingText.textContent = 'Sending submission...';
-
-        // 3. Send everything to Google Apps Script
-        const payload = new FormData();
-        payload.append('artistName', artistName.value.trim());
-        payload.append('songTitle', songTitle.value.trim());
-        payload.append('email', email.value.trim());
-        payload.append('songLink', songLink.value.trim());
-        payload.append('socialProof', socialProof.value.trim());
-        payload.append('notes', notes.value.trim());
-        payload.append('audioUrl', audioUrl);
-        payload.append('coverUrl', coverUrl);
-
-        // Classic form POST so we land on the success page
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = SCRIPT_URL;
-        form.style.display = 'none';
-
-        for (const [key, value] of payload.entries()) {
-          const input = document.createElement('input');
-          input.type = 'hidden';
-          input.name = key;
-          input.value = value;
-          form.appendChild(input);
-        }
-
-        document.body.appendChild(form);
-        form.submit();
-
-      } catch (err) {
-        loadingOverlay.classList.remove('active');
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Submit Your Song';
-
-        const li = document.createElement('li');
-        li.textContent = 'Upload failed: ' + (err.message || 'Please try again');
-        errorList.appendChild(li);
-        errorMessage.classList.add('visible');
-        errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
+      submitBtn.textContent = 'Submitting...';
+      // Let the form submit normally to Google Apps Script
     });
   </script>
 </body>
