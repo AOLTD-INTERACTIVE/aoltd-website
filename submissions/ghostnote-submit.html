@@ -1,33 +1,18 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8" />
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>GHOST NOTE · Submit Your Song</title>
-
   
-
   <!-- Fonts -->
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
-
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Foldit:wght@600;700&family=Aubrey&display=swap" rel="stylesheet">
-
   
-
   <!-- Tailwind -->
-
   <script src="https://cdn.tailwindcss.com"></script>
-
   
-
   <style>
     /* ============================================
        ALL STYLES - Matches AOLTD theme exactly
@@ -304,7 +289,7 @@
       margin-bottom: 0.25rem;
     }
 
-    /* Success overlay */
+    /* Success overlay (kept for reference, but traditional form uses server HTML) */
     .success-overlay {
       display: none;
       position: fixed;
@@ -406,441 +391,238 @@
       font-style: normal;
     }
   </style>
-
 </head>
-
 <body>
 
   <div class="noise" aria-hidden="true"></div>
 
-  
-
-  <!-- ============================================
-       SUCCESS OVERLAY
-       ============================================ -->
-
-  <div id="successOverlay" class="success-overlay">
-
-    <div class="success-content">
-
-      <div class="text-7xl mb-6">🎵</div>
-
-      <h2 class="text-3xl md:text-4xl font-extrabold text-gradient mb-4">Song Submitted!</h2>
-
-      <p class="text-white/60 text-lg mb-2">We'll review your track and email you at <span id="successEmail" class="text-orange"></span></p>
-
-      <p class="text-white/40 text-sm">Expect to hear back within 3-5 business days.</p>
-
-      <div class="mt-8 w-16 h-16 mx-auto border-4 border-orange/20 border-t-orange rounded-full animate-spin"></div>
-
-    </div>
-
-  </div>
-
   <!-- ============================================
        MAIN CONTENT
        ============================================ -->
-
   <main class="max-w-4xl mx-auto px-5 py-16 md:py-24 relative z-10">
 
-    
-
     <!-- Header -->
-
     <header class="text-center mb-12 fade-up">
-
       <p class="text-xs uppercase tracking-[0.4em] text-orange/70 mb-4">GHOST NOTE</p>
-
       <h1 class="glitch-title mb-4">Submit Your Song</h1>
-
       <p class="text-xl md:text-2xl text-white/50 font-aubrey tracking-wide">
-
         Want your music in our rhythm game? <span class="text-gradient">We want to hear it.</span>
-
       </p>
-
     </header>
 
     <!-- Rules - Only 3 cards -->
-
     <section class="grid sm:grid-cols-3 gap-4 mb-12 fade-up" style="transition-delay:0.05s">
-
       <div class="glass rounded-2xl p-5 card-hover text-center">
-
         <div class="text-3xl mb-2">🎵</div>
-
         <h3 class="font-bold text-sm mb-1">Original Songs Only</h3>
-
         <p class="text-white/40 text-xs">No covers, no samples — just your 100% original work.</p>
-
       </div>
-
       <div class="glass rounded-2xl p-5 card-hover text-center">
-
         <div class="text-3xl mb-2">🔗</div>
-
         <h3 class="font-bold text-sm mb-1">Proof of Ownership</h3>
-
         <p class="text-white/40 text-xs">Link to your song on Spotify/YouTube/Instagram as proof.</p>
-
       </div>
-
       <div class="glass rounded-2xl p-5 card-hover text-center">
-
         <div class="text-3xl mb-2">⚖️</div>
-
         <h3 class="font-bold text-sm mb-1">Legal Agreement</h3>
-
         <p class="text-white/40 text-xs">You keep 100% rights. We just get to use it in the game.</p>
-
       </div>
-
     </section>
 
     <!-- ============================================
-         FORM - Google Drive Method with AJAX
+         FORM - Traditional multipart POST (reliable for files)
          ============================================ -->
-
-    <form id="submissionForm" class="space-y-6 fade-up" style="transition-delay:0.1s">
+    <form id="submissionForm"
+          action="https://script.google.com/macros/s/AKfycbx6iivhxRGEKW4eS4yq_kfePgLy5RELDXn5ePxIGXRor5vSKo1ZBjIPiecGhuK11HZLdw/exec"
+          method="POST"
+          enctype="multipart/form-data"
+          class="space-y-6 fade-up"
+          style="transition-delay:0.1s">
 
       <!-- Error Message -->
-
       <div id="errorMessage" class="error-message">
-
         <strong>Please fix the following:</strong>
-
         <ul id="errorList"></ul>
-
       </div>
-
       
-
       <!-- Artist Name -->
-
       <div class="form-group">
-
         <label>Artist Name <span class="required">*</span></label>
-
         <input type="text" name="artistName" id="artistName" required placeholder="Your artist/band name" class="text-base py-3.5">
-
       </div>
 
       <!-- Song Title -->
-
       <div class="form-group">
-
         <label>Song Title <span class="required">*</span></label>
-
         <input type="text" name="songTitle" id="songTitle" required placeholder="The name of your track" class="text-base py-3.5">
-
       </div>
 
       <!-- Email -->
-
       <div class="form-group">
-
         <label>Email <span class="required">*</span></label>
-
         <input type="email" name="email" id="email" required placeholder="Where we'll reach you" class="text-base py-3.5">
-
       </div>
 
       <!-- Audio File -->
-
       <div class="form-group">
-
         <label>Audio File <span class="required">*</span></label>
-
         <div class="file-input-wrapper">
-
           <div class="file-input-label" id="audioLabel">
-
             <span class="text-xl">🎧</span>
-
             <span class="text-sm text-white/50" id="audioLabelText">Click to upload MP3, WAV, or OGG (max 10MB)</span>
-
           </div>
-
-          <input type="file" name="audioFile" id="audioFile" accept=".mp3,.wav,.ogg,.m4a" required>
-
+          <input type="file" name="audioFile" id="audioFile" accept=".mp3,.wav,.ogg,.m4a,audio/*" required>
         </div>
-
         <div id="audioPreview" class="audio-player" style="display:none;">
-
           <audio id="audioPlayer" controls></audio>
-
         </div>
-
         <p class="file-status" id="audioStatus"></p>
-
       </div>
 
       <!-- Cover Art -->
-
       <div class="form-group">
-
         <label>Cover Art <span class="required">*</span></label>
-
         <p class="text-xs text-white/30 mb-2">Must be 1:1 square (PNG or JPG, max 2MB)</p>
-
         <div class="file-input-wrapper">
-
           <div class="file-input-label" id="coverLabel">
-
             <span class="text-xl">🖼️</span>
-
             <span class="text-sm text-white/50" id="coverLabelText">Click to upload square artwork</span>
-
           </div>
-
-          <input type="file" name="coverArt" id="coverArt" accept=".png,.jpg,.jpeg" required>
-
+          <input type="file" name="coverArt" id="coverArt" accept=".png,.jpg,.jpeg,image/png,image/jpeg" required>
         </div>
-
         <div class="flex items-center gap-4 mt-3">
-
           <img id="coverPreview" class="cover-preview" alt="Cover preview">
-
           <span class="file-status" id="coverStatus"></span>
-
         </div>
-
       </div>
 
       <!-- Song Link -->
-
       <div class="form-group">
-
         <label>Link to your song <span class="required">*</span></label>
-
         <input type="url" name="songLink" id="songLink" required placeholder="Spotify / Apple Music / YouTube / SoundCloud" class="text-base py-3.5">
-
         <p class="text-xs text-white/30 mt-1">Where can we hear your song publicly?</p>
-
       </div>
 
       <!-- Social Proof -->
-
       <div class="form-group">
-
         <label>Social Proof <span class="required">*</span></label>
-
         <input type="url" name="socialProof" id="socialProof" required placeholder="Instagram / TikTok / YouTube post with your song" class="text-base py-3.5">
-
         <p class="text-xs text-white/30 mt-1">Link to a public post where you've shared this song as yourself.</p>
-
       </div>
 
       <!-- Additional Notes -->
-
       <div class="form-group">
-
         <label>Additional Notes</label>
-
         <textarea name="notes" id="notes" rows="3" placeholder="Anything else you want us to know?" class="resize-none"></textarea>
-
       </div>
 
       <!-- ============================================
            LEGAL SECTION - Fully visible with numbers
            ============================================ -->
-
       <div class="glass rounded-2xl p-6">
-
         <div class="legal-terms-wrapper">
-
           <h3>📜 Submission Agreement & Music License</h3>
-
           
-
           <p class="italic">
-
             "Look, we hate reading legal documents as much as you do. But here's the deal: we're a small indie studio from Tanzania, and we want to make sure both your music and our game are fully protected.
-
           </p>
-
           <p class="italic">
-
             By checking this box and submitting your music, you agree to the formal terms below. The human translation: you keep 100% ownership of your song, you give us permission to put it in our game, and you promise you didn't use stolen samples. Cool? Cool."
-
           </p>
-
           
-
           <hr class="border-white/10 my-4">
-
           
-
           <h3>⚖️ Formal Terms and Conditions</h3>
-
           
-
           <p>
-
             By clicking "I Agree" or submitting your musical composition and audio recording (collectively, the "Song"), you enter into a legally binding agreement with AOLTD (the "Studio") under the following terms:
-
           </p>
-
           
-
           <ol style="list-style-type: decimal; padding-left: 1.8rem;">
-
             <li><span class="highlight">Grant of License:</span> You hereby grant AOLTD a perpetual, irrevocable, worldwide, non-exclusive, sublicensable, and royalty-free license to use, reproduce, distribute, publicly perform, transmit, and display the Song (in whole or in part) within, and in connection with the marketing, promotion, and advertising of, the video game tentatively titled "GHOST NOTE" across all media and distribution platforms now known or hereafter devised.</li>
-
             
-
             <li><span class="highlight">Reservation of Ownership:</span> You retain 100% ownership, copyright, and title of the Song. This agreement is a non-exclusive license for use, not a transfer or assignment of copyright ownership to AOLTD.</li>
-
             
-
             <li><span class="highlight">Representations & Warranties:</span> You explicitly represent and warrant that:
-
               <ul>
-
                 <li>You are the sole creator, author, and rightful owner of 100% of the rights to the Song (including both the underlying composition and the master recording).</li>
-
                 <li>The Song is entirely original and does not infringe upon the intellectual property, copyright, trademark, privacy, or any other rights of any third party.</li>
-
                 <li>The Song contains no unauthorized copyrighted samples, loops, melodies, or interpolations from other artists or media.</li>
-
               </ul>
-
             </li>
-
             
-
             <li><span class="highlight">Indemnification & Liability:</span> You agree to indemnify, defend, and hold harmless AOLTD, its developers, partners, and distributors from and against any and all claims, damages, liabilities, costs, losses, or expenses (including reasonable attorneys' fees) arising out of or resulting from a breach of your representations and warranties above, or any third-party claims of copyright infringement regarding the Song.</li>
-
             
-
             <li><span class="highlight">No Obligation to Use:</span> AOLTD is under no obligation to feature, use, or continue using the Song within GHOST NOTE or its promotional materials, and may remove the Song from the game at its sole discretion at any time without liability.</li>
-
             
-
             <li><span class="highlight">Governing Law:</span> This agreement shall be governed by and construed in accordance with the laws of the United Republic of Tanzania, without giving effect to any principles of conflicts of law. Any legal disputes arising under this agreement shall be subject to the exclusive jurisdiction of the courts of Tanzania.</li>
-
           </ol>
-
           
-
           <!-- Checkbox at the END of terms -->
-
           <div class="flex items-start gap-3 mt-6 pt-4 border-t border-white/10">
-
             <input type="checkbox" id="legalCheck" class="legal-checkbox mt-1" required>
-
             <label for="legalCheck" class="text-sm text-white/80 cursor-pointer font-medium">
-
               I have read and agree to all the terms above. I confirm that I own 100% of the rights to this song.
-
             </label>
-
           </div>
-
         </div>
-
       </div>
 
       <!-- Submit Button - Greyed out until checkbox checked -->
-
       <button type="submit" id="submitBtn" class="btn-glow w-full py-4 rounded-xl font-bold text-white text-base" disabled>
-
         Submit Your Song
-
       </button>
 
       <p class="text-center text-xs text-white/30">
-
         By submitting, you agree to our terms. We'll review your song within 3-5 business days.
-
       </p>
-
     </form>
-
   </main>
 
   <!-- Footer -->
-
   <footer class="border-t border-white/5 pt-8 pb-6 mt-8">
-
     <div class="max-w-4xl mx-auto px-5 text-center">
-
       <p class="text-xs text-white/25">© 2026 AOLTD · GHOST NOTE · Built with love from Tanzania</p>
-
     </div>
-
   </footer>
 
   <!-- ============================================
-       JAVASCRIPT - AJAX Submission with JSON Response
+       JAVASCRIPT - Client validation + traditional form submit
        ============================================ -->
-
   <script>
-
     // ============================================
     // DOM REFS
     // ============================================
-
     const form = document.getElementById('submissionForm');
-
     const artistName = document.getElementById('artistName');
-
     const songTitle = document.getElementById('songTitle');
-
     const email = document.getElementById('email');
-
     const audioFile = document.getElementById('audioFile');
-
     const coverArt = document.getElementById('coverArt');
-
     const songLink = document.getElementById('songLink');
-
     const socialProof = document.getElementById('socialProof');
-
     const notes = document.getElementById('notes');
-
     const legalCheck = document.getElementById('legalCheck');
-
     const submitBtn = document.getElementById('submitBtn');
-
     const audioPreview = document.getElementById('audioPreview');
-
     const audioPlayer = document.getElementById('audioPlayer');
-
     const coverPreview = document.getElementById('coverPreview');
-
     const audioStatus = document.getElementById('audioStatus');
-
     const coverStatus = document.getElementById('coverStatus');
-
-    const successOverlay = document.getElementById('successOverlay');
-
-    const successEmail = document.getElementById('successEmail');
-
     const errorMessage = document.getElementById('errorMessage');
-
     const errorList = document.getElementById('errorList');
 
     // ============================================
     // CONSTANTS
     // ============================================
-
     const MAX_AUDIO_SIZE = 10 * 1024 * 1024; // 10MB
-
-    const MAX_COVER_SIZE = 2 * 1024 * 1024; // 2MB
-
-    const ALLOWED_AUDIO = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/m4a'];
-
+    const MAX_COVER_SIZE = 2 * 1024 * 1024;  // 2MB
+    const ALLOWED_AUDIO = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/mp4', 'audio/x-m4a', 'audio/m4a'];
     const ALLOWED_IMAGE = ['image/png', 'image/jpeg'];
-
-    // Your Google Apps Script Web App URL
-
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwAu4YujYCUS33CIuSAWTrXM45OM1F4QkDCvPMwQ-WfHqGQAiOrA_4CH-oxUutPPcPDzw/exec';
 
     // ============================================
     // ENABLE/DISABLE SUBMIT BUTTON BASED ON CHECKBOX
     // ============================================
-
     legalCheck.addEventListener('change', function() {
       submitBtn.disabled = !this.checked;
     });
@@ -848,15 +630,21 @@
     // ============================================
     // FILE VALIDATION - AUDIO
     // ============================================
-
     audioFile.addEventListener('change', function(e) {
       const file = this.files[0];
       if (!file) return;
-      if (!ALLOWED_AUDIO.includes(file.type)) {
-        audioStatus.textContent = 'Please upload MP3, WAV, or OGG file';
+
+      // Some browsers report empty type for certain files – fall back to extension
+      const typeOk = ALLOWED_AUDIO.includes(file.type) ||
+                     /\.(mp3|wav|ogg|m4a)$/i.test(file.name);
+
+      if (!typeOk) {
+        audioStatus.textContent = 'Please upload MP3, WAV, OGG or M4A file';
         audioStatus.className = 'file-status status-error';
         this.value = '';
         audioPreview.style.display = 'none';
+        document.getElementById('audioLabel').classList.remove('has-file');
+        document.getElementById('audioLabelText').textContent = 'Click to upload MP3, WAV, or OGG (max 10MB)';
         return;
       }
       if (file.size > MAX_AUDIO_SIZE) {
@@ -864,12 +652,16 @@
         audioStatus.className = 'file-status status-error';
         this.value = '';
         audioPreview.style.display = 'none';
+        document.getElementById('audioLabel').classList.remove('has-file');
+        document.getElementById('audioLabelText').textContent = 'Click to upload MP3, WAV, or OGG (max 10MB)';
         return;
       }
+
       audioStatus.textContent = `${file.name} (${(file.size/1024/1024).toFixed(1)}MB)`;
       audioStatus.className = 'file-status status-success';
       document.getElementById('audioLabelText').textContent = file.name;
       document.getElementById('audioLabel').classList.add('has-file');
+
       const url = URL.createObjectURL(file);
       audioPlayer.src = url;
       audioPreview.style.display = 'block';
@@ -878,15 +670,20 @@
     // ============================================
     // FILE VALIDATION - COVER ART
     // ============================================
-
     coverArt.addEventListener('change', function(e) {
       const file = this.files[0];
       if (!file) return;
-      if (!ALLOWED_IMAGE.includes(file.type)) {
+
+      const typeOk = ALLOWED_IMAGE.includes(file.type) ||
+                     /\.(png|jpe?g)$/i.test(file.name);
+
+      if (!typeOk) {
         coverStatus.textContent = 'Please upload PNG or JPG';
         coverStatus.className = 'file-status status-error';
         this.value = '';
         coverPreview.classList.remove('visible');
+        document.getElementById('coverLabel').classList.remove('has-file');
+        document.getElementById('coverLabelText').textContent = 'Click to upload square artwork';
         return;
       }
       if (file.size > MAX_COVER_SIZE) {
@@ -894,8 +691,11 @@
         coverStatus.className = 'file-status status-error';
         this.value = '';
         coverPreview.classList.remove('visible');
+        document.getElementById('coverLabel').classList.remove('has-file');
+        document.getElementById('coverLabelText').textContent = 'Click to upload square artwork';
         return;
       }
+
       const img = new Image();
       img.onload = function() {
         if (this.width !== this.height) {
@@ -903,6 +703,8 @@
           coverStatus.className = 'file-status status-error';
           coverArt.value = '';
           coverPreview.classList.remove('visible');
+          document.getElementById('coverLabel').classList.remove('has-file');
+          document.getElementById('coverLabelText').textContent = 'Click to upload square artwork';
           return;
         }
         coverStatus.textContent = `${file.name} (${this.width}x${this.height})`;
@@ -912,13 +714,17 @@
         coverPreview.src = URL.createObjectURL(file);
         coverPreview.classList.add('visible');
       };
+      img.onerror = function() {
+        coverStatus.textContent = 'Could not read image';
+        coverStatus.className = 'file-status status-error';
+        coverArt.value = '';
+      };
       img.src = URL.createObjectURL(file);
     });
 
     // ============================================
     // FADE-UP ANIMATIONS
     // ============================================
-
     const observer = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
@@ -926,20 +732,15 @@
     document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
     // ============================================
-    // FORM SUBMISSION - AJAX to Google Apps Script
+    // FORM SUBMISSION - Client validation then real multipart POST
     // ============================================
-
-    form.addEventListener('submit', async function(e) {
-      // Prevent default form submission
-      e.preventDefault();
-
+    form.addEventListener('submit', function(e) {
       // Clear previous errors
       errorMessage.classList.remove('visible');
       errorList.innerHTML = '';
 
       const errors = [];
 
-      // Check all required fields
       if (!artistName.value.trim()) {
         errors.push('Artist Name is required');
       }
@@ -967,8 +768,9 @@
         errors.push('You must agree to the Submission Agreement');
       }
 
-      // If there are errors, show them and stop
+      // If there are errors, stop the submit
       if (errors.length > 0) {
+        e.preventDefault();
         errors.forEach(err => {
           const li = document.createElement('li');
           li.textContent = err;
@@ -979,68 +781,12 @@
         return;
       }
 
-      // Disable button and show loading state
+      // Validation passed → show loading state and allow the browser
+      // to do a real multipart/form-data POST to Google Apps Script
       submitBtn.disabled = true;
       submitBtn.textContent = 'Submitting...';
-
-      try {
-        // Create FormData
-        const formData = new FormData();
-        formData.append('artistName', artistName.value.trim());
-        formData.append('songTitle', songTitle.value.trim());
-        formData.append('email', email.value.trim());
-        formData.append('songLink', songLink.value.trim());
-        formData.append('socialProof', socialProof.value.trim());
-        formData.append('notes', notes.value.trim());
-        formData.append('audioFile', audioFile.files[0]);
-        formData.append('coverArt', coverArt.files[0]);
-
-        // Send to Google Apps Script
-        const response = await fetch(SCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors', // Important for Google Apps Script
-          body: formData
-        });
-
-        // Since we're using no-cors, we can't read the response directly
-        // But the script will still process the data
-        // Show success overlay
-        successEmail.textContent = email.value.trim();
-        successOverlay.classList.add('active');
-
-        // Reset form after success
-        form.reset();
-        audioPreview.style.display = 'none';
-        coverPreview.classList.remove('visible');
-        document.getElementById('audioLabel').classList.remove('has-file');
-        document.getElementById('coverLabel').classList.remove('has-file');
-        document.getElementById('audioLabelText').textContent = 'Click to upload MP3, WAV, or OGG (max 10MB)';
-        document.getElementById('coverLabelText').textContent = 'Click to upload square artwork';
-        audioStatus.textContent = '';
-        coverStatus.textContent = '';
-        submitBtn.disabled = true;
-
-      } catch (error) {
-        // Show error
-        errors.push('Submission failed. Please try again.');
-        errors.forEach(err => {
-          const li = document.createElement('li');
-          li.textContent = err;
-          errorList.appendChild(li);
-        });
-        errorMessage.classList.add('visible');
-        errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      } finally {
-        // Re-enable button
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Submit Your Song';
-        // Re-check legal checkbox state
-        submitBtn.disabled = !legalCheck.checked;
-      }
+      // Do NOT call e.preventDefault() — let the form submit normally
     });
-
   </script>
-
 </body>
-
 </html>
