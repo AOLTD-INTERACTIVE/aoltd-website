@@ -973,13 +973,14 @@
         return;
       }
 
-      // If no errors, show success overlay
+      // Show success overlay after a short delay
       setTimeout(() => {
         successEmail.textContent = email.value;
         successOverlay.classList.add('active');
       }, 1000);
 
-      // Let the form submit normally to Google Apps Script    });
+      // Allow the form to submit naturally
+    });
 
   </script>
 
