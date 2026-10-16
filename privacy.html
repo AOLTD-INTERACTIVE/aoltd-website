@@ -1,291 +1,225 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AOLTD - Privacy Policy</title>
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Foldit:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            cursor: none;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AOLTD - Privacy Policy</title>
+  <meta name="description" content="Privacy Policy for AOLTD INTERACTIVE — CUBLY and future titles." />
 
-        :root {
-            --orange: #ff5500;
-            --dark-blue: #0a1929;
-            --darker-blue: #0a141f;
-            --text-light: #ffffff;
-            --text-dim: #b0b0b0;
-            --card-bg: rgba(20, 30, 45, 0.7);
-        }
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
 
-        body {
-            font-family: 'Space Grotesk', sans-serif;
-            background-color: var(--dark-blue);
-            color: var(--text-light);
-            line-height: 1.6;
-        }
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Foldit:wght@600;700&display=swap" rel="stylesheet" />
 
-        .cursor {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--orange);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            transition: transform 0.2s ease;
-            mix-blend-mode: difference;
-            transform: translate(-50%, -50%);
-        }
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { void: '#050508', orange: '#ff5500' },
+          fontFamily: {
+            sans: ['Space Grotesk', 'system-ui', 'sans-serif'],
+            foldit: ['Foldit', 'cursive'],
+          },
+        },
+      },
+    };
+  </script>
 
-        .cursor-follower {
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 85, 0, 0.1);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9998;
-            transition: transform 0.4s ease;
-            backdrop-filter: blur(2px);
-            transform: translate(-50%, -50%);
-        }
-
-        .nav {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(10, 25, 41, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 85, 0, 0.2);
-            padding: 1rem 2rem;
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .nav-logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--orange);
-            text-decoration: none;
-            font-family: 'Foldit', cursive;
-            letter-spacing: 2px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-
-        .nav-link {
-            color: var(--text-light);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .nav-link:hover {
-            color: var(--orange);
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 4rem auto;
-            padding: 0 2rem;
-        }
-
-        .policy-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 3rem;
-            border: 1px solid rgba(255, 85, 0, 0.2);
-            backdrop-filter: blur(10px);
-        }
-
-        h1 {
-            font-size: 3rem;
-            color: var(--orange);
-            margin-bottom: 0.5rem;
-        }
-
-        .last-updated {
-            color: var(--text-dim);
-            margin-bottom: 2rem;
-            font-size: 0.9rem;
-        }
-
-        h2 {
-            color: var(--orange);
-            font-size: 1.5rem;
-            margin: 2rem 0 1rem;
-        }
-
-        p {
-            color: var(--text-dim);
-            margin-bottom: 1rem;
-        }
-
-        ul {
-            color: var(--text-dim);
-            margin-bottom: 1rem;
-            padding-left: 2rem;
-        }
-
-        li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-note {
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 85, 0, 0.2);
-            font-size: 0.9rem;
-            color: var(--text-dim);
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 2rem;
-            color: var(--orange);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .back-link:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            h1 { font-size: 2rem; }
-            .policy-card { padding: 2rem; }
-        }
-    </style>
+  <style>
+    :root {
+      --void: #050508;
+      --orange: #ff5500;
+    }
+    body {
+      background: var(--void);
+      color: #f0f0f5;
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      margin: 0;
+    }
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9998;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .glass {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .text-gradient {
+      background: linear-gradient(135deg, #ff5500 0%, #a855f7 45%, #22d3ee 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #0a0a0f; }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #ff5500, #a855f7);
+      border-radius: 3px;
+    }
+    ::selection {
+      background: rgba(255, 85, 0, 0.35);
+      color: white;
+    }
+    .policy-card h2 {
+      color: #ff5500;
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 2rem 0 0.75rem;
+    }
+    .policy-card p,
+    .policy-card li {
+      color: rgba(240, 240, 245, 0.55);
+      line-height: 1.7;
+      margin-bottom: 0.75rem;
+    }
+    .policy-card ul {
+      padding-left: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .policy-card li {
+      margin-bottom: 0.4rem;
+    }
+    .policy-card a {
+      color: #ff5500;
+      text-decoration: none;
+    }
+    .policy-card a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
-<body>
-    <div class="cursor" id="cursor"></div>
-    <div class="cursor-follower" id="cursor-follower"></div>
+<body class="bg-void text-[#f0f0f5] antialiased">
+  <div class="noise" aria-hidden="true"></div>
 
-    <nav class="nav">
-        <div class="nav-container">
-            <a href="index.html" class="nav-logo">AOLTD</a>
-            <div class="nav-links">
-                <a href="index.html" class="nav-link">Home</a>
-                <a href="#" class="nav-link">Games</a>
-                <a href="#" class="nav-link">Blog</a>
-                <a href="#" class="nav-link">Press</a>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container">
-        <div class="policy-card">
-            <h1>Privacy Policy</h1>
-            <div class="last-updated">Last updated: January 11, 2026</div>
-
-            <p>AOLTD INTERACTIVE ("we", "our", or "us") respects your privacy and is committed to protecting it. This Privacy Policy applies to all AOLTD games, websites, and services, including CUBLY, Bones & Banner, TouchV2, The Accord, and any future releases.</p>
-
-            <h2>1. Information We Collect</h2>
-            <p>Depending on which game or service you use, we may collect:</p>
-            <ul>
-                <li>Username, profile name, and email address (for account creation)</li>
-                <li>Login credentials (securely handled via PlayFab)</li>
-                <li>Game progress, achievements, and multiplayer data</li>
-                <li>Device information (model, operating system, unique identifiers)</li>
-                <li>Approximate location (country-level only)</li>
-                <li>Optional gameplay and usage analytics</li>
-                <li>Advertising data (only when you choose to view rewarded ads)</li>
-            </ul>
-            <p>Guest accounts are available in some games but may restrict access to online features.</p>
-
-            <h2>2. How We Use Information</h2>
-            <ul>
-                <li>Create and manage user accounts</li>
-                <li>Save and sync game progress across devices</li>
-                <li>Enable multiplayer and social features</li>
-                <li>Display optional rewarded advertisements (with your consent)</li>
-                <li>Improve gameplay through analytics</li>
-                <li>Maintain security and prevent fraud</li>
-            </ul>
-
-            <h2>3. Third-Party Services</h2>
-            <p>Our games use trusted third-party services that operate under their own privacy policies:</p>
-            <ul>
-                <li><strong>PlayFab:</strong> Account management, data storage, and backend services</li>
-                <li><strong>Advertising Partners:</strong> For optional rewarded ads (only when you choose to view them)</li>
-            </ul>
-
-            <h2>4. User-Generated Content</h2>
-            <p>Players may create text-based content including chat messages, profile names, and clan names. You are responsible for what you share. We reserve the right to remove content that violates our Terms of Use.</p>
-
-            <h2>5. Data Sharing & Analytics</h2>
-            <p>We may share anonymized gameplay and device data with third-party services (PlayFab, analytics partners) to improve our games and ensure smooth operation. We do not sell your personal information.</p>
-
-            <h2>6. Your Rights & Account Deletion</h2>
-            <p>You may request deletion of your account or personal data at any time by contacting us. We'll handle requests in accordance with applicable laws.</p>
-
-            <h2>7. Children's Privacy</h2>
-            <p>Our games are intended for users aged 13 and older. We do not knowingly collect personal data from children under 13. If you believe we have, please contact us immediately.</p>
-
-            <h2>8. Security</h2>
-            <p>We take reasonable measures to protect your data. However, no online system is 100% secure.</p>
-
-            <h2>9. Updates to This Policy</h2>
-            <p>We may update this Privacy Policy. We'll notify users via in-game messages, email, or store listings. Continued use means you accept the updated policy.</p>
-
-            <h2>10. Contact Us</h2>
-            <p>For privacy questions or requests:<br>
-            Email: <strong>aoltdinquiry@outlook.com</strong></p>
-            <p><strong>Governing Law:</strong> Tanzania (with worldwide applicability). Local laws may provide additional protections.</p>
-
-            <div class="footer-note">
-                <p>This policy applies to all AOLTD games and services. Each game will clearly inform you what data it collects before you play.</p>
-            </div>
-
-            <a href="index.html" class="back-link">← Back to Home</a>
-        </div>
+  <nav class="sticky top-0 z-50 border-b border-white/5 bg-void/85 backdrop-blur-xl">
+    <div class="max-w-6xl mx-auto px-5 py-4 flex items-center justify-between">
+      <a href="index.html" class="text-xl font-bold tracking-tighter text-gradient">AOLTD</a>
+      <div class="flex items-center gap-6 text-sm">
+        <a href="index.html" class="text-white/50 hover:text-white transition">Home</a>
+        <a href="https://aoltd.xyz/games/games.html" class="text-white/50 hover:text-white transition">Games</a>
+      </div>
     </div>
+  </nav>
 
-    <script>
-        const cursor = document.querySelector('.cursor');
-        const cursorFollower = document.querySelector('.cursor-follower');
+  <main class="max-w-3xl mx-auto px-5 py-16 md:py-24">
+    <div class="glass rounded-3xl p-8 md:p-12 policy-card">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-orange mb-2">Privacy Policy</h1>
+      <p class="text-sm text-white/35 mb-8">Last updated: October 16, 2026</p>
 
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-            cursorFollower.style.left = e.clientX + 'px';
-            cursorFollower.style.top = e.clientY + 'px';
-        });
+      <p>
+        AOLTD INTERACTIVE (“we”, “our”, or “us”) respects your privacy and is committed to protecting it.
+        This Privacy Policy applies to <strong class="text-white/70">CUBLY</strong> and any future titles
+        or related services we release under the AOLTD name.
+      </p>
 
-        document.querySelectorAll('a').forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
-                cursorFollower.style.transform = 'translate(-50%, -50%) scale(1.5)';
-            });
-            el.addEventListener('mouseleave', () => {
-                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
-                cursorFollower.style.transform = 'translate(-50%, -50%) scale(1)';
-            });
-        });
-    </script>
+      <h2>1. Information We Collect</h2>
+      <p>Depending on how you use our apps or services, we may collect:</p>
+      <ul>
+        <li>Username, profile name, and email address (when you create an account)</li>
+        <li>Login credentials, handled securely through our authentication provider (Supabase)</li>
+        <li>Game progress, achievements, and related save data</li>
+        <li>Device information (such as model, operating system, and app identifiers)</li>
+        <li>Approximate location at country level only, where needed for service operation</li>
+        <li>Where enabled in a product, limited gameplay or usage data used to improve stability and experience</li>
+        <li>Advertising-related data only when you choose to watch a rewarded ad</li>
+      </ul>
+      <p>
+        Guest or anonymous sign-in may be available. Some online features may require a registered account.
+      </p>
+
+      <h2>2. How We Use Information</h2>
+      <ul>
+        <li>Create and manage accounts (including guest/anonymous sessions where offered)</li>
+        <li>Save and sync progress across devices where that feature is available</li>
+        <li>Operate multiplayer, social, or community features when a title includes them</li>
+        <li>Show optional rewarded advertisements only when you choose to view them</li>
+        <li>Improve reliability, performance, and gameplay where analytics are enabled</li>
+        <li>Maintain security and help prevent abuse or fraud</li>
+      </ul>
+
+      <h2>3. Third-Party Services</h2>
+      <p>Our products may rely on trusted third-party services that process data under their own policies:</p>
+      <ul>
+        <li>
+          <strong class="text-white/70">Supabase</strong> — authentication, data storage, and backend services
+        </li>
+        <li>
+          <strong class="text-white/70">Google AdMob</strong> — optional rewarded advertisements (only when you choose to watch an ad)
+        </li>
+      </ul>
+      <p>
+        We encourage you to review those providers’ privacy documentation if you want more detail about their practices.
+      </p>
+
+      <h2>4. User-Generated Content</h2>
+      <p>
+        Where a product allows it, players may create text-based content such as display names, messages, or group names.
+        You are responsible for what you share. We may remove content that violates our Terms of Use or applicable law.
+      </p>
+
+      <h2>5. Data Sharing</h2>
+      <p>
+        We may process or share data with the service providers listed above as needed to run our apps
+        (for example Supabase for accounts and saves, and AdMob when you opt into a rewarded ad).
+        We do not sell your personal information.
+      </p>
+
+      <h2>6. Your Rights &amp; Account Deletion</h2>
+      <p>
+        You may request access to, correction of, or deletion of your account or personal data by contacting us.
+        We will handle requests in line with applicable law and our technical capabilities.
+      </p>
+
+      <h2>7. Children’s Privacy</h2>
+      <p>
+        Our products are intended for users aged 13 and older. We do not knowingly collect personal data from
+        children under 13. If you believe we have, please contact us so we can take appropriate action.
+      </p>
+
+      <h2>8. Security</h2>
+      <p>
+        We take reasonable measures to protect information we process. No online system is completely secure,
+        and we cannot guarantee absolute security.
+      </p>
+
+      <h2>9. Updates to This Policy</h2>
+      <p>
+        We may update this Privacy Policy from time to time. When we do, we will revise the “Last updated” date
+        and may notify users through the app, website, or store listing where appropriate.
+        Continued use after an update means you accept the revised policy.
+      </p>
+
+      <h2>10. Contact Us</h2>
+      <p>
+        For privacy questions or requests:<br />
+        Email:
+        <a href="mailto:hello@aoltd.xyz"><strong>hello@aoltd.xyz</strong></a>
+      </p>
+      <p>
+        <strong class="text-white/70">Governing law:</strong> Tanzania, with worldwide applicability.
+        Local laws may provide additional protections.
+      </p>
+
+      <div class="mt-10 pt-8 border-t border-white/10 text-sm text-white/40">
+        <p>
+          This policy applies to CUBLY and future AOLTD titles. Each product will make clear, where relevant,
+          what data it relies on for the features you use.
+        </p>
+      </div>
+
+      <a href="index.html" class="inline-block mt-8 text-orange font-semibold hover:underline">← Back to Home</a>
+    </div>
+  </main>
 </body>
 </html>
